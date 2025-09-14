@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOKIGEN MOOD フォトデザインツール</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #ffa726);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ffa726);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .upload-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px dashed #ff6b6b;
+        }
+
+        .upload-section h2 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 20px;
+            border: 2px dashed #ff6b6b;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .file-input:hover {
+            background: #fff5f5;
+            border-color: #ff5252;
+        }
+
+        .file-input input {
+            display: none;
+        }
+
+        .preview-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .preview-section h2 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+        }
+
+        .preview-container {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            position: relative;
+            border: 2px solid #ff6b6b;
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .preview-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 107, 107, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff6b6b;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .controls {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .control-group input,
+        .control-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .control-group input:focus,
+        .control-group select:focus {
+            outline: none;
+            border-color: #ff6b6b;
+        }
+
+        .size-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .size-option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .size-option:hover {
+            border-color: #ff6b6b;
+            background: #fff5f5;
+        }
+
+        .size-option.selected {
+            border-color: #ff6b6b;
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .download-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .download-section.show {
+            display: block;
+        }
+
+        .download-btn {
+            background: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .instructions {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .instructions h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .instructions ol {
+            color: #856404;
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .size-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📸 GOKIGEN MOOD フォトデザインツール 📸</h1>
+            <p>あなたの写真を素敵なデザインに変身させましょう！</p>
+        </div>
+
+        <div class="main-content">
+            <div class="upload-section">
+                <h2>📁 写真をアップロード</h2>
+                <div class="file-input" onclick="document.getElementById('photoInput').click()">
+                    <input type="file" id="photoInput" accept="image/*" onchange="handleFileSelect(event)">
+                    <div>
+                        <p>📷 クリックして写真を選択</p>
+                        <p>または</p>
+                        <p>📎 ドラッグ&ドロップ</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="preview-section">
+                <h2>👀 プレビュー</h2>
+                <div class="preview-container" id="previewContainer">
+                    <div class="preview-overlay">
+                        写真を選択してください
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>📏 フレームサイズ</label>
+                <div class="size-options">
+                    <div class="size-option" data-size="A4" onclick="selectSize(this)">
+                        <strong>A4版</strong><br>
+                        <small>大きな写真用</small>
+                    </div>
+                    <div class="size-option" data-size="L" onclick="selectSize(this)">
+                        <strong>L版</strong><br>
+                        <small>標準サイズ</small>
+                    </div>
+                    <div class="size-option" data-size="square" onclick="selectSize(this)">
+                        <strong>ましかくL版</strong><br>
+                        <small>インスタ風</small>
+                    </div>
+                    <div class="size-option" data-size="2L" onclick="selectSize(this)">
+                        <strong>2L版</strong><br>
+                        <small>特別な写真用</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>🎨 デザインスタイル</label>
+                <select id="designStyle">
+                    <option value="minimal">ミニマル</option>
+                    <option value="vintage">ヴィンテージ</option>
+                    <option value="modern">モダン</option>
+                    <option value="cute">キュート</option>
+                    <option value="elegant">エレガント</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>🌈 カラーテーマ</label>
+                <select id="colorTheme">
+                    <option value="warm">暖色系</option>
+                    <option value="cool">寒色系</option>
+                    <option value="neutral">ニュートラル</option>
+                    <option value="vibrant">ビビッド</option>
+                    <option value="pastel">パステル</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>✨ 装飾オプション</label>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="border" style="margin-right: 8px;">
+                        ボーダー
+                    </label>
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="shadow" style="margin-right: 8px;">
+                        シャドウ
+                    </label>
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="text" style="margin-right: 8px;">
+                        テキスト
+                    </label>
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="frame" style="margin-right: 8px;">
+                        フレーム
+                    </label>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="generateDesign()">🎨 デザイン生成</button>
+                <button class="btn btn-secondary" onclick="resetDesign()">🔄 リセット</button>
+            </div>
+        </div>
+
+        <div class="download-section" id="downloadSection">
+            <h3>✅ デザイン完成！</h3>
+            <p>あなたのオリジナルデザインが完成しました！</p>
+            <button class="download-btn" onclick="downloadDesign()">💾 ダウンロード</button>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 使い方</h3>
+            <ol>
+                <li>写真をアップロードしてください</li>
+                <li>フレームサイズを選択してください</li>
+                <li>デザインスタイルとカラーテーマを選んでください</li>
+                <li>装飾オプションを設定してください</li>
+                <li>「デザイン生成」ボタンをクリックしてください</li>
+                <li>完成したデザインをダウンロードしてください</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        let selectedSize = 'L';
+        let canvas = null;
+        let ctx = null;
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                selectedFile = file;
+                displayPreview(file);
+            }
+        }
+
+        function displayPreview(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewContainer = document.getElementById('previewContainer');
+                previewContainer.innerHTML = `
+                    <img src="${e.target.result}" class="preview-image" alt="プレビュー">
+                `;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function selectSize(element) {
+            // 全てのサイズオプションから選択状態を削除
+            document.querySelectorAll('.size-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 選択されたオプションに選択状態を追加
+            element.classList.add('selected');
+            selectedSize = element.dataset.size;
+        }
+
+        function generateDesign() {
+            if (!selectedFile) {
+                alert('写真を選択してください！');
+                return;
+            }
+
+            // キャンバスを作成
+            canvas = document.createElement('canvas');
+            ctx = canvas.getContext('2d');
+
+            // サイズに応じてキャンバスサイズを設定
+            const sizes = {
+                'A4': { width: 800, height: 1131 },
+                'L': { width: 400, height: 500 },
+                'square': { width: 400, height: 400 },
+                '2L': { width: 500, height: 700 }
+            };
+
+            const size = sizes[selectedSize];
+            canvas.width = size.width;
+            canvas.height = size.height;
+
+            // 背景を描画
+            drawBackground();
+
+            // 写真を描画
+            const img = new Image();
+            img.onload = function() {
+                drawPhoto(img);
+                drawDecorations();
+                
+                // プレビューを更新
+                updatePreview();
+                
+                // ダウンロードセクションを表示
+                document.getElementById('downloadSection').classList.add('show');
+            };
+            img.src = URL.createObjectURL(selectedFile);
+        }
+
+        function drawBackground() {
+            const colorTheme = document.getElementById('colorTheme').value;
+            const colors = {
+                'warm': ['#ff6b6b', '#ffa726', '#ffeb3b'],
+                'cool': ['#2196f3', '#00bcd4', '#4caf50'],
+                'neutral': ['#9e9e9e', '#607d8b', '#795548'],
+                'vibrant': ['#e91e63', '#9c27b0', '#673ab7'],
+                'pastel': ['#ffcdd2', '#f8bbd9', '#e1bee7']
+            };
+
+            const themeColors = colors[colorTheme];
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, themeColors[0]);
+            gradient.addColorStop(0.5, themeColors[1]);
+            gradient.addColorStop(1, themeColors[2]);
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function drawPhoto(img) {
+            const designStyle = document.getElementById('designStyle').value;
+            const margin = 40;
+            const photoWidth = canvas.width - (margin * 2);
+            const photoHeight = canvas.height - (margin * 2);
+
+            // 写真のアスペクト比を保持
+            const imgAspect = img.width / img.height;
+            const canvasAspect = photoWidth / photoHeight;
+
+            let drawWidth, drawHeight, drawX, drawY;
+
+            if (imgAspect > canvasAspect) {
+                drawWidth = photoWidth;
+                drawHeight = photoWidth / imgAspect;
+                drawX = margin;
+                drawY = margin + (photoHeight - drawHeight) / 2;
+            } else {
+                drawHeight = photoHeight;
+                drawWidth = photoHeight * imgAspect;
+                drawX = margin + (photoWidth - drawWidth) / 2;
+                drawY = margin;
+            }
+
+            // デザインスタイルに応じて効果を適用
+            if (designStyle === 'vintage') {
+                ctx.filter = 'sepia(0.8) contrast(1.2) brightness(0.9)';
+            } else if (designStyle === 'modern') {
+                ctx.filter = 'contrast(1.1) saturate(1.2)';
+            } else if (designStyle === 'cute') {
+                ctx.filter = 'brightness(1.1) saturate(1.3)';
+            } else if (designStyle === 'elegant') {
+                ctx.filter = 'contrast(1.1) brightness(0.95)';
+            }
+
+            ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+            ctx.filter = 'none';
+        }
+
+        function drawDecorations() {
+            const border = document.getElementById('border').checked;
+            const shadow = document.getElementById('shadow').checked;
+            const text = document.getElementById('text').checked;
+            const frame = document.getElementById('frame').checked;
+
+            if (border) {
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 4;
+                ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+            }
+
+            if (shadow) {
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+                ctx.shadowBlur = 10;
+                ctx.shadowOffsetX = 5;
+                ctx.shadowOffsetY = 5;
+            }
+
+            if (text) {
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('GOKIGEN MOOD', canvas.width / 2, canvas.height - 30);
+            }
+
+            if (frame) {
+                ctx.strokeStyle = '#ff6b6b';
+                ctx.lineWidth = 8;
+                ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+            }
+        }
+
+        function updatePreview() {
+            const previewContainer = document.getElementById('previewContainer');
+            previewContainer.innerHTML = `
+                <img src="${canvas.toDataURL()}" class="preview-image" alt="デザイン済み写真">
+            `;
+        }
+
+        function resetDesign() {
+            selectedFile = null;
+            selectedSize = 'L';
+            canvas = null;
+            ctx = null;
+            
+            document.getElementById('photoInput').value = '';
+            document.getElementById('previewContainer').innerHTML = `
+                <div class="preview-overlay">
+                    写真を選択してください
+                </div>
+            `;
+            
+            document.getElementById('downloadSection').classList.remove('show');
+            
+            // サイズ選択をリセット
+            document.querySelectorAll('.size-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+        }
+
+        function downloadDesign() {
+            if (!canvas) {
+                alert('デザインを生成してください！');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.download = `gokigen-mood-design-${Date.now()}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // ドラッグ&ドロップ機能
+        const fileInput = document.querySelector('.file-input');
+
+        fileInput.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            fileInput.style.background = '#fff5f5';
+        });
+
+        fileInput.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            fileInput.style.background = 'white';
+        });
+
+        fileInput.addEventListener('drop', function(e) {
+            e.preventDefault();
+            fileInput.style.background = 'white';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                selectedFile = files[0];
+                displayPreview(files[0]);
+            }
+        });
+    </script>
+</body>
+</html>
