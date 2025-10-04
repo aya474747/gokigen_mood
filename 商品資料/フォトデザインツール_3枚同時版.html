@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOKIGEN MOOD 無料ポスター作成ツール - 3枚同時版</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Parisienne&display=swap" rel="stylesheet">
+    <!-- AR.js -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* 全てのデバイスで統一された見た目を保証 */
+        * {
+            box-sizing: border-box;
+        }
+
+        .header {
+            background: #F6A18F;
+            color: white;
+            padding: 18px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.3em;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .quality-badge {
+            background: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .upload-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px dashed #ff6b6b;
+        }
+
+        .upload-section h2 {
+            color: #F6A18F;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 20px;
+            border: 2px dashed #F6A18F;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            margin-bottom: 20px;
+        }
+
+        .file-input:hover {
+            background: #fdf7f5;
+            border-color: #e8917a;
+        }
+
+        .file-input input {
+            display: none;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .photo-slot {
+            position: relative;
+            aspect-ratio: 1.2;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .photo-slot:hover {
+            border-color: #F6A18F;
+            background: #fdf7f5;
+        }
+
+        .photo-slot.has-photo {
+            border: 2px solid #F6A18F;
+            background: white;
+        }
+
+        .photo-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-slot .placeholder {
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .photo-slot .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 12px;
+            display: none;
+        }
+
+        .photo-slot.has-photo .remove-btn {
+            display: block;
+        }
+
+        .preview-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .preview-section h2 {
+            color: #F6A18F;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .gallery-preview {
+            display: block !important;
+            position: relative !important;
+            width: 270px;
+            max-width: 300px;
+            height: 225px;
+            margin: 0 auto;
+            background-color: transparent;
+            padding: 8px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .gallery-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.05);
+            z-index: 0;
+        }
+
+        .preview-item {
+            position: absolute !important;
+            border: 8px solid white;
+            overflow: hidden;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .preview-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        }
+
+        .preview-item.large {
+            /* A4版の比率: 210:297 = 0.707 (縦向き) */
+            aspect-ratio: 0.707;
+            /* A4の周りの白い枠: 上下3cm、左右1.7cm */
+            padding: 12px 1px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .preview-item.large .inner-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-item.large .photo-area {
+            width: 122px;
+            height: 158px;
+            background: #f5f5f5;
+            border-radius: 200px 200px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-item.large img {
+            border-radius: 200px 200px 0 0;
+        }
+
+        .preview-item.large .png-overlay {
+            position: absolute;
+            top: 8px;
+            right: -1px;
+            width: 37px;
+            height: 37px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .preview-item.large .french-text {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 15;
+            pointer-events: none;
+            width: 100%;
+        }
+
+
+        .preview-item.medium {
+            /* L版の比率: 89:127 = 0.701 (縦向き) */
+            aspect-ratio: 0.701;
+        }
+
+        .preview-item.small {
+            /* L版の比率: 127:89 = 1.427 (横向き) */
+            aspect-ratio: 1.427;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-item .placeholder {
+            text-align: center;
+            color: #999;
+            font-size: 0.8em;
+            line-height: 1.3;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        .preview-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #F6A18F;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            display: none;
+            z-index: 2;
+        }
+
+        .preview-item.has-photo .remove-btn {
+            display: block;
+        }
+
+        .controls {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .control-group input,
+        .control-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .control-group input:focus,
+        .control-group select:focus {
+            outline: none;
+            border-color: #F6A18F;
+        }
+
+        .size-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .size-option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .size-option:hover {
+            border-color: #F6A18F;
+            background: #fdf7f5;
+        }
+
+        .size-option.selected {
+            border-color: #F6A18F;
+            background: #F6A18F;
+            color: white;
+        }
+
+        .quality-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .quality-info h4 {
+            color: #1976d2;
+            margin-bottom: 8px;
+        }
+
+        .quality-info ul {
+            color: #1976d2;
+            padding-left: 20px;
+        }
+
+        .quality-info li {
+            margin-bottom: 4px;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #F6A18F;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #e8917a;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .download-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .download-section.show {
+            display: block;
+        }
+
+        .download-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .download-btn {
+            background: #28a745;
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .download-btn.zip {
+            background: #17a2b8;
+        }
+
+        .download-btn.zip:hover {
+            background: #138496;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ff6b6b;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .instructions {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .instructions h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .instructions ol {
+            color: #856404;
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        /* モーダルスタイル */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #F6A18F;
+        }
+
+        .modal-title {
+            font-size: 1.5em;
+            color: #F6A18F;
+            font-weight: bold;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #F6A18F;
+        }
+
+        .photo-editor {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .photo-preview-large {
+            text-align: center;
+        }
+
+        .photo-preview-large img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .editor-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .control-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .control-section h4 {
+            color: #F6A18F;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .slider-group {
+            margin-bottom: 15px;
+        }
+
+        .slider-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+        }
+
+        .slider-value {
+            min-width: 40px;
+            text-align: center;
+            background: #F6A18F;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .text-overlay-controls {
+            display: grid;
+            gap: 10px;
+        }
+
+        .text-overlay-controls textarea {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .text-overlay-controls textarea:focus {
+            border-color: #F6A18F;
+            outline: none;
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .preset-btn {
+            padding: 10px;
+            border: 2px solid #F6A18F;
+            background: white;
+            color: #F6A18F;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .preset-btn:hover {
+            background: #F6A18F;
+            color: white;
+        }
+
+        .preset-btn.active {
+            background: #F6A18F;
+            color: white;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        /* 全デバイスで完全に同じ見た目を強制 */
+        .preview-item.large {
+            top: 10px !important;
+            left: 6px !important;
+            width: 140px !important;
+            height: 198px !important;
+        }
+
+        .preview-item.medium {
+            top: 10px !important;
+            right: 20px !important;
+            width: 60px !important;
+            height: 85px !important;
+        }
+
+        .preview-item.small {
+            top: 120px !important;
+            right: 20px !important;
+            width: 85px !important;
+            height: 60px !important;
+        }
+
+        /* 最小限のデバイス別調整のみ */
+        @media (max-width: 375px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                max-width: 355px;
+                margin: 5px auto;
+            }
+
+            .preview-item .placeholder {
+                font-size: 0.7em !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌈 GOKIGEN MOOD 💘<br>無料フォトポスター作成ツール</h1>
+            <p>気分上げてこ♡ 3枚の写真でおしゃれなポスターを作ろう！</p>
+        </div>
+
+        <div class="main-content">
+            <!-- 隠しファイル入力 -->
+            <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+            
+            <div class="preview-section">
+                <div class="gallery-preview">
+                    <!-- 実際の壁の写真の3枚のフレームをシミュレーション -->
+                    <div class="preview-item large" id="preview1" onclick="selectSlot(0)" style="position: absolute; top: 10px; left: 10px; width: 128px; height: 181px;">
+                        <div class="inner-container">
+                            <div class="photo-area">
+                                <div class="placeholder">A4版<br><small>210×297mm<br>タップで写真を追加</small></div>
+                            </div>
+                        </div>
+                        <!-- PNG画像を右上に配置 -->
+                        <div class="png-overlay">
+                            <img src="circle_logo.png" alt="ご機嫌ムード">
+                        </div>
+                        <!-- フランス語テキスト -->
+                        <div class="french-text">
+                            <img src="Un_doux_souvenir.png" alt="Un doux souvenir" style="width: 60%; height: auto; border-radius: 0;">
+                        </div>
+                        <button class="remove-btn" onclick="removePhoto(0)">×</button>
+                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(0)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer; display: none;">編集</button>
+                    </div>
+                    <div class="preview-item medium" id="preview2" onclick="selectSlot(1)" style="position: absolute; top: 10px; right: 20px; width: 60px; height: 85px;">
+                        <div class="placeholder">L版<br><small>89×127mm<br>タップで写真を追加</small></div>
+                        <button class="remove-btn" onclick="removePhoto(1)">×</button>
+                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(1)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer; display: none;">編集</button>
+                    </div>
+                    <div class="preview-item small" id="preview3" onclick="selectSlot(2)" style="position: absolute; top: 120px; right: 20px; width: 85px; height: 60px;">
+                        <div class="placeholder">L版<br><small>127×89mm<br>タップで写真を追加</small></div>
+                        <button class="remove-btn" onclick="removePhoto(2)">×</button>
+                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(2)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer; display: none;">編集</button>
+                    </div>
+                    
+                </div>
+                <p style="text-align: center; margin-top: 2px; color: #666; font-size: 0.9em;">
+                    💡 フレームをタップして写真を追加してください
+                </p>
+                <div style="text-align: center; margin-top: 3px;">
+                    <button onclick="loadSamplePhotos()" style="background: #F6A18F; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.9em; cursor: pointer;">
+                        📸 サンプル写真を表示
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+
+
+            <div class="control-group">
+                <label>🎨 デザインスタイル</label>
+                <select id="designStyle">
+                    <option value="minimal">ミニマル</option>
+                    <option value="vintage">ヴィンテージ</option>
+                    <option value="modern">モダン</option>
+                    <option value="cute">キュート</option>
+                    <option value="elegant">エレガント</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>🌈 カラーテーマ</label>
+                <select id="colorTheme">
+                    <option value="default">デフォルト</option>
+                    <option value="soft">ソフト調</option>
+                    <option value="orange">オレンジ</option>
+                    <option value="blue">ブルー</option>
+                </select>
+            </div>
+
+
+
+
+
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="resetGallery()">🔄 リセット</button>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>ギャラリーセットを生成中...</p>
+        </div>
+
+        <div class="download-section" id="downloadSection">
+            <h3>✅ ギャラリーセット完成！</h3>
+            <p>3枚のデザインが完成しました！</p>
+            
+            
+            <div class="download-options">
+                <button class="download-btn" onclick="downloadIndividual()">📸 個別ダウンロード</button>
+                <button class="download-btn zip" onclick="downloadZip()">📦 ZIP一括ダウンロード</button>
+                <button class="download-btn ar" onclick="openAR()" style="background: #4CAF50; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 16px; cursor: pointer; margin-top: 10px; width: 100%;">📱 ARで部屋に配置してみる</button>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>✨ 使い方</h3>
+            <ol>
+                <li>💕 お気に入りの写真を3枚までアップロード</li>
+                <li>🎨 フレームをクリックして写真を配置</li>
+                <li>🌈 カラーテーマとデザインスタイルを選択</li>
+                <li>📸 「編集」ボタンで写真を美しく調整</li>
+                <li>🎉 完成！ダウンロードして飾ろう♡</li>
+            </ol>
+            <p><strong>💫 ギャラリーセット：</strong>3枚の写真を美しく配置したセットで、そのまま壁に飾って毎日を特別に！</p>
+        </div>
+    </div>
+
+    <!-- 写真編集モーダル -->
+    <div id="photoEditModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📸 写真編集モード</div>
+                <span class="close" onclick="closePhotoEditModal()">&times;</span>
+            </div>
+            
+            <div class="photo-editor">
+                <div class="photo-preview-large">
+                    <img id="modalPhotoPreview" src="" alt="編集中の写真">
+                </div>
+                
+                <div class="editor-controls">
+                    <!-- おまかせ調整モード -->
+                    <div class="control-section">
+                        <h4>🎨 おまかせ調整モード</h4>
+                        <div class="preset-buttons">
+                            <button class="preset-btn" onclick="applyPreset('pastel')">パステル</button>
+                            <button class="preset-btn" onclick="applyPreset('bright')">明るく</button>
+                            <button class="preset-btn" onclick="applyPreset('soft')">ソフト</button>
+                            <button class="preset-btn" onclick="applyPreset('dramatic')">ドラマチック</button>
+                            <button class="preset-btn" onclick="applyPreset('warm')">温かみ</button>
+                            <button class="preset-btn" onclick="applyPreset('cool')">クール</button>
+                        </div>
+                    </div>
+
+                    <!-- 色調調整 -->
+                    <div class="control-section">
+                        <h4>🌈 色調調整</h4>
+                        <div class="slider-group">
+                            <label>明度</label>
+                            <div class="slider-container">
+                                <input type="range" id="modalBrightness" min="0.3" max="2" step="0.1" value="1">
+                                <span class="slider-value" id="modalBrightnessValue">1.0</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label>コントラスト</label>
+                            <div class="slider-container">
+                                <input type="range" id="modalContrast" min="0.3" max="2" step="0.1" value="1">
+                                <span class="slider-value" id="modalContrastValue">1.0</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label>彩度</label>
+                            <div class="slider-container">
+                                <input type="range" id="modalSaturation" min="0" max="2" step="0.1" value="1">
+                                <span class="slider-value" id="modalSaturationValue">1.0</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label>セピア</label>
+                            <div class="slider-container">
+                                <input type="range" id="modalSepia" min="0" max="1" step="0.1" value="0">
+                                <span class="slider-value" id="modalSepiaValue">0.0</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label>色相</label>
+                            <div class="slider-container">
+                                <input type="range" id="modalHue" min="-180" max="180" step="10" value="0">
+                                <span class="slider-value" id="modalHueValue">0°</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 文字入れ -->
+                    <div class="control-section">
+                        <h4>💝 文字入れ</h4>
+                        <div class="text-overlay-controls">
+                            <textarea id="modalMainText" placeholder="例：Sweet Memories💕&#10;今日もハッピー！" rows="2"></textarea>
+                            <textarea id="modalSubText" placeholder="例：大切な瞬間を&#10;お部屋に飾って&#10;毎日を特別に♡" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="resetModalAdjustments()">リセット</button>
+                <button class="btn btn-primary" onclick="applyModalChanges()">適用</button>
+                <button class="btn btn-primary" onclick="closePhotoEditModal()">完了</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AR Modal -->
+    <div id="arModal" class="ar-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000;">
+        <div class="ar-modal-content" style="position: relative; width: 100%; height: 100%;">
+            <button onclick="closeAR()" style="position: absolute; top: 20px; right: 20px; background: #ff4444; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer; z-index: 1001;">×</button>
+            <div id="arContainer" style="width: 100%; height: 100%;">
+                <!-- AR.js will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 変数を先に定義
+        let selectedFiles = [null, null, null];
+        let selectedSize = 'gallery';
+        let canvases = [null, null, null];
+        let contexts = [null, null, null];
+        let currentSlot = 0;
+        let currentPhotoIndex = -1; // 現在選択中の写真のインデックス
+        let photoAdjustments = [
+            { brightness: 1, contrast: 1, saturation: 1, sepia: 0, hue: 0, mainText: '', subText: '' },
+            { brightness: 1, contrast: 1, saturation: 1, sepia: 0, hue: 0, mainText: '', subText: '' },
+            { brightness: 1, contrast: 1, saturation: 1, sepia: 0, hue: 0, mainText: '', subText: '' }
+        ];
+        let modalPhotoIndex = -1; // モーダルで編集中の写真のインデックス
+
+        function selectSlot(index) {
+            currentSlot = index;
+            currentPhotoIndex = index;
+            // ファイル入力の値をリセット（同じファイルを選択できるように）
+            document.getElementById('photoInput').value = '';
+            document.getElementById('photoInput').click();
+        }
+
+        async function loadSamplePhotos() {
+            // サンプル写真を3つのスロットに配置
+            const samplePhotos = [
+                '../sample-photos/sample_1.jpg',
+                '../sample-photos/sample_2.jpg',
+                '../sample-photos/sample_3.jpg'
+            ];
+
+            // 各サンプル写真をfetchしてFileオブジェクトに変換
+            for (let index = 0; index < samplePhotos.length; index++) {
+                const photoPath = samplePhotos[index];
+                try {
+                    const response = await fetch(photoPath);
+                    const blob = await response.blob();
+                    const file = new File([blob], `sample_${index + 1}.jpg`, { type: 'image/jpeg' });
+                    
+                    // displayPhoto関数を使って表示（通常のアップロードと同じ処理）
+                    displayPhoto(file, index);
+                } catch (error) {
+                    console.error(`Error loading sample photo ${index + 1}:`, error);
+                }
+            }
+        }
+
+        // 印刷用サイズ定義（mm）
+        const printSizes = {
+            'gallery': [
+                { name: 'A4版', width: 210, height: 297 },
+                { name: 'L版', width: 89, height: 127 },
+                { name: 'L版', width: 127, height: 89 }
+            ],
+            'mixed': [
+                { name: 'A4版', width: 210, height: 297 },
+                { name: 'L版', width: 89, height: 127 },
+                { name: 'L版', width: 89, height: 127 }
+            ],
+            'square': [
+                { name: 'ましかくL版', width: 89, height: 89 },
+                { name: 'ましかくL版', width: 89, height: 89 },
+                { name: 'ましかくL版', width: 89, height: 89 }
+            ],
+            'custom': [
+                { name: 'カスタム1', width: 89, height: 127 },
+                { name: 'カスタム2', width: 89, height: 127 },
+                { name: 'カスタム3', width: 89, height: 127 }
+            ]
+        };
+
+        // 300 DPI でのピクセル計算
+        function mmToPixels(mm, dpi = 300) {
+            return Math.round((mm * dpi) / 25.4);
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                selectedFiles[currentSlot] = file;
+                displayPhoto(file, currentSlot);
+            }
+        }
+
+
+        // 写真編集モーダルを開く
+        function openPhotoEditModal(index) {
+            if (selectedFiles[index]) {
+                modalPhotoIndex = index;
+                const modal = document.getElementById('photoEditModal');
+                const preview = document.getElementById('modalPhotoPreview');
+                const adjustments = photoAdjustments[index];
+                
+                // 写真を表示
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(selectedFiles[index]);
+                
+                // 調整値を設定
+                document.getElementById('modalBrightness').value = adjustments.brightness;
+                document.getElementById('modalContrast').value = adjustments.contrast;
+                document.getElementById('modalSaturation').value = adjustments.saturation;
+                document.getElementById('modalSepia').value = adjustments.sepia;
+                document.getElementById('modalHue').value = adjustments.hue;
+                document.getElementById('modalMainText').value = adjustments.mainText;
+                document.getElementById('modalSubText').value = adjustments.subText;
+                
+                updateModalValues();
+                applyModalFilters();
+                modal.style.display = 'block';
+            }
+        }
+
+        // 写真編集モーダルを閉じる
+        function closePhotoEditModal() {
+            document.getElementById('photoEditModal').style.display = 'none';
+            modalPhotoIndex = -1;
+        }
+
+        // モーダルの調整値を更新
+        function updateModalValues() {
+            document.getElementById('modalBrightnessValue').textContent = document.getElementById('modalBrightness').value;
+            document.getElementById('modalContrastValue').textContent = document.getElementById('modalContrast').value;
+            document.getElementById('modalSaturationValue').textContent = document.getElementById('modalSaturation').value;
+            document.getElementById('modalSepiaValue').textContent = document.getElementById('modalSepia').value;
+            document.getElementById('modalHueValue').textContent = document.getElementById('modalHue').value + '°';
+        }
+
+        // モーダルでフィルターを適用
+        function applyModalFilters() {
+            const brightness = document.getElementById('modalBrightness').value;
+            const contrast = document.getElementById('modalContrast').value;
+            const saturation = document.getElementById('modalSaturation').value;
+            const sepia = document.getElementById('modalSepia').value;
+            const hue = document.getElementById('modalHue').value;
+            
+            const filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturation}) sepia(${sepia}) hue-rotate(${hue}deg)`;
+            document.getElementById('modalPhotoPreview').style.filter = filter;
+        }
+
+        // プリセットを適用
+        function applyPreset(preset) {
+            const presets = {
+                'pastel': { brightness: 1.2, contrast: 0.8, saturation: 0.6, sepia: 0, hue: 0 },
+                'bright': { brightness: 1.3, contrast: 1.1, saturation: 1.2, sepia: 0, hue: 0 },
+                'soft': { brightness: 1.1, contrast: 0.9, saturation: 0.8, sepia: 0.2, hue: 0 },
+                'dramatic': { brightness: 0.8, contrast: 1.4, saturation: 1.3, sepia: 0.3, hue: -10 },
+                'warm': { brightness: 1.1, contrast: 1.1, saturation: 1.2, sepia: 0.3, hue: 30 },
+                'cool': { brightness: 1.0, contrast: 1.2, saturation: 1.1, sepia: 0.1, hue: -30 }
+            };
+            
+            const presetValues = presets[preset];
+            document.getElementById('modalBrightness').value = presetValues.brightness;
+            document.getElementById('modalContrast').value = presetValues.contrast;
+            document.getElementById('modalSaturation').value = presetValues.saturation;
+            document.getElementById('modalSepia').value = presetValues.sepia;
+            document.getElementById('modalHue').value = presetValues.hue;
+            
+            updateModalValues();
+            applyModalFilters();
+        }
+
+        // モーダルの調整をリセット
+        function resetModalAdjustments() {
+            document.getElementById('modalBrightness').value = 1;
+            document.getElementById('modalContrast').value = 1;
+            document.getElementById('modalSaturation').value = 1;
+            document.getElementById('modalSepia').value = 0;
+            document.getElementById('modalHue').value = 0;
+            document.getElementById('modalMainText').value = '';
+            document.getElementById('modalSubText').value = '';
+            
+            updateModalValues();
+            applyModalFilters();
+        }
+
+        // モーダルの変更を適用
+        function applyModalChanges() {
+            if (modalPhotoIndex >= 0) {
+                photoAdjustments[modalPhotoIndex] = {
+                    brightness: parseFloat(document.getElementById('modalBrightness').value),
+                    contrast: parseFloat(document.getElementById('modalContrast').value),
+                    saturation: parseFloat(document.getElementById('modalSaturation').value),
+                    sepia: parseFloat(document.getElementById('modalSepia').value),
+                    hue: parseFloat(document.getElementById('modalHue').value),
+                    mainText: document.getElementById('modalMainText').value,
+                    subText: document.getElementById('modalSubText').value
+                };
+                
+                // 写真に色調調整を適用
+                const preview = document.getElementById(`preview${modalPhotoIndex + 1}`);
+                const img = preview.querySelector('img');
+                if (img) {
+                    const adjustments = photoAdjustments[modalPhotoIndex];
+                    const filter = `brightness(${adjustments.brightness}) contrast(${adjustments.contrast}) saturate(${adjustments.saturation}) sepia(${adjustments.sepia}) hue-rotate(${adjustments.hue}deg)`;
+                    img.style.filter = filter;
+                }
+                
+                // プレビューを更新
+                updatePreview();
+            }
+        }
+
+
+
+        function displayPhoto(file, index) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById(`preview${index + 1}`);
+                if (index === 0) {
+                    // A4版の場合はinner-containerとphoto-areaを使用
+                    preview.innerHTML = `
+                        <div class="inner-container">
+                            <div class="photo-area">
+                                <img src="${e.target.result}" alt="写真${index + 1}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 200px 200px 0 0;">
+                            </div>
+                        </div>
+                        <!-- PNG画像を右上に配置 -->
+                        <div class="png-overlay">
+                            <img src="circle_logo.png" alt="ご機嫌ムード">
+                        </div>
+                        <!-- フランス語テキスト -->
+                        <div class="french-text">
+                            <img src="Un_doux_souvenir.png" alt="Un doux souvenir" style="width: 60%; height: auto; border-radius: 0;">
+                        </div>
+                        <button class="remove-btn" onclick="removePhoto(${index})">×</button>
+                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
+                    `;
+                } else {
+                    // L版の場合は通常の表示
+                    preview.innerHTML = `
+                        <img src="${e.target.result}" alt="写真${index + 1}">
+                        <button class="remove-btn" onclick="removePhoto(${index})">×</button>
+                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
+                    `;
+                }
+                preview.classList.add('has-photo');
+                selectedFiles[index] = file;
+                
+                // 背景を白に設定
+                preview.style.background = 'white';
+                
+                // 写真を表示した後、自動的にキャンバスを生成
+                setTimeout(() => {
+                    generateGallery();
+                }, 500);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removePhoto(index) {
+            selectedFiles[index] = null;
+            const preview = document.getElementById(`preview${index + 1}`);
+            const sizeText = index === 0 ? 'A4版<br><small>210×297mm<br>タップで写真を追加</small>' : 
+                           'L版<br><small>89×127mm<br>タップで写真を追加</small>';
+            
+            if (index === 0) {
+                // A4版の場合はinner-containerとphoto-areaを使用
+                preview.innerHTML = `
+                    <div class="inner-container">
+                        <div class="photo-area">
+                            <div class="placeholder">${sizeText}</div>
+                        </div>
+                    </div>
+                    <!-- PNG画像を右上に配置 -->
+                    <div class="png-overlay">
+                        <img src="circle_logo.png" alt="ご機嫌ムード">
+                    </div>
+                    <!-- フランス語テキスト -->
+                    <div class="french-text">
+                        <img src="Un_doux_souvenir.png" alt="Un doux souvenir" style="width: 60%; height: auto;">
+                    </div>
+                    <button class="remove-btn" onclick="removePhoto(${index})">×</button>
+                `;
+            } else {
+                // L版の場合は通常の表示
+                preview.innerHTML = `
+                    <div class="placeholder">${sizeText}</div>
+                    <button class="remove-btn" onclick="removePhoto(${index})">×</button>
+                `;
+            }
+            preview.classList.remove('has-photo');
+        }
+
+
+        function selectSize(element) {
+            document.querySelectorAll('.size-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+            selectedSize = element.dataset.size;
+        }
+
+        function generateGallery() {
+            const validPhotos = selectedFiles.filter(photo => photo !== null);
+            if (validPhotos.length === 0) {
+                alert('写真を選択してください！');
+                return;
+            }
+
+            showLoading(true);
+
+            const sizes = printSizes[selectedSize];
+            
+            // 各写真に対してキャンバスを作成
+            for (let i = 0; i < 3; i++) {
+                if (selectedFiles[i]) {
+                    createCanvas(i, sizes[i], selectedFiles[i]);
+                }
+            }
+
+            setTimeout(() => {
+                showLoading(false);
+                document.getElementById('downloadSection').classList.add('show');
+            }, 2000);
+        }
+
+        function createCanvas(index, size, file) {
+            const width = mmToPixels(size.width, 300);
+            const height = mmToPixels(size.height, 300);
+
+            canvases[index] = document.createElement('canvas');
+            contexts[index] = canvases[index].getContext('2d');
+            canvases[index].width = width;
+            canvases[index].height = height;
+
+            // 背景を描画
+            drawBackground(contexts[index], width, height);
+
+            // 写真を描画
+            const img = new Image();
+            img.onload = function() {
+                drawPhoto(img, contexts[index], width, height);
+                drawDecorations(contexts[index], width, height);
+            };
+            // FileオブジェクトからObjectURLを作成
+            img.src = URL.createObjectURL(file);
+        }
+
+        function drawBackground(context, width, height) {
+            const colorTheme = document.getElementById('colorTheme').value;
+            
+            if (colorTheme === 'soft') {
+                // ソフト調は白い背景を描画
+                context.fillStyle = '#ffffff';
+                context.fillRect(0, 0, width, height);
+                return;
+            }
+            
+            const colors = {
+                'default': ['#ffffff', '#f8f9fa', '#e9ecef'],
+                'orange': ['#ffb74d', '#ff9800', '#f57c00'],
+                'blue': ['#64b5f6', '#42a5f5', '#2196f3']
+            };
+
+            const themeColors = colors[colorTheme];
+            const gradient = context.createLinearGradient(0, 0, width, height);
+            gradient.addColorStop(0, themeColors[0]);
+            gradient.addColorStop(0.5, themeColors[1]);
+            gradient.addColorStop(1, themeColors[2]);
+
+            context.fillStyle = gradient;
+            context.fillRect(0, 0, width, height);
+        }
+
+        // プレビュー用の背景描画関数
+        function drawPreviewBackground(element, colorTheme) {
+            if (colorTheme === 'soft') {
+                // ソフト調は白い背景を設定
+                element.style.background = '#ffffff';
+                return;
+            }
+            
+            const colors = {
+                'default': ['#ffffff', '#f8f9fa', '#e9ecef'],
+                'orange': ['#ffb74d', '#ff9800', '#f57c00'],
+                'blue': ['#64b5f6', '#42a5f5', '#2196f3']
+            };
+
+            const themeColors = colors[colorTheme];
+            element.style.background = `linear-gradient(135deg, ${themeColors[0]}, ${themeColors[1]}, ${themeColors[2]})`;
+        }
+
+        // リアルタイムプレビュー更新
+        function updatePreview() {
+            const colorTheme = document.getElementById('colorTheme').value;
+            const designStyle = document.getElementById('designStyle').value;
+            const mainText = document.getElementById('mainText').value;
+            const subText = document.getElementById('subText').value;
+            
+            // すべてのプレビューアイテムを更新
+            document.querySelectorAll('.preview-item').forEach((item, index) => {
+                // 写真がない場合は背景色を更新
+                if (!item.querySelector('img')) {
+                    drawPreviewBackground(item, colorTheme);
+                } else {
+                    // 写真がある場合は背景を白に設定（色は変更しない）
+                    item.style.background = 'white';
+                }
+                
+                // 左の大きいフレーム（A4版、index=0）のみにメッセージを表示
+                if (index === 0) {
+                    updatePreviewText(item, mainText, subText);
+                } else {
+                    // 他のフレームはメッセージを削除
+                    const existingText = item.querySelector('.preview-text');
+                    if (existingText) {
+                        existingText.remove();
+                    }
+                }
+            });
+        }
+
+        // 写真にフィルター効果を適用
+        function updatePhotoFilter(element, colorTheme, designStyle) {
+            const img = element.querySelector('img');
+            if (img) {
+                let filter = '';
+                
+                // カラーテーマに応じたフィルター
+                if (colorTheme === 'soft') {
+                    filter += 'sepia(0.3) contrast(0.9) brightness(1.1) saturate(0.8)';
+                } else if (colorTheme === 'default') {
+                    filter += 'contrast(1.1) brightness(1.05)';
+                } else if (colorTheme === 'orange') {
+                    filter += 'sepia(0.2) contrast(1.1) brightness(1.1) saturate(1.2) hue-rotate(20deg)';
+                } else if (colorTheme === 'blue') {
+                    filter += 'sepia(0.1) contrast(1.1) brightness(1.05) saturate(1.1) hue-rotate(-20deg)';
+                }
+                
+                // デザインスタイルに応じたフィルター
+                if (designStyle === 'minimal') {
+                    filter += ' contrast(1.1) brightness(1.05)';
+                } else if (designStyle === 'vintage') {
+                    filter += ' sepia(0.8) contrast(1.2) brightness(0.9)';
+                } else if (designStyle === 'modern') {
+                    filter += ' contrast(1.1) saturate(1.2)';
+                } else if (designStyle === 'cute') {
+                    filter += ' brightness(1.1) saturate(1.3)';
+                } else if (designStyle === 'elegant') {
+                    filter += ' contrast(1.1) brightness(0.95)';
+                }
+                
+                img.style.filter = filter;
+            }
+        }
+
+        // プレビューのテキストを更新
+        function updatePreviewText(element, mainText, subText) {
+            // 既存のテキスト要素を削除
+            const existingText = element.querySelector('.preview-text');
+            if (existingText) {
+                existingText.remove();
+            }
+
+            // テキストがある場合のみ追加
+            if (mainText || subText) {
+                const textDiv = document.createElement('div');
+                textDiv.className = 'preview-text';
+                textDiv.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    align-items: center;
+                    text-align: center;
+                    color: white;
+                    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+                    padding: 15px 10px 20px 10px;
+                    z-index: 2;
+                `;
+
+                if (mainText) {
+                    const mainDiv = document.createElement('div');
+                    mainDiv.innerHTML = mainText.replace(/\n/g, '<br>');
+                    mainDiv.style.cssText = `
+                        font-family: 'Dancing Script', cursive;
+                        font-weight: 600;
+                        font-size: 16px;
+                        margin-bottom: 8px;
+                        line-height: 1.2;
+                        letter-spacing: 0.5px;
+                    `;
+                    textDiv.appendChild(mainDiv);
+                }
+
+                if (subText) {
+                    const subDiv = document.createElement('div');
+                    subDiv.innerHTML = subText.replace(/\n/g, '<br>');
+                    subDiv.style.cssText = `
+                        font-family: 'Parisienne', cursive;
+                        font-size: 11px;
+                        line-height: 1.3;
+                        opacity: 0.9;
+                        letter-spacing: 0.3px;
+                    `;
+                    textDiv.appendChild(subDiv);
+                }
+
+                element.appendChild(textDiv);
+            }
+        }
+
+        // プレースホルダーテキストを更新（写真がない状態用）
+        function updatePlaceholderText(element, index) {
+            let sizeText;
+            if (index === 0) {
+                sizeText = 'A4版<br><small>210×297mm<br>タップで写真を追加</small>';
+            } else if (index === 1) {
+                sizeText = 'L版<br><small>89×127mm<br>タップで写真を追加</small>';
+            } else {
+                sizeText = 'L版<br><small>127×89mm<br>タップで写真を追加</small>';
+            }
+            
+            const placeholder = element.querySelector('.placeholder');
+            if (placeholder) {
+                placeholder.innerHTML = sizeText;
+            }
+        }
+
+        function drawPhoto(img, context, width, height) {
+            // 写真を100%の領域に描画（object-fit: coverの動作を再現）
+            const imgAspect = img.width / img.height;
+            const canvasAspect = width / height;
+
+            let drawWidth, drawHeight, drawX, drawY;
+
+            if (imgAspect > canvasAspect) {
+                // 画像の方が横長 → 高さを合わせて、左右をトリミング
+                drawHeight = height;
+                drawWidth = height * imgAspect;
+                drawX = (width - drawWidth) / 2;
+                drawY = 0;
+            } else {
+                // 画像の方が縦長 → 幅を合わせて、上下をトリミング
+                drawWidth = width;
+                drawHeight = width / imgAspect;
+                drawX = 0;
+                drawY = (height - drawHeight) / 2;
+            }
+
+            context.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+        }
+
+        function drawDecorations(context, width, height) {
+            // 装飾は不要（削除済み）
+        }
+
+        function showLoading(show) {
+            const loading = document.getElementById('loading');
+            if (show) {
+                loading.classList.add('show');
+            } else {
+                loading.classList.remove('show');
+            }
+        }
+
+        function resetGallery() {
+            selectedFiles = [null, null, null];
+            canvases = [null, null, null];
+            contexts = [null, null, null];
+            
+            document.getElementById('photoInput').value = '';
+            document.querySelectorAll('.photo-slot').forEach(slot => {
+                slot.innerHTML = `
+                    <div class="placeholder">写真${parseInt(slot.dataset.index) + 1}<br><small>クリックして選択</small></div>
+                    <button class="remove-btn" onclick="removePhoto(${slot.dataset.index})">×</button>
+                `;
+                slot.classList.remove('has-photo');
+            });
+            
+            document.getElementById('downloadSection').classList.remove('show');
+            updatePreview();
+        }
+
+        function downloadIndividual() {
+            for (let i = 0; i < 3; i++) {
+                if (canvases[i]) {
+                    if (i === 0) {
+                        // A4版の場合はPNG画像とフランス語テキストを追加し、アーチ型でクリッピング
+                        const canvas = canvases[i];
+                        const ctx = canvas.getContext('2d');
+                        
+                        // 新しいキャンバスを作成
+                        const archCanvas = document.createElement('canvas');
+                        const archCtx = archCanvas.getContext('2d');
+                        archCanvas.width = canvas.width;
+                        archCanvas.height = canvas.height;
+                        
+                        // 白い背景を描画（外枠）
+                        archCtx.fillStyle = '#ffffff';
+                        archCtx.fillRect(0, 0, archCanvas.width, archCanvas.height);
+                        
+                        // 写真部分をアーチ型で描画
+                        archCtx.save();
+                        archCtx.beginPath();
+                        // プレビュー画面と同じ比率で写真エリアを計算
+                        const marginX = archCanvas.width * 0.05; // 5%の余白（左右）
+                        const marginY = archCanvas.height * 0.08; // 8%の余白（上下）
+                        const photoWidth = archCanvas.width - (marginX * 2);
+                        const photoHeight = archCanvas.height - (marginY * 2);
+                        const photoX = marginX;
+                        const photoY = marginY;
+                        
+                        // border-radius: 200px 200px 0 0 を再現
+                        const radius = Math.min(200 * (archCanvas.width / 128), photoWidth / 2);
+                        
+                        // 角丸長方形のパスを描画（上の2つの角のみ）
+                        archCtx.moveTo(photoX + radius, photoY);
+                        archCtx.lineTo(photoX + photoWidth - radius, photoY);
+                        archCtx.arc(photoX + photoWidth - radius, photoY + radius, radius, -Math.PI / 2, 0);
+                        archCtx.lineTo(photoX + photoWidth, photoY + photoHeight);
+                        archCtx.lineTo(photoX, photoY + photoHeight);
+                        archCtx.lineTo(photoX, photoY + radius);
+                        archCtx.arc(photoX + radius, photoY + radius, radius, Math.PI, -Math.PI / 2);
+                        archCtx.closePath();
+                        archCtx.clip();
+                        
+                        // 元の写真をアーチ形状で描画
+                        archCtx.drawImage(canvas, 0, 0);
+                        archCtx.restore();
+                        
+                        // PNG画像を追加（プレビューから取得）
+                        const addPngImages = () => {
+                            try {
+                                // プレビューから画像要素を取得
+                                const preview = document.getElementById('preview1');
+                                const logoImgElement = preview.querySelector('.png-overlay img');
+                                const frenchImgElement = preview.querySelector('.french-text img');
+                                
+                                if (logoImgElement && frenchImgElement) {
+                                    // プレビューサイズからの比率を計算
+                                    const previewWidth = 128;
+                                    const previewHeight = 181;
+                                    const scale = archCanvas.width / previewWidth;
+                                    
+                                    // ロゴを描画
+                                    const logoSize = 37 * scale;
+                                    const logoX = archCanvas.width - logoSize - (1 * scale);
+                                    const logoY = 8 * scale;
+                                    archCtx.drawImage(logoImgElement, logoX, logoY, logoSize, logoSize);
+                                    
+                                    // フランス語テキストを描画
+                                    const frenchWidth = archCanvas.width * 0.6;
+                                    const frenchHeight = (frenchWidth * frenchImgElement.naturalHeight) / frenchImgElement.naturalWidth;
+                                    const frenchX = (archCanvas.width - frenchWidth) / 2;
+                                    const frenchY = archCanvas.height - frenchHeight - (20 * scale);
+                                    archCtx.drawImage(frenchImgElement, frenchX, frenchY, frenchWidth, frenchHeight);
+                                }
+                                
+                                // ダウンロード実行
+                                const link = document.createElement('a');
+                                link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
+                                link.href = archCanvas.toDataURL('image/jpeg', 0.95);
+                                link.click();
+                            } catch (error) {
+                                console.error('PNG画像の描画エラー:', error);
+                                // エラーが発生してもアーチ型の写真はダウンロード
+                                const link = document.createElement('a');
+                                link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
+                                link.href = archCanvas.toDataURL('image/jpeg', 0.95);
+                                link.click();
+                            }
+                        };
+                        
+                        // 画像が読み込まれるのを待ってから実行
+                        setTimeout(addPngImages, 100);
+                    } else {
+                        // A4版以外はそのままダウンロード
+                        const link = document.createElement('a');
+                        link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
+                        link.href = canvases[i].toDataURL('image/jpeg', 0.95);
+                        link.click();
+                    }
+                }
+            }
+        }
+
+
+        function downloadZip() {
+            // 簡易版：個別ダウンロードを順次実行
+            alert('ZIP機能は準備中です。現在は個別ダウンロードをご利用ください。');
+            downloadIndividual();
+        }
+
+        // リアルタイムプレビュー更新のイベントリスナー（削除済みの要素）
+
+
+        // モーダルのスライダーイベントリスナー
+        document.getElementById('modalBrightness').addEventListener('input', function() {
+            updateModalValues();
+            applyModalFilters();
+        });
+
+        document.getElementById('modalContrast').addEventListener('input', function() {
+            updateModalValues();
+            applyModalFilters();
+        });
+
+        document.getElementById('modalSaturation').addEventListener('input', function() {
+            updateModalValues();
+            applyModalFilters();
+        });
+
+        document.getElementById('modalSepia').addEventListener('input', function() {
+            updateModalValues();
+            applyModalFilters();
+        });
+
+        document.getElementById('modalHue').addEventListener('input', function() {
+            updateModalValues();
+            applyModalFilters();
+        });
+
+        // ドラッグ&ドロップ機能
+        const fileInput = document.querySelector('.file-input');
+
+        fileInput.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            fileInput.style.background = '#fff5f5';
+        });
+
+        fileInput.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            fileInput.style.background = 'white';
+        });
+
+        fileInput.addEventListener('drop', function(e) {
+            e.preventDefault();
+            fileInput.style.background = 'white';
+            
+            const files = Array.from(e.dataTransfer.files);
+            files.forEach((file, index) => {
+                if (index < 3) {
+                    selectedFiles[index] = file;
+                    displayPhoto(file, index);
+                }
+            });
+        });
+
+        // ページ読み込み時にプレビューを初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePreview();
+        });
+
+        // AR機能
+        function openAR() {
+            // 写真が選択されているかチェック
+            if (!selectedFiles[0] && !selectedFiles[1] && !selectedFiles[2]) {
+                alert('まず写真を選択してください！');
+                return;
+            }
+
+            // ARモーダルを表示
+            document.getElementById('arModal').style.display = 'block';
+            
+            // シンプルなAR体験を提供
+            const arContainer = document.getElementById('arContainer');
+            arContainer.innerHTML = `
+                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 20px;">
+                    <h2 style="font-size: 2em; margin-bottom: 20px;">📱 AR体験</h2>
+                    <p style="font-size: 1.2em; margin-bottom: 30px;">スマホのカメラで壁をスキャンして、ポスターを配置してみましょう！</p>
+                    
+                    <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px;">🎯 使い方</h3>
+                        <ol style="text-align: left; line-height: 1.8;">
+                            <li>スマホを壁に向けてください</li>
+                            <li>壁の表面をゆっくりとスキャンしてください</li>
+                            <li>ポスターを配置したい場所をタップしてください</li>
+                            <li>サイズを調整して配置完了！</li>
+                        </ol>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <button onclick="startCamera()" style="background: #4CAF50; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; cursor: pointer;">📷 カメラを開始</button>
+                        <button onclick="closeAR()" style="background: #f44336; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; cursor: pointer;">❌ 閉じる</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startCamera() {
+            // カメラアクセスを要求
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    const arContainer = document.getElementById('arContainer');
+                    arContainer.innerHTML = `
+                        <div style="position: relative; width: 100%; height: 100%;">
+                            <video id="camera" autoplay style="width: 100%; height: 100%; object-fit: cover;"></video>
+                            <div style="position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.7); color: white; padding: 10px; border-radius: 8px;">
+                                <p>📱 壁をスキャンして、ポスターを配置したい場所をタップしてください</p>
+                            </div>
+                            <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);">
+                                <button onclick="placePoster()" style="background: #4CAF50; color: white; border: none; padding: 15px 30px; border-radius: 25px; font-size: 18px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">🎯 ここにポスターを配置</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    const video = document.getElementById('camera');
+                    video.srcObject = stream;
+                })
+                .catch(function(err) {
+                    alert('カメラにアクセスできません。ブラウザの設定を確認してください。');
+                    console.error('カメラエラー:', err);
+                });
+        }
+
+        function placePoster() {
+            const arContainer = document.getElementById('arContainer');
+            arContainer.innerHTML = `
+                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 20px;">
+                    <h2 style="font-size: 2em; margin-bottom: 20px;">🎉 ポスター配置完了！</h2>
+                    <p style="font-size: 1.2em; margin-bottom: 30px;">素敵なポスターが部屋に配置されました！</p>
+                    
+                    <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px;">✨ 実際の商品</h3>
+                        <p>このポスターを実際に部屋に飾りませんか？</p>
+                        <p>GOKIGEN MOODのペーパーフォトフレームで、</p>
+                        <p>いつでも写真を差し替えできます！</p>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <button onclick="window.open('https://minne.com', '_blank')" style="background: #FF6B6B; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; cursor: pointer;">🛒 商品を見る</button>
+                        <button onclick="closeAR()" style="background: #666; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; cursor: pointer;">❌ 閉じる</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function closeAR() {
+            document.getElementById('arModal').style.display = 'none';
+            // ARシーンをクリア
+            document.getElementById('arContainer').innerHTML = '';
+        }
+
+    </script>
+</body>
+</html>
