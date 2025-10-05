@@ -205,7 +205,7 @@
 
         .preview-item {
             position: absolute !important;
-            border: 8px solid white;
+            border: 4px solid white;
             overflow: hidden;
             background: white;
             display: flex;
@@ -278,11 +278,35 @@
         .preview-item.medium {
             /* L版の比率: 89:127 = 0.701 (縦向き) */
             aspect-ratio: 0.701;
+            padding: 2px;
+            box-sizing: border-box;
         }
 
         .preview-item.small {
             /* L版の比率: 127:89 = 1.427 (横向き) */
             aspect-ratio: 1.427;
+            padding: 2px;
+            box-sizing: border-box;
+        }
+
+        .preview-item.medium .photo-area {
+            width: 100%;
+            height: 100%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .preview-item.small .photo-area {
+            width: 100%;
+            height: 100%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
         .preview-item img {
@@ -467,10 +491,10 @@
         .download-btn {
             background: #28a745;
             color: white;
-            padding: 15px 20px;
+            padding: 10px 16px;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 6px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -563,12 +587,12 @@
 
         @media (min-width: 768px) {
             .modal-content {
-                margin: 2% auto;
-                padding: 20px;
-                border-radius: 15px;
-                width: 90%;
-                max-width: 800px;
-                max-height: 90vh;
+            margin: 2% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
             }
         }
 
@@ -712,7 +736,7 @@
         }
 
         .photo-preview-large.zooming {
-            cursor: zoom-in;
+            cursor: move;
             border: 2px solid #F6A18F;
             box-shadow: 0 0 10px rgba(246, 161, 143, 0.3);
         }
@@ -720,17 +744,19 @@
         .corner-arrow {
             position: absolute;
             font-size: 24px;
-            opacity: 0.3;
+            opacity: 0;
             pointer-events: none;
             z-index: 3;
             transition: opacity 0.3s;
-        }
-
-        .photo-preview-large:hover .corner-arrow {
-            opacity: 0.6;
+            display: none;
         }
 
         .photo-preview-large.zooming .corner-arrow {
+            display: block;
+            opacity: 0.5;
+        }
+
+        .photo-preview-large.zooming:hover .corner-arrow {
             opacity: 0.8;
         }
 
@@ -842,11 +868,33 @@
             padding: 20px;
         }
 
-        .photo-preview-large.simple-preview img {
-            max-width: 100%;
-            max-height: 400px;
-            border-radius: 10px;
+        .photo-preview-large .modal-l-frame {
+            border: 4px solid white;
+            padding: 2px;
+            background: white;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .photo-preview-large .modal-l-frame.l-vertical {
+            width: 200px;
+            height: 284px;
+            /* L版縦向き: 89:127 の比率 */
+        }
+
+        .photo-preview-large .modal-l-frame.l-horizontal {
+            width: 284px;
+            height: 200px;
+            /* L版横向き: 127:89 の比率 */
+        }
+
+        .photo-preview-large .modal-l-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .editor-controls {
@@ -999,21 +1047,21 @@
         }
 
         /* 全デバイスで完全に同じ見た目を強制 */
-        .preview-item.large {
+            .preview-item.large {
             top: 10px !important;
             left: 6px !important;
             width: 140px !important;
             height: 198px !important;
-        }
-
-        .preview-item.medium {
+            }
+            
+            .preview-item.medium {
             top: 10px !important;
             right: 20px !important;
             width: 60px !important;
             height: 85px !important;
-        }
-
-        .preview-item.small {
+            }
+            
+            .preview-item.small {
             top: 120px !important;
             right: 20px !important;
             width: 85px !important;
@@ -1030,7 +1078,7 @@
                 max-width: 355px;
                 margin: 5px auto;
             }
-
+            
             .preview-item .placeholder {
                 font-size: 0.7em !important;
             }
@@ -1041,7 +1089,7 @@
     <div class="container">
         <div class="header">
             <h1>🌈 GOKIGEN MOOD 💘<br>無料フォトポスター作成ツール</h1>
-            <p>気分上げてこ♡ 3枚の写真でおしゃれなポスターを作ろう！</p>
+            <p style="font-size: 12px;">気分上げてこ♡ 3枚の写真でおしゃれなポスターを作ろう！</p>
         </div>
 
         <div class="main-content">
@@ -1069,59 +1117,51 @@
                         <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(0)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer; display: none;">編集</button>
                     </div>
                     <div class="preview-item medium" id="preview2" onclick="selectSlot(1)" style="position: absolute; top: 10px; right: 20px; width: 60px; height: 85px;">
-                        <div class="placeholder">L版<br><small>89×127mm<br>タップで写真を追加</small></div>
+                        <div class="photo-area">
+                            <div class="placeholder">L版<br><small>89×127mm<br>タップで写真を追加</small></div>
+                        </div>
                         <button class="remove-btn" onclick="removePhoto(1)">×</button>
                         <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(1)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer; display: none;">編集</button>
                     </div>
                     <div class="preview-item small" id="preview3" onclick="selectSlot(2)" style="position: absolute; top: 120px; right: 20px; width: 85px; height: 60px;">
-                        <div class="placeholder">L版<br><small>127×89mm<br>タップで写真を追加</small></div>
+                        <div class="photo-area">
+                            <div class="placeholder">L版<br><small>127×89mm<br>タップで写真を追加</small></div>
+                        </div>
                         <button class="remove-btn" onclick="removePhoto(2)">×</button>
                         <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(2)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer; display: none;">編集</button>
                     </div>
                     
                 </div>
                 <p style="text-align: center; margin-top: 2px; color: #666; font-size: 0.9em;">
-                    💡 フレームをタップして写真を追加してください
+                    💡 フレームをタップして写真を追加してね
                 </p>
-                <div style="text-align: center; margin-top: 3px;">
+                <div style="text-align: center; margin-top: 3px; display: flex; gap: 8px; justify-content: center;">
                     <button onclick="loadSamplePhotos()" style="background: #F6A18F; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.9em; cursor: pointer;">
                         📸 サンプル写真を表示
                     </button>
-                </div>
+                    <button onclick="location.reload()" style="background: #999; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.9em; cursor: pointer;">
+                        🔄 リセット
+                </button>
             </div>
-        </div>
-
-        <div class="controls">
-
-
-
-
-
-
-
-            <div class="action-buttons">
-                <button class="btn btn-secondary" onclick="resetGallery()">🔄 リセット</button>
             </div>
         </div>
 
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>ギャラリーセットを生成中...</p>
+            <p>デザイン生成中...</p>
         </div>
 
         <div class="download-section" id="downloadSection">
-            <h3>✅ ギャラリーセット完成！</h3>
-            <p>3枚のデザインが完成しました！</p>
+            <h3>✅ デザイン完成！</h3>
             
             
             <div class="download-options">
-                <button class="download-btn" onclick="downloadIndividual()">📸 個別ダウンロード</button>
-                <button class="download-btn zip" onclick="downloadZip()">📦 ZIP一括ダウンロード</button>
-                <button class="download-btn ar" onclick="openAR()" style="background: #4CAF50; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 16px; cursor: pointer; margin-top: 10px; width: 100%;">📱 ARで部屋に配置してみる</button>
+                <button class="download-btn" onclick="downloadIndividual()">📸 ダウンロード</button>
+                <button class="download-btn ar" onclick="openAR()" style="background: #4CAF50; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; margin-top: 10px; width: 100%;">📱 ARで部屋に配置してみる</button>
             </div>
         </div>
 
-        <div class="instructions">
+        <div class="instructions" style="font-size: 14px;">
             <h3>✨ 使い方</h3>
             <ol>
                 <li>💕 お気に入りの写真を3枚までアップロード</li>
@@ -1151,7 +1191,7 @@
                             <span class="corner-arrow top-right">↗️</span>
                             <span class="corner-arrow bottom-left">↙️</span>
                             <span class="corner-arrow bottom-right">↘️</span>
-                            <img id="modalPhotoPreview" src="" alt="編集中の写真">
+                    <img id="modalPhotoPreview" src="" alt="編集中の写真">
                         </div>
                         <button class="trim-button" id="interactiveModeBtn" onclick="enableInteractiveMode()">✂️</button>
                         <div class="trim-hint" id="trimHint">🖐️ ドラッグで移動<br>🔍 ホイール/ピンチで拡大</div>
@@ -1174,6 +1214,14 @@
                             <button class="preset-btn" onclick="applyDuotone('green')" style="background: linear-gradient(135deg, #B8D4C0, #C8E6C8);">💚</button>
                             <button class="preset-btn" onclick="applyDuotone('pink')" style="background: linear-gradient(135deg, #E0C4D0, #FFD2E6);">💗</button>
                             <button class="preset-btn" onclick="applyDuotone('purple')" style="background: linear-gradient(135deg, #C8C0DC, #DCD2F5);">💜</button>
+                        </div>
+                        
+                        <!-- デュオトーン濃度調整（フィルター選択時のみ表示） -->
+                        <div id="duotoneIntensityControl" style="display: none; margin-top: 15px;">
+                            <label>
+                                濃度: <span class="slider-value" id="modalDuotoneIntensityValue">100</span>%
+                                <input type="range" id="modalDuotoneIntensity" min="0" max="100" value="100" step="5">
+                            </label>
                         </div>
                     </div>
 
@@ -1294,8 +1342,8 @@
             ],
             'mixed': [
                 { name: 'A4版', width: 210, height: 297 },
-                { name: 'L版', width: 89, height: 127 },
-                { name: 'L版', width: 89, height: 127 }
+                { name: 'L版', width: 127, height: 89 },
+                { name: 'L版', width: 127, height: 89 }
             ],
             'square': [
                 { name: 'ましかくL版', width: 89, height: 89 },
@@ -1326,6 +1374,23 @@
         // 写真編集モーダルを開く
         function openPhotoEditModal(index) {
             if (selectedFiles[index]) {
+                // 前のモーダルのトリミングモードをリセット
+                if (isInteractiveMode) {
+                    isInteractiveMode = false;
+                    removeInteractiveHandlers();
+                    // トリミングボタンの表示もリセット
+                    const trimBtn = document.getElementById('interactiveModeBtn');
+                    const trimHint = document.getElementById('trimHint');
+                    if (trimBtn) {
+                        trimBtn.textContent = '✂️';
+                        trimBtn.classList.remove('active');
+                        trimBtn.style.fontSize = '';
+                    }
+                    if (trimHint) {
+                        trimHint.classList.remove('show');
+                    }
+                }
+                
                 modalPhotoIndex = index;
                 const modal = document.getElementById('photoEditModal');
                 const modalPreviewContainer = document.querySelector('.photo-preview-large');
@@ -1349,6 +1414,10 @@
                     // A4版（index === 0）の場合は、PNGとアーチを含むプレビューを表示
                     if (index === 0) {
                         modalPreviewContainer.innerHTML = `
+                            <span class="corner-arrow top-left">↖️</span>
+                            <span class="corner-arrow top-right">↗️</span>
+                            <span class="corner-arrow bottom-left">↙️</span>
+                            <span class="corner-arrow bottom-right">↘️</span>
                             <div class="modal-frame-container">
                                 <div class="modal-inner-container">
                                     <div class="modal-photo-area">
@@ -1364,28 +1433,47 @@
                             </div>
                         `;
                     } else {
-                        // L版の場合はシンプルなプレビュー
+                        // L版の場合もフレーム付きプレビュー
                         modalPreviewContainer.classList.add('simple-preview');
+                        // index 1は縦向き（89×127mm）、index 2は横向き（127×89mm）
+                        const isVertical = index === 1;
+                        const orientationClass = isVertical ? 'l-vertical' : 'l-horizontal';
                         modalPreviewContainer.innerHTML = `
-                            <img id="modalPhotoPreview" src="${displaySrc}" alt="編集中の写真" data-original-src="${originalSrc}">
+                            <span class="corner-arrow top-left">↖️</span>
+                            <span class="corner-arrow top-right">↗️</span>
+                            <span class="corner-arrow bottom-left">↙️</span>
+                            <span class="corner-arrow bottom-right">↘️</span>
+                            <div class="modal-l-frame ${orientationClass}">
+                                <img id="modalPhotoPreview" src="${displaySrc}" alt="編集中の写真" data-original-src="${originalSrc}">
+                            </div>
                         `;
                     }
-                    
-                    // 調整値を設定
+                
+                // 調整値を設定
                     document.getElementById('modalZoom').value = adjustments.zoom || 100;
                     document.getElementById('modalPosX').value = adjustments.posX || 0;
                     document.getElementById('modalPosY').value = adjustments.posY || 0;
-                    document.getElementById('modalBrightness').value = adjustments.brightness;
-                    document.getElementById('modalContrast').value = adjustments.contrast;
-                    document.getElementById('modalSaturation').value = adjustments.saturation;
+                document.getElementById('modalBrightness').value = adjustments.brightness;
+                document.getElementById('modalContrast').value = adjustments.contrast;
+                document.getElementById('modalSaturation').value = adjustments.saturation;
                     document.getElementById('modalMonotone').value = adjustments.monotone;
-                    document.getElementById('modalHue').value = adjustments.hue;
-                    
-                    updateModalValues();
+                document.getElementById('modalHue').value = adjustments.hue;
+                
+                // デュオトーン濃度の設定と表示/非表示
+                const intensityControl = document.getElementById('duotoneIntensityControl');
+                if (adjustments.duotone && adjustments.duotone !== 'none') {
+                    intensityControl.style.display = 'block';
+                    document.getElementById('modalDuotoneIntensity').value = adjustments.duotoneIntensity || 100;
+                    document.getElementById('modalDuotoneIntensityValue').textContent = adjustments.duotoneIntensity || 100;
+                } else {
+                    intensityControl.style.display = 'none';
+                }
+                
+                updateModalValues();
                     
                     // フィルターを適用（DOMが完全に準備されるまで待つ）
                     setTimeout(() => {
-                        applyModalFilters();
+                applyModalFilters();
                     }, 100);
                 };
                 reader.readAsDataURL(selectedFiles[index]);
@@ -1400,6 +1488,17 @@
             if (isInteractiveMode) {
                 isInteractiveMode = false;
                 removeInteractiveHandlers();
+                // トリミングボタンの表示もリセット
+                const trimBtn = document.getElementById('interactiveModeBtn');
+                const trimHint = document.getElementById('trimHint');
+                if (trimBtn) {
+                    trimBtn.textContent = '✂️';
+                    trimBtn.classList.remove('active');
+                    trimBtn.style.fontSize = '';
+                }
+                if (trimHint) {
+                    trimHint.classList.remove('show');
+                }
             }
             
             document.getElementById('photoEditModal').style.display = 'none';
@@ -1500,9 +1599,15 @@
                     t = Math.pow(t, 0.85);
                     
                     // 暗部と明部の色を線形補間
-                    data[i] = colors.dark[0] * (1 - t) + colors.light[0] * t;
-                    data[i + 1] = colors.dark[1] * (1 - t) + colors.light[1] * t;
-                    data[i + 2] = colors.dark[2] * (1 - t) + colors.light[2] * t;
+                    const duotoneR = colors.dark[0] * (1 - t) + colors.light[0] * t;
+                    const duotoneG = colors.dark[1] * (1 - t) + colors.light[1] * t;
+                    const duotoneB = colors.dark[2] * (1 - t) + colors.light[2] * t;
+                    
+                    // 元の色とデュオトーン色を濃度に応じてブレンド
+                    const intensity = (photoAdjustments[modalPhotoIndex].duotoneIntensity || 100) / 100;
+                    data[i] = r * (1 - intensity) + duotoneR * intensity;
+                    data[i + 1] = g * (1 - intensity) + duotoneG * intensity;
+                    data[i + 2] = b * (1 - intensity) + duotoneB * intensity;
                 }
                 
                 // 処理済み画像を書き戻す
@@ -1525,12 +1630,22 @@
             if (modalPhotoIndex >= 0) {
                 photoAdjustments[modalPhotoIndex].duotone = color;
                 
-                // 「なし」の場合はオリジナル画像に戻す
+                // 濃度コントロールの表示/非表示
+                const intensityControl = document.getElementById('duotoneIntensityControl');
                 if (color === 'none') {
+                    intensityControl.style.display = 'none';
                     const img = document.getElementById('modalPhotoPreview');
                     const originalSrc = img.getAttribute('data-original-src');
                     if (originalSrc) {
                         img.src = originalSrc;
+                    }
+                } else {
+                    intensityControl.style.display = 'block';
+                    // 初期値を設定（もし未設定なら100%）
+                    if (!photoAdjustments[modalPhotoIndex].duotoneIntensity) {
+                        photoAdjustments[modalPhotoIndex].duotoneIntensity = 100;
+                        document.getElementById('modalDuotoneIntensity').value = 100;
+                        document.getElementById('modalDuotoneIntensityValue').textContent = 100;
                     }
                 }
                 
@@ -1588,7 +1703,8 @@
                     hue: parseFloat(document.getElementById('modalHue').value),
                     mainText: '',
                     subText: '',
-                    duotone: duotone
+                    duotone: duotone,
+                    duotoneIntensity: parseFloat(document.getElementById('modalDuotoneIntensity').value) || 100
                 };
                 
                 // プレビューの写真に調整を適用
@@ -1625,7 +1741,7 @@
         function displayPhoto(file, index) {
             // photoAdjustmentsが未定義の場合は初期化
             if (!photoAdjustments[index]) {
-                photoAdjustments[index] = { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none' };
+                photoAdjustments[index] = { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 100 };
             }
             
             const reader = new FileReader();
@@ -1652,11 +1768,11 @@
                     `;
                 } else {
                     // L版の場合は通常の表示
-                    preview.innerHTML = `
-                        <img src="${e.target.result}" alt="写真${index + 1}">
-                        <button class="remove-btn" onclick="removePhoto(${index})">×</button>
-                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
-                    `;
+                preview.innerHTML = `
+                    <img src="${e.target.result}" alt="写真${index + 1}">
+                    <button class="remove-btn" onclick="removePhoto(${index})">×</button>
+                    <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
+                `;
                 }
                 preview.classList.add('has-photo');
                 selectedFiles[index] = file;
@@ -1684,10 +1800,10 @@
             
             if (index === 0) {
                 // A4版の場合はinner-containerとphoto-areaを使用
-                preview.innerHTML = `
+            preview.innerHTML = `
                     <div class="inner-container">
                         <div class="photo-area">
-                            <div class="placeholder">${sizeText}</div>
+                <div class="placeholder">${sizeText}</div>
                         </div>
                     </div>
                     <!-- PNG画像を右上に配置 -->
@@ -1698,8 +1814,8 @@
                     <div class="french-text">
                         <img src="Un_doux_souvenir.png" alt="Un doux souvenir" style="width: 60%; height: auto;">
                     </div>
-                    <button class="remove-btn" onclick="removePhoto(${index})">×</button>
-                `;
+                <button class="remove-btn" onclick="removePhoto(${index})">×</button>
+            `;
             } else {
                 // L版の場合は通常の表示
                 preview.innerHTML = `
@@ -1768,8 +1884,8 @@
 
         function drawBackground(context, width, height) {
             // 白い背景を描画
-            context.fillStyle = '#ffffff';
-            context.fillRect(0, 0, width, height);
+                context.fillStyle = '#ffffff';
+                context.fillRect(0, 0, width, height);
         }
 
         // リアルタイムプレビュー更新
@@ -1949,84 +2065,174 @@
             updatePreview();
         }
 
+        // デュオトーン適用関数（ダウンロード用）
+        function applyFiltersToCanvas(source, adjustments, callback) {
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            
+            // CanvasまたはImageの両方に対応
+            tempCanvas.width = source.width;
+            tempCanvas.height = source.height;
+            
+            // 元の画像を描画
+            tempCtx.drawImage(source, 0, 0);
+            
+            console.log('applyFiltersToCanvas called with adjustments:', adjustments);
+            
+            // デュオトーンフィルターが設定されている場合のみ適用
+            if (adjustments.duotone && adjustments.duotone !== 'none') {
+                console.log('Applying duotone:', adjustments.duotone);
+                const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                const data = imageData.data;
+                
+                const duotoneColors = {
+                    'orange': { dark: [140, 100, 80], light: [246, 195, 175] },
+                    'blue': { dark: [100, 120, 160], light: [200, 220, 240] },
+                    'green': { dark: [100, 140, 100], light: [200, 230, 200] },
+                    'pink': { dark: [150, 120, 130], light: [250, 210, 230] },
+                    'purple': { dark: [130, 120, 160], light: [220, 210, 245] }
+                };
+                
+                const colors = duotoneColors[adjustments.duotone];
+                
+                if (colors) {
+                    const intensity = (adjustments.duotoneIntensity || 100) / 100;
+                    for (let i = 0; i < data.length; i += 4) {
+                        const r = data[i];
+                        const g = data[i + 1];
+                        const b = data[i + 2];
+                        const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+                        let t = gray / 255;
+                        t = Math.pow(t, 0.85);
+                        
+                        const duotoneR = colors.dark[0] * (1 - t) + colors.light[0] * t;
+                        const duotoneG = colors.dark[1] * (1 - t) + colors.light[1] * t;
+                        const duotoneB = colors.dark[2] * (1 - t) + colors.light[2] * t;
+                        
+                        data[i] = r * (1 - intensity) + duotoneR * intensity;
+                        data[i + 1] = g * (1 - intensity) + duotoneG * intensity;
+                        data[i + 2] = b * (1 - intensity) + duotoneB * intensity;
+                    }
+                    
+                    tempCtx.putImageData(imageData, 0, 0);
+                    console.log('Duotone applied successfully with intensity:', intensity);
+                } else {
+                    console.warn('Duotone color not found:', adjustments.duotone);
+                }
+            } else {
+                console.log('No duotone filter to apply');
+            }
+            
+            callback(tempCanvas);
+        }
+
         function downloadIndividual() {
             for (let i = 0; i < 3; i++) {
                 if (canvases[i]) {
+                    const adjustments = photoAdjustments[i];
+                    
                     if (i === 0) {
-                        // A4版の場合はPNG画像とフランス語テキストを追加し、アーチ型でクリッピング
-                        const canvas = canvases[i];
-                        const ctx = canvas.getContext('2d');
+                        // A4版の場合
+                        const preview = document.getElementById(`preview${i + 1}`);
                         
-                        // 新しいキャンバスを作成
-                        const archCanvas = document.createElement('canvas');
-                        const archCtx = archCanvas.getContext('2d');
-                        archCanvas.width = canvas.width;
-                        archCanvas.height = canvas.height;
+                        // 元の画像を読み込んでフィルター適用
+                        const sourceImg = new Image();
+                        sourceImg.crossOrigin = 'anonymous';
+                        sourceImg.src = selectedFiles[i] ? URL.createObjectURL(selectedFiles[i]) : '';
                         
-                        // 白い背景を描画（外枠）
-                        archCtx.fillStyle = '#ffffff';
-                        archCtx.fillRect(0, 0, archCanvas.width, archCanvas.height);
-                        
-                        // 写真部分をアーチ型で描画
-                        archCtx.save();
-                        archCtx.beginPath();
-                        // プレビュー画面と同じ比率で写真エリアを計算
-                        const marginX = archCanvas.width * 0.10; // 10%の余白（左右）
-                        const marginY = archCanvas.height * 0.12; // 12%の余白（上下）
-                        const photoWidth = archCanvas.width - (marginX * 2);
-                        const photoHeight = archCanvas.height - (marginY * 2);
-                        const photoX = marginX;
-                        const photoY = marginY;
-                        
-                        // border-radius: 200px 200px 0 0 を再現
-                        const radius = Math.min(200 * (archCanvas.width / 128), photoWidth / 2);
-                        
-                        // 角丸長方形のパスを描画（上の2つの角のみ）
-                        archCtx.moveTo(photoX + radius, photoY);
-                        archCtx.lineTo(photoX + photoWidth - radius, photoY);
-                        archCtx.arc(photoX + photoWidth - radius, photoY + radius, radius, -Math.PI / 2, 0);
-                        archCtx.lineTo(photoX + photoWidth, photoY + photoHeight);
-                        archCtx.lineTo(photoX, photoY + photoHeight);
-                        archCtx.lineTo(photoX, photoY + radius);
-                        archCtx.arc(photoX + radius, photoY + radius, radius, Math.PI, -Math.PI / 2);
-                        archCtx.closePath();
-                        archCtx.clip();
-                        
-                        // 元の写真をアーチ形状で描画
-                        archCtx.drawImage(canvas, 0, 0);
-                        archCtx.restore();
-                        
-                        // PNG画像を追加（プレビューから取得）
-                        const addPngImages = () => {
+                        sourceImg.onload = () => {
+                            applyFiltersToCanvas(sourceImg, adjustments, (filteredCanvas) => {
+                                // アーチ型キャンバスを作成
+                                const archCanvas = document.createElement('canvas');
+                                const archCtx = archCanvas.getContext('2d');
+                                archCanvas.width = canvases[i].width;
+                                archCanvas.height = canvases[i].height;
+                                
+                                // 白い背景
+                                archCtx.fillStyle = '#ffffff';
+                                archCtx.fillRect(0, 0, archCanvas.width, archCanvas.height);
+                                
+                                // アーチ型クリッピング
+                                archCtx.save();
+                                archCtx.beginPath();
+                                const marginX = archCanvas.width * 0.10;
+                                const marginY = archCanvas.height * 0.12;
+                                const photoWidth = archCanvas.width - (marginX * 2);
+                                const photoHeight = archCanvas.height - (marginY * 2);
+                                const photoX = marginX;
+                                const photoY = marginY;
+                                const radius = Math.min(200 * (archCanvas.width / 128), photoWidth / 2);
+                                
+                                archCtx.moveTo(photoX + radius, photoY);
+                                archCtx.lineTo(photoX + photoWidth - radius, photoY);
+                                archCtx.arc(photoX + photoWidth - radius, photoY + radius, radius, -Math.PI / 2, 0);
+                                archCtx.lineTo(photoX + photoWidth, photoY + photoHeight);
+                                archCtx.lineTo(photoX, photoY + photoHeight);
+                                archCtx.lineTo(photoX, photoY + radius);
+                                archCtx.arc(photoX + radius, photoY + radius, radius, Math.PI, -Math.PI / 2);
+                                archCtx.closePath();
+                                archCtx.clip();
+                                
+                                // フィルター適用済み画像を描画（object-fit: cover のように）
+                                const imgRatio = filteredCanvas.width / filteredCanvas.height;
+                                const areaRatio = photoWidth / photoHeight;
+                                
+                                let srcX = 0, srcY = 0, srcWidth = filteredCanvas.width, srcHeight = filteredCanvas.height;
+                                
+                                if (imgRatio > areaRatio) {
+                                    // 画像が横長 → 高さを合わせて幅をトリミング
+                                    srcWidth = filteredCanvas.height * areaRatio;
+                                    srcX = (filteredCanvas.width - srcWidth) / 2;
+                                } else {
+                                    // 画像が縦長 → 幅を合わせて高さをトリミング
+                                    srcHeight = filteredCanvas.width / areaRatio;
+                                    srcY = (filteredCanvas.height - srcHeight) / 2;
+                                }
+                                
+                                // ズームとポジション調整を適用
+                                const scale = adjustments.zoom / 100;
+                                const scaledWidth = photoWidth * scale;
+                                const scaledHeight = photoHeight * scale;
+                                const offsetX = photoX + (photoWidth - scaledWidth) / 2 + (adjustments.posX * photoWidth / 100);
+                                const offsetY = photoY + (photoHeight - scaledHeight) / 2 + (adjustments.posY * photoHeight / 100);
+                                
+                                archCtx.drawImage(
+                                    filteredCanvas,
+                                    srcX, srcY, srcWidth, srcHeight,  // ソースのトリミング領域
+                                    offsetX, offsetY, scaledWidth, scaledHeight  // 描画先の位置とサイズ
+                                );
+                                archCtx.restore();
+                            
+                            // PNG画像を追加（プレビューから取得）
                             try {
                                 // プレビューから画像要素を取得
-                                const preview = document.getElementById('preview1');
                                 const logoImgElement = preview.querySelector('.png-overlay img');
                                 const frenchImgElement = preview.querySelector('.french-text img');
                                 
                                 if (logoImgElement && frenchImgElement) {
-                                    // プレビューサイズからの比率を計算
+                                    // プレビューサイズからの比率を計算（幅と高さの両方を考慮）
                                     const previewWidth = 128;
                                     const previewHeight = 181;
-                                    const scale = archCanvas.width / previewWidth;
+                                    const scaleX = archCanvas.width / previewWidth;
+                                    const scaleY = archCanvas.height / previewHeight;
                                     
                                     // ロゴを描画（右上から少し左下に）
-                                    const logoSize = 37 * scale;
-                                    const logoX = archCanvas.width - logoSize - (8 * scale);
-                                    const logoY = 15 * scale;
+                                    const logoSize = 37 * scaleX;
+                                    const logoX = archCanvas.width - logoSize - (8 * scaleX);
+                                    const logoY = 15 * scaleY;
                                     archCtx.drawImage(logoImgElement, logoX, logoY, logoSize, logoSize);
                                     
                                     // フランス語テキストを描画（下部中央）
                                     const frenchWidth = archCanvas.width * 0.6;
                                     const frenchHeight = (frenchWidth * frenchImgElement.naturalHeight) / frenchImgElement.naturalWidth;
                                     const frenchX = (archCanvas.width - frenchWidth) / 2;
-                                    const frenchY = archCanvas.height - frenchHeight - (30 * scale);
+                                    const frenchY = archCanvas.height - frenchHeight - (30 * scaleY);
                                     archCtx.drawImage(frenchImgElement, frenchX, frenchY, frenchWidth, frenchHeight);
                                 }
                                 
                                 // ダウンロード実行
-                                const link = document.createElement('a');
-                                link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
+                    const link = document.createElement('a');
+                    link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
                                 link.href = archCanvas.toDataURL('image/jpeg', 0.95);
                                 link.click();
                             } catch (error) {
@@ -2035,18 +2241,83 @@
                                 const link = document.createElement('a');
                                 link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
                                 link.href = archCanvas.toDataURL('image/jpeg', 0.95);
-                                link.click();
-                            }
+                    link.click();
+                }
+                            });
                         };
-                        
-                        // 画像が読み込まれるのを待ってから実行
-                        setTimeout(addPngImages, 100);
                     } else {
-                        // A4版以外はそのままダウンロード
-                        const link = document.createElement('a');
-                        link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
-                        link.href = canvases[i].toDataURL('image/jpeg', 0.95);
-                        link.click();
+                        // L版の場合
+                        console.log(`Downloading L版 (index ${i}), canvas size:`, canvases[i].width, 'x', canvases[i].height);
+                        const sourceImg = new Image();
+                        sourceImg.crossOrigin = 'anonymous';
+                        sourceImg.src = selectedFiles[i] ? URL.createObjectURL(selectedFiles[i]) : '';
+                        
+                        sourceImg.onload = () => {
+                            console.log(`Source image loaded for index ${i}, size:`, sourceImg.width, 'x', sourceImg.height);
+                            // まず元画像をcanvasのサイズにリサイズしてからフィルター適用
+                            const resizeCanvas = document.createElement('canvas');
+                            const resizeCtx = resizeCanvas.getContext('2d');
+                            resizeCanvas.width = canvases[i].width;
+                            resizeCanvas.height = canvases[i].height;
+                            
+                            // 余白を考慮（プレビューのborder 4px + padding 2px = 6pxに相当）
+                            // プレビューサイズとの比率で計算
+                            const previewSize = i === 1 ? 60 : 85; // preview2は60px、preview3は85px（主要な辺）
+                            const marginRatio = 6 / previewSize; // プレビューの余白比率
+                            const margin = Math.min(resizeCanvas.width, resizeCanvas.height) * marginRatio;
+                            console.log(`L版 index ${i}: Canvas size=${resizeCanvas.width}x${resizeCanvas.height}, previewSize=${previewSize}, marginRatio=${marginRatio.toFixed(3)}, margin=${margin.toFixed(1)}px`);
+                            const photoArea = {
+                                width: resizeCanvas.width - (margin * 2),
+                                height: resizeCanvas.height - (margin * 2),
+                                x: margin,
+                                y: margin
+                            };
+                            console.log(`Photo area: ${photoArea.width.toFixed(1)}x${photoArea.height.toFixed(1)} at (${photoArea.x.toFixed(1)}, ${photoArea.y.toFixed(1)})`);
+                            console.log(`Margin as % of shorter side: ${(margin / Math.min(resizeCanvas.width, resizeCanvas.height) * 100).toFixed(1)}%`);
+                            
+                            // 白背景
+                            resizeCtx.fillStyle = '#ffffff';
+                            resizeCtx.fillRect(0, 0, resizeCanvas.width, resizeCanvas.height);
+                            
+                            // object-fit: cover のように画像をトリミング
+                            const imgRatio = sourceImg.width / sourceImg.height;
+                            const areaRatio = photoArea.width / photoArea.height;
+                            console.log(`Image ratio: ${imgRatio.toFixed(2)}, Area ratio: ${areaRatio.toFixed(2)}`);
+                            
+                            let drawWidth, drawHeight, drawX, drawY;
+                            
+                            if (imgRatio > areaRatio) {
+                                // 画像が横長 → 高さを合わせて幅をトリミング
+                                drawHeight = photoArea.height;
+                                drawWidth = drawHeight * imgRatio;
+                                drawX = photoArea.x - (drawWidth - photoArea.width) / 2;
+                                drawY = photoArea.y;
+                            } else {
+                                // 画像が縦長 → 幅を合わせて高さをトリミング
+                                drawWidth = photoArea.width;
+                                drawHeight = drawWidth / imgRatio;
+                                drawX = photoArea.x;
+                                drawY = photoArea.y - (drawHeight - photoArea.height) / 2;
+                            }
+                            
+                            // クリッピング領域を設定
+                            resizeCtx.save();
+                            resizeCtx.beginPath();
+                            resizeCtx.rect(photoArea.x, photoArea.y, photoArea.width, photoArea.height);
+                            resizeCtx.clip();
+                            
+                            // 画像を描画
+                            resizeCtx.drawImage(sourceImg, drawX, drawY, drawWidth, drawHeight);
+                            resizeCtx.restore();
+                            
+                            // リサイズされた画像にフィルターを適用
+                            applyFiltersToCanvas(resizeCanvas, adjustments, (filteredCanvas) => {
+                                const link = document.createElement('a');
+                                link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
+                                link.href = filteredCanvas.toDataURL('image/jpeg', 0.95);
+                                link.click();
+                            });
+                        };
                     }
                 }
             }
@@ -2101,6 +2372,15 @@
         document.getElementById('modalHue').addEventListener('input', function() {
             updateModalValues();
             applyModalFilters();
+        });
+        
+        document.getElementById('modalDuotoneIntensity').addEventListener('input', function() {
+            const value = this.value;
+            document.getElementById('modalDuotoneIntensityValue').textContent = value;
+            if (modalPhotoIndex >= 0) {
+                photoAdjustments[modalPhotoIndex].duotoneIntensity = parseFloat(value);
+                applyModalFilters();
+            }
         });
 
         // ドラッグ&ドロップ機能は削除済み（プレビュー直接クリック方式に変更）
@@ -2210,9 +2490,15 @@
 
         function enableInteractiveMode() {
             isInteractiveMode = !isInteractiveMode;
+            console.log('Interactive mode toggled:', isInteractiveMode);
             const container = document.getElementById('photoPreviewContainer');
             const btn = document.getElementById('interactiveModeBtn');
             const hint = document.getElementById('trimHint');
+            
+            if (!container || !btn || !hint) {
+                console.error('Elements not found:', { container, btn, hint });
+                return;
+            }
             
             if (isInteractiveMode) {
                 container.classList.add('zooming');
@@ -2236,17 +2522,59 @@
 
         function setupInteractiveHandlers() {
             const container = document.getElementById('photoPreviewContainer');
+            if (!container) {
+                console.error('photoPreviewContainer not found');
+                return;
+            }
             
             // マウスイベント（PC用）
             container.addEventListener('mousedown', onMouseDown);
-            container.addEventListener('wheel', onWheel, { passive: false });
+            
+            // ホイールイベントを直接テスト
+            const wheelTest = function(e) {
+                console.log('🎯 WHEEL EVENT CAPTURED on container!', e.deltaY);
+                onWheel(e);
+            };
+            container.addEventListener('wheel', wheelTest, { passive: false });
+            console.log('✅ Wheel listener added to:', container);
             
             // タッチイベント（モバイル用）
             container.addEventListener('touchstart', onTouchStart, { passive: false });
+            
+            // モーダルプレビュー全体にもホイールイベントを登録
+            const previewSection = document.querySelector('.photo-preview-section');
+            if (previewSection) {
+                const wheelTest2 = function(e) {
+                    console.log('🎯 WHEEL on preview section!', e.deltaY);
+                    onWheel(e);
+                };
+                previewSection.addEventListener('wheel', wheelTest2, { passive: false });
+                console.log('✅ Wheel event added to preview section');
+            } else {
+                console.error('❌ preview section not found!');
+            }
+            
+            // モーダル全体にもホイールイベントを登録
+            const modal = document.getElementById('photoEditModal');
+            if (modal) {
+                const wheelTest3 = function(e) {
+                    console.log('🎯 WHEEL on MODAL!', e.deltaY);
+                    onWheel(e);
+                };
+                modal.addEventListener('wheel', wheelTest3, { passive: false });
+                console.log('✅ Wheel event added to MODAL');
+            }
+            
+            // Windowレベルでもホイールイベントを登録（最終手段）
+            window.addEventListener('wheel', onWheel, { passive: false });
+            console.log('✅ Wheel event added to WINDOW');
+            
+            console.log('✅ Interactive handlers setup complete, isInteractiveMode:', isInteractiveMode);
         }
 
         function removeInteractiveHandlers() {
             const container = document.getElementById('photoPreviewContainer');
+            if (!container) return;
             
             container.removeEventListener('mousedown', onMouseDown);
             document.removeEventListener('mousemove', onMouseMove);
@@ -2256,6 +2584,15 @@
             container.removeEventListener('touchstart', onTouchStart);
             document.removeEventListener('touchmove', onTouchMove);
             document.removeEventListener('touchend', onTouchEnd);
+            
+            // モーダルプレビューからもホイールイベントを削除
+            const previewSection = document.querySelector('.photo-preview-section');
+            if (previewSection) {
+                previewSection.removeEventListener('wheel', onWheel);
+            }
+            
+            // Windowからもホイールイベントを削除
+            window.removeEventListener('wheel', onWheel);
         }
 
         // マウスドラッグ（PC）
@@ -2297,15 +2634,34 @@
 
         // マウスホイール（PC）
         function onWheel(e) {
-            if (!isInteractiveMode) return;
+            const modal = document.getElementById('photoEditModal');
+            console.log('🎡 Wheel event triggered, isInteractiveMode:', isInteractiveMode, ', modalPhotoIndex:', modalPhotoIndex, ', modal display:', modal ? modal.style.display : 'null');
+            
+            // モーダルが開いていて、インタラクティブモードがONの場合のみ処理
+            if (!isInteractiveMode || modalPhotoIndex < 0) {
+                console.log('❌ Interactive mode is OFF or modal is closed, ignoring wheel event');
+                return;
+            }
+            
+            // モーダル内でのホイールイベントか確認
+            if (!modal || modal.style.display === 'none') {
+                console.log('❌ Modal is not visible');
+                return;
+            }
+            
+            console.log('✅ All checks passed, processing wheel event');
             e.preventDefault();
+            e.stopPropagation();
             
             const delta = e.deltaY > 0 ? -5 : 5;
             const currentZoom = parseFloat(document.getElementById('modalZoom').value);
             const newZoom = Math.max(100, Math.min(200, currentZoom + delta));
             
+            console.log('✅ Zoom changed from', currentZoom, 'to', newZoom);
             document.getElementById('modalZoom').value = newZoom;
-            updateModalValues();
+            if (modalPhotoIndex >= 0) {
+                photoAdjustments[modalPhotoIndex].zoom = newZoom;
+            }
             applyModalFilters();
         }
 
