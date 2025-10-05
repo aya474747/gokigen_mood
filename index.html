@@ -659,8 +659,13 @@
         }
 
         .photo-preview-section {
+            position: sticky;
+            top: 0;
             background: white;
-            border-bottom: 1px solid #eee;
+            z-index: 50;
+            padding: 15px;
+            border-bottom: 2px solid #F6A18F;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             display: flex;
             gap: 15px;
             align-items: flex-start;
@@ -753,6 +758,8 @@
             border-radius: 8px;
             overflow: hidden;
             cursor: move;
+            border: 2px solid #F6A18F;
+            box-shadow: 0 4px 12px rgba(246, 161, 143, 0.2);
         }
 
         .photo-preview-large.zooming {
@@ -818,6 +825,16 @@
 
             .corner-arrow {
                 font-size: 20px;
+            }
+            
+            .photo-preview-section {
+                padding: 10px;
+                gap: 10px;
+            }
+            
+            .editor-controls {
+                max-height: calc(100vh - 350px);
+                padding: 10px;
             }
         }
 
@@ -922,6 +939,8 @@
             flex-direction: column;
             gap: 10px;
             padding: 15px;
+            max-height: calc(100vh - 400px);
+            overflow-y: auto;
         }
 
         .control-section {
