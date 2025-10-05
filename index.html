@@ -513,6 +513,18 @@
             background: #138496;
         }
 
+        .mobile-hint {
+            display: none;
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-hint {
+                display: inline;
+            }
+        }
+
         .loading {
             display: none;
             text-align: center;
@@ -1156,7 +1168,7 @@
             
             
             <div class="download-options">
-                <button class="download-btn" onclick="downloadIndividual()">📸 ダウンロード</button>
+                <button class="download-btn" onclick="downloadIndividual()">📸 ダウンロード<span class="mobile-hint">（スマホでは長押しで保存）</span></button>
                 <button class="download-btn ar" onclick="openAR()" style="background: #4CAF50; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; margin-top: 10px; width: 100%;">📱 ARで部屋に配置してみる</button>
             </div>
         </div>
@@ -2232,15 +2244,27 @@
                                 
                                 // ダウンロード実行
                     const link = document.createElement('a');
-                    link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
-                                link.href = archCanvas.toDataURL('image/jpeg', 0.95);
+                    // スマホではdownload属性を削除して新しいタブで開く
+                    if (window.innerWidth <= 768) {
+                        link.href = archCanvas.toDataURL('image/jpeg', 0.95);
+                        link.target = '_blank';
+                    } else {
+                        link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
+                        link.href = archCanvas.toDataURL('image/jpeg', 0.95);
+                    }
                                 link.click();
                             } catch (error) {
                                 console.error('PNG画像の描画エラー:', error);
                                 // エラーが発生してもアーチ型の写真はダウンロード
                                 const link = document.createElement('a');
-                                link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
-                                link.href = archCanvas.toDataURL('image/jpeg', 0.95);
+                                // スマホではdownload属性を削除して新しいタブで開く
+                                if (window.innerWidth <= 768) {
+                                    link.href = archCanvas.toDataURL('image/jpeg', 0.95);
+                                    link.target = '_blank';
+                                } else {
+                                    link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
+                                    link.href = archCanvas.toDataURL('image/jpeg', 0.95);
+                                }
                     link.click();
                 }
                             });
@@ -2313,8 +2337,14 @@
                             // リサイズされた画像にフィルターを適用
                             applyFiltersToCanvas(resizeCanvas, adjustments, (filteredCanvas) => {
                                 const link = document.createElement('a');
-                                link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
-                                link.href = filteredCanvas.toDataURL('image/jpeg', 0.95);
+                                // スマホではdownload属性を削除して新しいタブで開く
+                                if (window.innerWidth <= 768) {
+                                    link.href = filteredCanvas.toDataURL('image/jpeg', 0.95);
+                                    link.target = '_blank';
+                                } else {
+                                    link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
+                                    link.href = filteredCanvas.toDataURL('image/jpeg', 0.95);
+                                }
                                 link.click();
                             });
                         };
