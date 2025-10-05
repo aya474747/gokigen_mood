@@ -2154,40 +2154,165 @@
                 return;
             }
             
-            // スマホ用の保存処理
-            const previewItems = document.querySelectorAll('.preview-item');
-            let savedCount = 0;
-            let validImages = [];
+            // 実際のデザイン画像を生成して表示
+            generateDesignImagesForSave();
+        }
+        
+        function generateDesignImagesForSave() {
+            const validImages = [];
+            let processedCount = 0;
             
-            // 有効な画像を収集
-            previewItems.forEach((item, index) => {
-                const img = item.querySelector('img');
-                if (img && img.src && !img.src.includes('data:image/svg+xml') && !img.src.includes('placeholder')) {
-                    validImages.push({
-                        src: img.src,
-                        alt: `画像 ${index + 1}`
-                    });
-                    savedCount++;
+            // 各画像のデザインを生成
+            for (let i = 0; i < 3; i++) {
+                if (canvases[i]) {
+                    const adjustments = photoAdjustments[i];
+                    
+                    if (i === 0) {
+                        // A4版のデザイン生成
+                        generateA4DesignForSave(i, (imageDataUrl) => {
+                            validImages[i] = {
+                                src: imageDataUrl,
+                                alt: `A4デザイン ${i + 1}`
+                            };
+                            processedCount++;
+                            if (processedCount === 3) {
+                                showAllImagesForSave(validImages);
+                            }
+                        });
+                    } else {
+                        // L版のデザイン生成
+                        generateLDesignForSave(i, (imageDataUrl) => {
+                            validImages[i] = {
+                                src: imageDataUrl,
+                                alt: `L版デザイン ${i + 1}`
+                            };
+                            processedCount++;
+                            if (processedCount === 3) {
+                                showAllImagesForSave(validImages);
+                            }
+                        });
+                    }
+                } else {
+                    processedCount++;
+                    if (processedCount === 3) {
+                        showAllImagesForSave(validImages);
+                    }
                 }
-            });
+            }
+        }
+        
+        function generateA4DesignForSave(index, callback) {
+            const adjustments = photoAdjustments[index];
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // A4サイズ（300dpi相当）
+            const A4_WIDTH = 2480;
+            const A4_HEIGHT = 3508;
+            canvas.width = A4_WIDTH;
+            canvas.height = A4_HEIGHT;
+            
+            // 白背景
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, A4_WIDTH, A4_HEIGHT);
+            
+            // 写真エリアの計算
+            const marginX = A4_WIDTH * 0.1;
+            const marginY = A4_HEIGHT * 0.12;
+            const photoArea = {
+                x: marginX,
+                y: marginY,
+                width: A4_WIDTH - marginX * 2,
+                height: A4_HEIGHT - marginY * 2
+            };
+            
+            // 写真を描画
+            const sourceImg = new Image();
+            sourceImg.onload = function() {
+                // アーチ型のクリッピングパス
+                ctx.save();
+                ctx.beginPath();
+                const centerX = photoArea.x + photoArea.width / 2;
+                const radius = photoArea.width / 2;
+                ctx.arc(centerX, photoArea.y + radius, radius, 0, Math.PI, true);
+                ctx.arc(centerX, photoArea.y + radius, radius, Math.PI, 0, true);
+                ctx.closePath();
+                ctx.clip();
+                
+                // 写真を描画（object-fit: cover）
+                const scale = Math.max(photoArea.width / sourceImg.width, photoArea.height / sourceImg.height);
+                const drawWidth = sourceImg.width * scale;
+                const drawHeight = sourceImg.height * scale;
+                const drawX = photoArea.x + (photoArea.width - drawWidth) / 2;
+                const drawY = photoArea.y + (photoArea.height - drawHeight) / 2;
+                
+                ctx.drawImage(sourceImg, drawX, drawY, drawWidth, drawHeight);
+                ctx.restore();
+                
+                // PNGオーバーレイを追加
+                addPngImagesToCanvas(ctx, A4_WIDTH, A4_HEIGHT, () => {
+                    // フィルターを適用
+                    applyFiltersToCanvas(canvas, adjustments, (filteredCanvas) => {
+                        callback(filteredCanvas.toDataURL('image/jpeg', 0.95));
+                    });
+                });
+            };
+            sourceImg.src = selectedFiles[index] ? URL.createObjectURL(selectedFiles[index]) : '';
+        }
+        
+        function generateLDesignForSave(index, callback) {
+            const adjustments = photoAdjustments[index];
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // L版サイズ（300dpi相当）
+            const L_WIDTH = index === 1 ? 1051 : 1488; // 縦向き or 横向き
+            const L_HEIGHT = index === 1 ? 1488 : 1051;
+            canvas.width = L_WIDTH;
+            canvas.height = L_HEIGHT;
+            
+            // 白背景
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, L_WIDTH, L_HEIGHT);
+            
+            // 写真エリアの計算
+            const margin = 6 * (L_WIDTH / 85); // プレビューと同じ比率
+            const photoArea = {
+                x: margin,
+                y: margin,
+                width: L_WIDTH - margin * 2,
+                height: L_HEIGHT - margin * 2
+            };
+            
+            // 写真を描画
+            const sourceImg = new Image();
+            sourceImg.onload = function() {
+                // object-fit: cover で描画
+                const scale = Math.max(photoArea.width / sourceImg.width, photoArea.height / sourceImg.height);
+                const drawWidth = sourceImg.width * scale;
+                const drawHeight = sourceImg.height * scale;
+                const drawX = photoArea.x + (photoArea.width - drawWidth) / 2;
+                const drawY = photoArea.y + (photoArea.height - drawHeight) / 2;
+                
+                ctx.drawImage(sourceImg, drawX, drawY, drawWidth, drawHeight);
+                
+                // フィルターを適用
+                applyFiltersToCanvas(canvas, adjustments, (filteredCanvas) => {
+                    callback(filteredCanvas.toDataURL('image/jpeg', 0.95));
+                });
+            };
+            sourceImg.src = selectedFiles[index] ? URL.createObjectURL(selectedFiles[index]) : '';
+        }
+        
+        function showAllImagesForSave(images) {
+            const validImages = images.filter(img => img && img.src);
             
             if (validImages.length === 0) {
                 alert('保存できる画像がありません。まず写真をアップロードしてください。');
                 return;
             }
             
-            // 画像を順番に表示
-            showImageForSave(validImages, 0);
-        }
-        
-        function showImageForSave(images, index) {
-            if (index >= images.length) {
-                alert('全ての画像を表示しました。各画像を長押ししてカメラロールに保存してください。');
-                return;
-            }
-            
-            const currentImage = images[index];
-            const newWindow = window.open('', '_blank', 'width=400,height=600,scrollbars=yes,resizable=yes');
+            const newWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
             
             if (!newWindow) {
                 alert('ポップアップがブロックされました。ブラウザの設定でポップアップを許可してください。');
@@ -2198,7 +2323,7 @@
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>画像を保存してください (${index + 1}/${images.length})</title>
+                    <title>デザインを保存してください</title>
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <style>
                         body { 
@@ -2208,12 +2333,22 @@
                             background: #f0f0f0;
                             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
                         }
+                        .images-container {
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: center;
+                            gap: 20px;
+                            margin: 20px 0;
+                        }
+                        .image-item {
+                            flex: 0 0 300px;
+                            max-width: 300px;
+                        }
                         img { 
-                            max-width: 100%; 
+                            width: 100%; 
                             height: auto; 
                             border-radius: 10px;
                             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                            margin: 20px 0;
                         }
                         .instruction {
                             background: white;
@@ -2229,9 +2364,6 @@
                             border-radius: 5px;
                             border-left: 4px solid #2196F3;
                         }
-                        .buttons {
-                            margin-top: 20px;
-                        }
                         .btn {
                             background: #FF6B6B;
                             color: white;
@@ -2240,27 +2372,26 @@
                             border-radius: 5px;
                             font-size: 16px;
                             cursor: pointer;
-                            margin: 0 10px;
-                        }
-                        .btn.next {
-                            background: #4CAF50;
+                            margin: 10px;
                         }
                     </style>
                 </head>
                 <body>
                     <div class="instruction">
                         <h2>📱 カメラロールに保存</h2>
-                        <p>画像 ${index + 1} / ${images.length}</p>
-                        <div class="step">1. 画像を長押ししてください</div>
+                        <div class="step">1. 各画像を長押ししてください</div>
                         <div class="step">2. 「画像を保存」をタップ</div>
                         <div class="step">3. カメラロールに保存完了！</div>
                     </div>
-                    <img src="${currentImage.src}" alt="${currentImage.alt}" onerror="alert('画像の読み込みに失敗しました。')">
+                    <div class="images-container">
+                        ${validImages.map((img, index) => `
+                            <div class="image-item">
+                                <img src="${img.src}" alt="${img.alt}" onerror="alert('画像の読み込みに失敗しました。')">
+                            </div>
+                        `).join('')}
+                    </div>
                     <div class="instruction">
-                        <div class="buttons">
-                            <button class="btn" onclick="window.close()">閉じる</button>
-                            ${index < images.length - 1 ? `<button class="btn next" onclick="window.opener.showImageForSave(${JSON.stringify(images)}, ${index + 1}); window.close();">次の画像</button>` : ''}
-                        </div>
+                        <button class="btn" onclick="window.close()">閉じる</button>
                     </div>
                 </body>
                 </html>
