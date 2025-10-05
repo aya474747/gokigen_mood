@@ -2149,50 +2149,64 @@
 
         // スマホでカメラロールに保存
         function saveToCameraRoll() {
+            console.log('📱 saveToCameraRoll called, window width:', window.innerWidth);
+            alert('カメラロール保存機能が呼び出されました！');
+            
             if (window.innerWidth > 768) {
                 alert('この機能はスマホでのみ利用できます');
                 return;
             }
             
+            console.log('📱 Starting design image generation...');
             // 実際のデザイン画像を生成して表示
             generateDesignImagesForSave();
         }
         
         function generateDesignImagesForSave() {
+            console.log('📱 generateDesignImagesForSave called');
             const validImages = [];
             let processedCount = 0;
             
             // 各画像のデザインを生成
             for (let i = 0; i < 3; i++) {
+                console.log(`📱 Processing image ${i}, canvas exists:`, !!canvases[i]);
                 if (canvases[i]) {
                     const adjustments = photoAdjustments[i];
+                    console.log(`📱 Adjustments for image ${i}:`, adjustments);
                     
                     if (i === 0) {
                         // A4版のデザイン生成
+                        console.log('📱 Generating A4 design...');
                         generateA4DesignForSave(i, (imageDataUrl) => {
+                            console.log('📱 A4 design generated:', !!imageDataUrl);
                             validImages[i] = {
                                 src: imageDataUrl,
                                 alt: `A4デザイン ${i + 1}`
                             };
                             processedCount++;
+                            console.log(`📱 Processed count: ${processedCount}/3`);
                             if (processedCount === 3) {
                                 showAllImagesForSave(validImages);
                             }
                         });
                     } else {
                         // L版のデザイン生成
+                        console.log(`📱 Generating L design for image ${i}...`);
                         generateLDesignForSave(i, (imageDataUrl) => {
+                            console.log(`📱 L design ${i} generated:`, !!imageDataUrl);
                             validImages[i] = {
                                 src: imageDataUrl,
                                 alt: `L版デザイン ${i + 1}`
                             };
                             processedCount++;
+                            console.log(`📱 Processed count: ${processedCount}/3`);
                             if (processedCount === 3) {
                                 showAllImagesForSave(validImages);
                             }
                         });
                     }
                 } else {
+                    console.log(`📱 No canvas for image ${i}, skipping`);
                     processedCount++;
                     if (processedCount === 3) {
                         showAllImagesForSave(validImages);
