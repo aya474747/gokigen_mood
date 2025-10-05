@@ -521,7 +521,15 @@
 
         @media (max-width: 768px) {
             .mobile-hint {
-                display: inline;
+                display: none;
+            }
+            .mobile-save {
+                display: inline-block !important;
+                background: #FF6B6B;
+                margin-top: 10px;
+            }
+            .mobile-save:hover {
+                background: #FF5252;
             }
         }
 
@@ -1169,6 +1177,7 @@
             
             <div class="download-options">
                 <button class="download-btn" onclick="downloadIndividual()">📸 ダウンロード<span class="mobile-hint">（スマホでは長押しで保存）</span></button>
+                <button class="download-btn mobile-save" onclick="saveToCameraRoll()" style="display: none;">📱 カメラロールに保存</button>
                 <button class="download-btn ar" onclick="openAR()" style="background: #4CAF50; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; margin-top: 10px; width: 100%;">📱 ARで部屋に配置してみる</button>
             </div>
         </div>
@@ -2136,6 +2145,83 @@
             }
             
             callback(tempCanvas);
+        }
+
+        // スマホでカメラロールに保存
+        function saveToCameraRoll() {
+            if (window.innerWidth > 768) {
+                alert('この機能はスマホでのみ利用できます');
+                return;
+            }
+            
+            // スマホ用の保存処理
+            const previewItems = document.querySelectorAll('.preview-item');
+            let savedCount = 0;
+            
+            previewItems.forEach((item, index) => {
+                const img = item.querySelector('img');
+                if (img && img.src && !img.src.includes('data:image/svg+xml')) {
+                    // 画像を新しいタブで開く
+                    const newWindow = window.open();
+                    newWindow.document.write(`
+                        <html>
+                            <head>
+                                <title>画像を保存してください</title>
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <style>
+                                    body { 
+                                        margin: 0; 
+                                        padding: 20px; 
+                                        text-align: center; 
+                                        background: #f0f0f0;
+                                        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                                    }
+                                    img { 
+                                        max-width: 100%; 
+                                        height: auto; 
+                                        border-radius: 10px;
+                                        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                                    }
+                                    .instruction {
+                                        background: white;
+                                        padding: 20px;
+                                        border-radius: 10px;
+                                        margin: 20px 0;
+                                        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                                    }
+                                    .step {
+                                        margin: 10px 0;
+                                        padding: 10px;
+                                        background: #e3f2fd;
+                                        border-radius: 5px;
+                                        border-left: 4px solid #2196F3;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <div class="instruction">
+                                    <h2>📱 カメラロールに保存</h2>
+                                    <div class="step">1. 画像を長押ししてください</div>
+                                    <div class="step">2. 「画像を保存」をタップ</div>
+                                    <div class="step">3. カメラロールに保存完了！</div>
+                                </div>
+                                <img src="${img.src}" alt="保存する画像">
+                                <div class="instruction">
+                                    <p>保存が完了したら、このタブを閉じてください</p>
+                                    <button onclick="window.close()" style="background: #FF6B6B; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; cursor: pointer;">閉じる</button>
+                                </div>
+                            </body>
+                        </html>
+                    `);
+                    savedCount++;
+                }
+            });
+            
+            if (savedCount === 0) {
+                alert('保存できる画像がありません。まず写真をアップロードしてください。');
+            } else {
+                alert(`${savedCount}枚の画像を開きました。各画像を長押ししてカメラロールに保存してください。`);
+            }
         }
 
         function downloadIndividual() {
