@@ -1195,6 +1195,14 @@
             
             
             <div class="download-options">
+                <div style="margin-bottom: 15px;">
+                    <label for="dpiSelect" style="display: block; margin-bottom: 5px; font-weight: bold;">📐 解像度選択:</label>
+                    <select id="dpiSelect" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 100%;">
+                        <option value="72">Web用 (72 DPI) - 軽量</option>
+                        <option value="150">標準印刷 (150 DPI) - バランス良好</option>
+                        <option value="300" selected>高品質印刷 (300 DPI) - 推奨</option>
+                    </select>
+                </div>
                 <button class="download-btn" onclick="downloadIndividual()">📸 ダウンロード<span class="mobile-hint">（スマホでは長押しで保存）</span></button>
                 <button class="download-btn mobile-save" onclick="saveToCameraRoll()" style="display: none;">📱 カメラロールに保存</button>
                 <button class="download-btn ar" onclick="openAR()" style="background: #4CAF50; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; margin-top: 10px; width: 100%;">📱 ARで部屋に配置してみる</button>
@@ -1349,28 +1357,192 @@
             document.getElementById('photoInput').click();
         }
 
-        async function loadSamplePhotos() {
-            // サンプル写真を3つのスロットに配置
-            const samplePhotos = [
+        function loadSamplePhotos() {
+            console.log('📸 loadSamplePhotos called');
+            alert('📸 サンプル写真を読み込みます');
+            
+            const samplePaths = [
                 'sample-photos/sample_1.jpg',
                 'sample-photos/sample_2.jpg',
                 'sample-photos/sample_3.jpg'
             ];
-
-            // 各サンプル写真をfetchしてFileオブジェクトに変換
-            for (let index = 0; index < samplePhotos.length; index++) {
-                const photoPath = samplePhotos[index];
-                try {
-                    const response = await fetch(photoPath);
-                    const blob = await response.blob();
-                    const file = new File([blob], `sample_${index + 1}.jpg`, { type: 'image/jpeg' });
-                    
-                    // displayPhoto関数を使って表示（通常のアップロードと同じ処理）
-                    displayPhoto(file, index);
-                } catch (error) {
-                    console.error(`Error loading sample photo ${index + 1}:`, error);
+            
+            let loadedCount = 0;
+            let errorCount = 0;
+            
+            // 既存の写真をクリア
+            selectedFiles = [null, null, null];
+            photoAdjustments = [
+                { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 100 },
+                { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 100 },
+                { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 100 }
+            ];
+            
+            // プレビューをリセット
+            for (let i = 1; i <= 3; i++) {
+                const preview = document.getElementById(`preview${i}`);
+                if (preview) {
+                    preview.innerHTML = '';
+                    preview.classList.remove('has-photo');
                 }
             }
+            
+            for (let i = 0; i < samplePaths.length; i++) {
+                const img = new Image();
+                const index = i;
+                const photoPath = samplePaths[i];
+                
+                img.onload = function() {
+                    loadedCount++;
+                    
+                    try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        
+                        canvas.toBlob((blob) => {
+                            if (!blob) {
+                                errorCount++;
+                                return;
+                            }
+                            
+                            const file = new File([blob], `sample_${index + 1}.jpg`, { type: 'image/jpeg' });
+                            selectedFiles[index] = file;
+                            
+                            const preview = document.getElementById(`preview${index + 1}`);
+                            if (!preview) {
+                                errorCount++;
+                                return;
+                            }
+                            
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                if (index === 0) {
+                                    preview.innerHTML = `
+                                        <div class="inner-container">
+                                            <div class="photo-area">
+                                                <img src="${e.target.result}" alt="写真${index + 1}">
+                                            </div>
+                                        </div>
+                                        <div class="png-overlay">
+                                            <img src="circle_logo.png" alt="ご機嫌ムード">
+                                        </div>
+                                        <div class="french-text">
+                                            <img src="Un_doux_souvenir.png" alt="Un doux souvenir">
+                                        </div>
+                                        <button class="remove-btn" onclick="removePhoto(${index})">×</button>
+                                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})">編集</button>
+                                    `;
+                                } else {
+                                    preview.innerHTML = `
+                                        <img src="${e.target.result}" alt="写真${index + 1}">
+                                        <button class="remove-btn" onclick="removePhoto(${index})">×</button>
+                                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})">編集</button>
+                                    `;
+                                }
+                                preview.classList.add('has-photo');
+                                
+                                if (loadedCount === 3) {
+                                    alert('✅ サンプル写真の読み込み完了！');
+                                    setTimeout(() => generateGallery(), 500);
+                                } else if (loadedCount + errorCount === 3) {
+                                    if (loadedCount > 0) {
+                                        alert(`⚠️ ${loadedCount}枚の写真を読み込みました（${errorCount}枚失敗）`);
+                                        setTimeout(() => generateGallery(), 500);
+                                    }
+                                }
+                            };
+                            reader.readAsDataURL(file);
+                        }, 'image/jpeg');
+                    } catch (error) {
+                        errorCount++;
+                        console.error(`Error processing image ${index + 1}:`, error);
+                        
+                        if (errorCount === samplePaths.length) {
+                            alert('❌ すべてのサンプル写真の処理に失敗しました。\nローカルサーバーで実行してください。\n\nhttp://localhost:8080 でアクセスしてください。');
+                        }
+                    }
+                };
+                
+                img.onerror = function() {
+                    errorCount++;
+                    console.error(`Failed to load: ${photoPath}`);
+                    
+                    if (errorCount === samplePaths.length) {
+                        alert('❌ すべてのサンプル写真の読み込みに失敗しました。\nローカルサーバーで実行してください。\n\nhttp://localhost:8080 でアクセスしてください。');
+                    } else {
+                        alert(`写真${index + 1}の読み込みに失敗しました: ${photoPath}`);
+                    }
+                };
+                
+                img.src = photoPath;
+            }
+        }
+
+        // DPI選択機能
+        function getSelectedDPI() {
+            const dpiSelect = document.getElementById('dpiSelect');
+            return dpiSelect ? parseInt(dpiSelect.value) : 300;
+        }
+        
+        // ミリメートルをピクセルに変換
+        function mmToPixels(mm, dpi = 300) {
+            return Math.round((mm * dpi) / 25.4);
+        }
+        
+        // キャンバスをDPI情報付きのData URLに変換
+        function canvasToDataURLWithDPI(canvas, dpi = 300) {
+            // まず通常のJPEGとしてエクスポート
+            const dataURL = canvas.toDataURL('image/jpeg', 0.95);
+            
+            // Base64をバイナリに変換
+            const base64 = dataURL.split(',')[1];
+            const binary = atob(base64);
+            const array = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) {
+                array[i] = binary.charCodeAt(i);
+            }
+            
+            // JFIF APP0マーカーを作成（DPI情報を含む）
+            const dpiBytes = new Uint8Array([
+                0xFF, 0xE0,                    // APP0マーカー
+                0x00, 0x10,                    // セグメント長（16バイト）
+                0x4A, 0x46, 0x49, 0x46, 0x00, // "JFIF\0"
+                0x01, 0x02,                    // JFIFバージョン 1.2
+                0x01,                          // 単位: DPI
+                (dpi >> 8) & 0xFF, dpi & 0xFF, // X解像度
+                (dpi >> 8) & 0xFF, dpi & 0xFF, // Y解像度
+                0x00, 0x00                     // サムネイルなし
+            ]);
+            
+            // 新しいJPEGを構築
+            let newArray;
+            if (array[2] === 0xFF && array[3] === 0xE0) {
+                // 既存のAPP0マーカーを置き換え
+                const app0Length = (array[4] << 8) | array[5];
+                const afterApp0 = array.slice(4 + app0Length);
+                newArray = new Uint8Array(2 + dpiBytes.length + afterApp0.length);
+                newArray.set([0xFF, 0xD8], 0);      // SOIマーカー
+                newArray.set(dpiBytes, 2);
+                newArray.set(afterApp0, 2 + dpiBytes.length);
+            } else {
+                // APP0マーカーを挿入
+                newArray = new Uint8Array(2 + dpiBytes.length + array.length - 2);
+                newArray.set([0xFF, 0xD8], 0);      // SOIマーカー
+                newArray.set(dpiBytes, 2);
+                newArray.set(array.slice(2), 2 + dpiBytes.length);
+            }
+            
+            // バイナリをBase64に変換
+            let newBinary = '';
+            for (let i = 0; i < newArray.length; i++) {
+                newBinary += String.fromCharCode(newArray[i]);
+            }
+            const newBase64 = btoa(newBinary);
+            
+            return 'data:image/jpeg;base64,' + newBase64;
         }
 
         // 印刷用サイズ定義（mm）
@@ -1397,9 +1569,15 @@
             ]
         };
 
-        // 300 DPI でのピクセル計算
+        // DPI でのピクセル計算
         function mmToPixels(mm, dpi = 300) {
             return Math.round((mm * dpi) / 25.4);
+        }
+        
+        // 選択されたDPIを取得
+        function getSelectedDPI() {
+            const dpiSelect = document.getElementById('dpiSelect');
+            return dpiSelect ? parseInt(dpiSelect.value) : 300;
         }
 
         function handleFileSelect(event) {
@@ -1901,8 +2079,9 @@
         }
 
         function createCanvas(index, size, file) {
-            const width = mmToPixels(size.width, 300);
-            const height = mmToPixels(size.height, 300);
+            const selectedDPI = getSelectedDPI();
+            const width = mmToPixels(size.width, selectedDPI);
+            const height = mmToPixels(size.height, selectedDPI);
 
             canvases[index] = document.createElement('canvas');
             contexts[index] = canvases[index].getContext('2d');
@@ -2239,9 +2418,10 @@
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
-            // A4サイズ（300dpi相当）
-            const A4_WIDTH = 2480;
-            const A4_HEIGHT = 3508;
+            // A4サイズ（選択されたDPI相当）
+            const selectedDPI = getSelectedDPI();
+            const A4_WIDTH = mmToPixels(210, selectedDPI);
+            const A4_HEIGHT = mmToPixels(297, selectedDPI);
             canvas.width = A4_WIDTH;
             canvas.height = A4_HEIGHT;
             
@@ -2298,9 +2478,10 @@
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
-            // L版サイズ（300dpi相当）
-            const L_WIDTH = index === 1 ? 1051 : 1488; // 縦向き or 横向き
-            const L_HEIGHT = index === 1 ? 1488 : 1051;
+            // L版サイズ（選択されたDPI相当）
+            const selectedDPI = getSelectedDPI();
+            const L_WIDTH = index === 1 ? mmToPixels(89, selectedDPI) : mmToPixels(127, selectedDPI); // 縦向き or 横向き
+            const L_HEIGHT = index === 1 ? mmToPixels(127, selectedDPI) : mmToPixels(89, selectedDPI);
             canvas.width = L_WIDTH;
             canvas.height = L_HEIGHT;
             
@@ -2535,30 +2716,20 @@
                                     archCtx.drawImage(frenchImgElement, frenchX, frenchY, frenchWidth, frenchHeight);
                                 }
                                 
-                                // ダウンロード実行
-                    const link = document.createElement('a');
-                    // スマホではdownload属性を削除して新しいタブで開く
-                    if (window.innerWidth <= 768) {
-                        link.href = archCanvas.toDataURL('image/jpeg', 0.95);
-                        link.target = '_blank';
-                    } else {
-                        link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
-                        link.href = archCanvas.toDataURL('image/jpeg', 0.95);
-                    }
+                                 // ダウンロード実行（DPI情報付き）
+                                 const selectedDPI = getSelectedDPI();
+                                 const link = document.createElement('a');
+                                 link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
+                                 link.href = canvasToDataURLWithDPI(archCanvas, selectedDPI);
                                 link.click();
                             } catch (error) {
                                 console.error('PNG画像の描画エラー:', error);
                                 // エラーが発生してもアーチ型の写真はダウンロード
+                                const selectedDPI = getSelectedDPI();
                                 const link = document.createElement('a');
-                                // スマホではdownload属性を削除して新しいタブで開く
-                                if (window.innerWidth <= 768) {
-                                    link.href = archCanvas.toDataURL('image/jpeg', 0.95);
-                                    link.target = '_blank';
-                                } else {
-                                    link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
-                                    link.href = archCanvas.toDataURL('image/jpeg', 0.95);
-                                }
-                    link.click();
+                                link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
+                                link.href = canvasToDataURLWithDPI(archCanvas, selectedDPI);
+                                link.click();
                 }
                             });
                         };
@@ -2629,15 +2800,10 @@
                             
                             // リサイズされた画像にフィルターを適用
                             applyFiltersToCanvas(resizeCanvas, adjustments, (filteredCanvas) => {
+                                const selectedDPI = getSelectedDPI();
                                 const link = document.createElement('a');
-                                // スマホではdownload属性を削除して新しいタブで開く
-                                if (window.innerWidth <= 768) {
-                                    link.href = filteredCanvas.toDataURL('image/jpeg', 0.95);
-                                    link.target = '_blank';
-                                } else {
-                                    link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
-                                    link.href = filteredCanvas.toDataURL('image/jpeg', 0.95);
-                                }
+                                link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
+                                link.href = canvasToDataURLWithDPI(filteredCanvas, selectedDPI);
                                 link.click();
                             });
                         };
@@ -2653,8 +2819,18 @@
             downloadIndividual();
         }
 
-        // リアルタイムプレビュー更新のイベントリスナー（削除済みの要素）
-
+        // DPI選択変更時のイベントリスナー
+        document.addEventListener('DOMContentLoaded', function() {
+            const dpiSelect = document.getElementById('dpiSelect');
+            if (dpiSelect) {
+                dpiSelect.addEventListener('change', function() {
+                    // 既にデザインが生成されている場合は再生成
+                    if (document.getElementById('downloadSection').classList.contains('show')) {
+                        generateGallery();
+                    }
+                });
+            }
+        });
 
         // モーダルのスライダーイベントリスナー
         document.getElementById('modalZoom').addEventListener('input', function() {
