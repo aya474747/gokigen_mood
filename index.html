@@ -240,38 +240,45 @@
         }
 
         .preview-item.large .photo-area {
-            width: 115px;
-            height: 154px;
+            width: 112px; /* 140px * 0.8 = 112px (ダウンロード画像と同じ10%マージン) */
+            height: 158px; /* 198px * 0.8 = 158px (ダウンロード画像と同じ12%マージン) */
             background: #f5f5f5;
             border-radius: 200px 200px 0 0;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden; /* 写真を窓型で切り抜き */
         }
 
         .preview-item.large img {
-            border-radius: 200px 200px 0 0;
+            /* border-radius: 200px 200px 0 0; 削除 - 白いフレームで切り抜き */
         }
 
         .preview-item.large .png-overlay {
             position: absolute;
-            top: 8px;
-            right: -1px;
-            width: 37px;
-            height: 37px;
+            top: 12px; /* 140px * 0.086 ≈ 12px (編集モーダルと同じ比率) */
+            right: 12px; /* 140px * 0.086 ≈ 12px (編集モーダルと同じ比率) */
+            width: 35px; /* ダウンロード画像のロゴサイズに合わせて大きく調整 */
+            height: 35px; /* ダウンロード画像のロゴサイズに合わせて大きく調整 */
             z-index: 10;
             pointer-events: none;
         }
 
         .preview-item.large .french-text {
             position: absolute;
-            bottom: 20px;
+            bottom: 15px; /* 少し上に移動 */
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
-            z-index: 15;
+            z-index: 10; /* +ボタンより下に */
             pointer-events: none;
             width: 100%;
+        }
+        
+        .preview-item.large .french-text img {
+            width: 70%; /* ダウンロード画像の40%に合わせて調整 */
+            height: auto;
+            border-radius: 0;
         }
 
 
@@ -318,14 +325,30 @@
         .preview-item .placeholder {
             text-align: center;
             color: #999;
-            font-size: 0.8em;
-            line-height: 1.3;
+            font-size: 0.6em;
+            line-height: 1.2;
             position: absolute;
-            top: 50%;
+            top: 50%; /* 中央に戻す */
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 1;
+            z-index: 10; /* ボタンより下、写真より上 */
+            padding: 2px;
+            box-sizing: border-box;
         }
+
+        /* A4版（large）は文字サイズを大きく、中央配置 */
+        .preview-item.large .placeholder {
+            font-size: 0.8em; /* A4版は大きく */
+            top: 50%; /* 中央配置 */
+        }
+
+        /* L版（medium・small）は文字サイズ小さく、上部配置 */
+        .preview-item.medium .placeholder,
+        .preview-item.small .placeholder {
+            font-size: 0.6em; /* L版は小さく */
+            top: 30%; /* もう少し下に */
+        }
+
 
         .preview-item .remove-btn {
             position: absolute;
@@ -340,11 +363,39 @@
             cursor: pointer;
             font-size: 12px;
             display: none;
-            z-index: 2;
+            z-index: 20; /* 最上層に設定 */
         }
 
         .preview-item.has-photo .remove-btn {
             display: block;
+        }
+
+        .preview-item .edit-btn {
+            z-index: 20; /* 最上層に設定 */
+            display: none; /* 初期状態では非表示 */
+        }
+
+        /* 写真がある場合は編集ボタンを表示 */
+        .preview-item.has-photo .edit-btn {
+            display: block;
+        }
+
+        /* +ボタンのスタイル */
+        .add-photo-btn {
+            display: block;
+            z-index: 25; /* フランス語の文字よりも上に */
+        }
+
+        /* 写真がある場合は+ボタンを非表示 */
+        .preview-item.has-photo .add-photo-btn {
+            display: none;
+        }
+
+        /* 縦のL版（preview2）専用の文字サイズ調整 */
+        .preview-item.medium .placeholder {
+            font-size: 0.5em;
+            line-height: 1.1;
+            padding: 1px;
         }
 
         .controls {
@@ -834,7 +885,6 @@
             
             .editor-controls {
                 max-height: calc(100vh - 350px);
-                padding: 10px;
             }
         }
 
@@ -865,19 +915,21 @@
             overflow: hidden;
             position: relative;
             border-radius: 200px 200px 0 0;
+            background-color: #f0f0f0; /* 写真が切れないように背景色を設定 */
         }
 
         .photo-preview-large .modal-photo-area img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* coverからcontainに変更 - 写真が切れないように */
+            /* border-radius: 200px 200px 0 0; 削除 - 白いフレームで切り抜き */
         }
 
         .photo-preview-large .modal-png-overlay {
             position: absolute;
-            top: 9px;
-            right: 10px;
-            width: 53px;
+            top: 15px; /* さらに下に移動 */
+            right: 15px; /* さらに左に移動 */
+            width: 45px; /* 180px * 0.25 ≈ 45px */
             z-index: 10;
         }
 
@@ -888,12 +940,12 @@
 
         .photo-preview-large .modal-french-text {
             position: absolute;
-            bottom: 50px;
+            bottom: 30px; /* 600px * 0.05 ≈ 30px (ダウンロード画像と同じ比率) */
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
             z-index: 10;
-            width: 60%;
+            width: 50%; /* ダウンロード画像の40%に合わせて調整 */
         }
 
         .photo-preview-large .modal-french-text img {
@@ -906,32 +958,38 @@
         }
 
         .photo-preview-large .modal-l-frame {
-            border: 4px solid white;
-            padding: 2px;
+            border: 6px solid white;
+            padding: 3px;
             background: white;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            /* トリミング時も外枠サイズを固定 */
+            flex-shrink: 0;
+            flex-grow: 0;
         }
 
         .photo-preview-large .modal-l-frame.l-vertical {
-            width: 200px;
-            height: 284px;
-            /* L版縦向き: 89:127 の比率 */
+            width: 140px;
+            height: 200px;
+            /* L版縦向き: 89:127 の比率、外枠（余白）をさらに太くしてダウンロード画像に近づける */
         }
 
         .photo-preview-large .modal-l-frame.l-horizontal {
-            width: 284px;
-            height: 200px;
-            /* L版横向き: 127:89 の比率 */
+            width: 200px;
+            height: 140px;
+            /* L版横向き: 127:89 の比率、外枠（余白）をさらに太くしてダウンロード画像に近づける */
         }
 
         .photo-preview-large .modal-l-frame img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            /* トリミング時も外枠サイズを固定 */
+            max-width: 100%;
+            max-height: 100%;
         }
 
         .editor-controls {
@@ -1142,6 +1200,7 @@
                         <div class="inner-container">
                             <div class="photo-area">
                                 <div class="placeholder">A4版<br><small>210×297mm<br>タップで写真を追加</small></div>
+                            <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(0)" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 18px; cursor: pointer; z-index: 15;">+</button>
                             </div>
                         </div>
                         <!-- PNG画像を右上に配置 -->
@@ -1153,21 +1212,23 @@
                             <img src="Un_doux_souvenir.png" alt="Un doux souvenir" style="width: 60%; height: auto; border-radius: 0;">
                         </div>
                         <button class="remove-btn" onclick="removePhoto(0)">×</button>
-                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(0)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer; display: none;">編集</button>
+                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(0)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
                     </div>
                     <div class="preview-item medium" id="preview2" onclick="selectSlot(1)" style="position: absolute; top: 10px; right: 20px; width: 60px; height: 85px;">
                         <div class="photo-area">
-                            <div class="placeholder">L版<br><small>89×127mm<br>タップで写真を追加</small></div>
+                            <div class="placeholder">L版<br><small>89×<br>127mm</small></div>
+                            <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(1)" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 16px; cursor: pointer; z-index: 15;">+</button>
                         </div>
                         <button class="remove-btn" onclick="removePhoto(1)">×</button>
-                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(1)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer; display: none;">編集</button>
+                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(1)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
                     </div>
                     <div class="preview-item small" id="preview3" onclick="selectSlot(2)" style="position: absolute; top: 120px; right: 20px; width: 85px; height: 60px;">
                         <div class="photo-area">
-                            <div class="placeholder">L版<br><small>127×89mm<br>タップで写真を追加</small></div>
+                            <div class="placeholder">L版<br><small>127×89mm</small></div>
+                            <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(2)" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 16px; cursor: pointer; z-index: 15;">+</button>
                         </div>
                         <button class="remove-btn" onclick="removePhoto(2)">×</button>
-                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(2)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer; display: none;">編集</button>
+                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(2)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
                     </div>
                     
                 </div>
@@ -1257,7 +1318,9 @@
                         <h4>🎨 デュオトーン（2色）フィルター</h4>
                         <div class="preset-buttons duotone-buttons">
                             <button class="preset-btn" onclick="applyDuotone('none')" style="background: linear-gradient(135deg, #bbb, #ddd);">なし</button>
+                            <button class="preset-btn" onclick="applyDuotone('gray')" style="background: linear-gradient(135deg, #C0C0C0, #E0E0E0);">⚫</button>
                             <button class="preset-btn" onclick="applyDuotone('orange')" style="background: linear-gradient(135deg, #D4A59B, #F6A18F);">🍊</button>
+                            <button class="preset-btn" onclick="applyDuotone('yellow')" style="background: linear-gradient(135deg, #F4E4A6, #FFF2CC);">💛</button>
                             <button class="preset-btn" onclick="applyDuotone('blue')" style="background: linear-gradient(135deg, #B0C4DC, #C8DCF0);">💙</button>
                             <button class="preset-btn" onclick="applyDuotone('green')" style="background: linear-gradient(135deg, #B8D4C0, #C8E6C8);">💚</button>
                             <button class="preset-btn" onclick="applyDuotone('pink')" style="background: linear-gradient(135deg, #E0C4D0, #FFD2E6);">💗</button>
@@ -1267,8 +1330,8 @@
                         <!-- デュオトーン濃度調整（フィルター選択時のみ表示） -->
                         <div id="duotoneIntensityControl" style="display: none; margin-top: 15px;">
                             <label>
-                                濃度: <span class="slider-value" id="modalDuotoneIntensityValue">100</span>%
-                                <input type="range" id="modalDuotoneIntensity" min="0" max="100" value="100" step="5">
+                                濃度: <span class="slider-value" id="modalDuotoneIntensityValue">65</span>%
+                                <input type="range" id="modalDuotoneIntensity" min="0" max="100" value="65" step="5">
                             </label>
                         </div>
                     </div>
@@ -1318,7 +1381,6 @@
             
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="resetModalAdjustments()">リセット</button>
-                <button class="btn btn-primary" onclick="applyModalChanges()">適用</button>
                 <button class="btn btn-primary" onclick="closePhotoEditModal()">完了</button>
             </div>
         </div>
@@ -1335,6 +1397,188 @@
     </div>
 
     <script>
+        // ========================================
+        // 🚀 一括改善: デバッグ・エラーハンドリング・状態管理・バリデーション
+        // ========================================
+        
+        // デバッグ設定
+        const DEBUG_CONFIG = {
+            enabled: true,
+            logLevel: 'info', // debug, info, warn, error
+            showToasts: true,
+            performanceMonitoring: true
+        };
+
+        // デバッグ関数
+        function debugLog(level, message, data = null) {
+            if (!DEBUG_CONFIG.enabled) return;
+            
+            const timestamp = new Date().toISOString();
+            const logMessage = `[${timestamp}] ${level.toUpperCase()}: ${message}`;
+            
+            console.log(logMessage, data);
+            
+            if (DEBUG_CONFIG.showToasts && level === 'error') {
+                showErrorToast(message);
+            }
+        }
+
+        // エラートースト表示
+        function showErrorToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; top: 20px; right: 20px; 
+                background: #ff4444; color: white; 
+                padding: 15px; border-radius: 5px; 
+                z-index: 10000; max-width: 300px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            `;
+            toast.innerHTML = `<strong>エラー:</strong> ${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.remove(), 5000);
+        }
+
+        // パフォーマンス監視
+        function measurePerformance(label, fn) {
+            const start = performance.now();
+            try {
+                const result = fn();
+                const end = performance.now();
+                debugLog('info', `⏱️ ${label}: ${(end - start).toFixed(2)}ms`);
+                return result;
+            } catch (error) {
+                debugLog('error', `❌ ${label} failed:`, error);
+                throw error;
+            }
+        }
+
+        // アプリケーション状態の一元管理
+        const AppState = {
+            photos: [null, null, null],
+            adjustments: [
+                { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65 },
+                { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65 },
+                { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65 }
+            ],
+            currentModalIndex: -1,
+            
+            // 状態変更の監視
+            listeners: [],
+            
+            setState(newState) {
+                debugLog('info', 'State updated:', newState);
+                Object.assign(this, newState);
+                this.listeners.forEach(callback => {
+                    try {
+                        callback(this);
+                    } catch (error) {
+                        debugLog('error', 'State listener error:', error);
+                    }
+                });
+            },
+            
+            subscribe(callback) {
+                this.listeners.push(callback);
+            },
+            
+            // 安全な状態取得
+            getPhoto(index) {
+                if (index < 0 || index >= this.photos.length) {
+                    debugLog('warn', `Invalid photo index: ${index}`);
+                    return null;
+                }
+                return this.photos[index];
+            },
+            
+            getAdjustments(index) {
+                if (index < 0 || index >= this.adjustments.length) {
+                    debugLog('warn', `Invalid adjustments index: ${index}`);
+                    return this.adjustments[0]; // デフォルト値を返す
+                }
+                return this.adjustments[index];
+            }
+        };
+
+        // バリデーション機能
+        const Validation = {
+            validatePhoto(file) {
+                const errors = [];
+                
+                if (!file) {
+                    errors.push('ファイルが選択されていません');
+                    return errors;
+                }
+                
+                if (!file.type.startsWith('image/')) {
+                    errors.push('画像ファイルを選択してください');
+                }
+                
+                if (file.size > 10 * 1024 * 1024) { // 10MB
+                    errors.push('ファイルサイズが大きすぎます（10MB以下）');
+                }
+                
+                if (errors.length > 0) {
+                    debugLog('warn', 'Photo validation failed:', errors);
+                }
+                
+                return errors;
+            },
+            
+            validateAdjustments(adjustments) {
+                const errors = [];
+                
+                if (adjustments.brightness < 0.1 || adjustments.brightness > 3) {
+                    errors.push('明度は0.1〜3の範囲で設定してください');
+                }
+                
+                if (adjustments.zoom < 50 || adjustments.zoom > 300) {
+                    errors.push('ズームは50〜300%の範囲で設定してください');
+                }
+                
+                if (errors.length > 0) {
+                    debugLog('warn', 'Adjustments validation failed:', errors);
+                }
+                
+                return errors;
+            }
+        };
+
+        // 安全な関数実行
+        function safeExecute(fn, context = 'Unknown', fallback = null) {
+            try {
+                return fn();
+            } catch (error) {
+                debugLog('error', `${context} failed:`, error);
+                if (fallback !== null) {
+                    return fallback;
+                }
+                throw error;
+            }
+        }
+
+        // 非同期処理の安全な実行
+        async function safeAsyncExecute(fn, context = 'Unknown', fallback = null) {
+            try {
+                return await fn();
+            } catch (error) {
+                debugLog('error', `${context} failed:`, error);
+                if (fallback !== null) {
+                    return fallback;
+                }
+                throw error;
+            }
+        }
+
+        // 初期化ログ
+        debugLog('info', '🚀 GOKIGEN MOOD 改善版が起動しました');
+        debugLog('info', 'デバッグ機能が有効です');
+
+        // ========================================
+        // 既存のコード
+        // ========================================
+        
         // 変数を先に定義
         let selectedFiles = [null, null, null];
         let selectedSize = 'gallery';
@@ -1358,127 +1602,160 @@
         }
 
         function loadSamplePhotos() {
-            console.log('📸 loadSamplePhotos called');
-            alert('📸 サンプル写真を読み込みます');
-            
-            const samplePaths = [
-                'sample-photos/sample_1.jpg',
-                'sample-photos/sample_2.jpg',
-                'sample-photos/sample_3.jpg'
-            ];
-            
-            let loadedCount = 0;
-            let errorCount = 0;
-            
-            // 既存の写真をクリア
-            selectedFiles = [null, null, null];
-            photoAdjustments = [
-                { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 100 },
-                { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 100 },
-                { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 100 }
-            ];
-            
-            // プレビューをリセット
-            for (let i = 1; i <= 3; i++) {
-                const preview = document.getElementById(`preview${i}`);
-                if (preview) {
-                    preview.innerHTML = '';
-                    preview.classList.remove('has-photo');
-                }
-            }
-            
-            for (let i = 0; i < samplePaths.length; i++) {
-                const img = new Image();
-                const index = i;
-                const photoPath = samplePaths[i];
+            return measurePerformance('loadSamplePhotos', () => {
+                debugLog('info', '📸 サンプル写真読み込み開始');
                 
-                img.onload = function() {
-                    loadedCount++;
+                const samplePaths = [
+                    'sample-photos/sample_1.jpg',
+                    'sample-photos/sample_2.jpg',
+                    'sample-photos/sample_3.jpg'
+                ];
+                
+                let loadedCount = 0;
+                let errorCount = 0;
+                
+                // 既存の写真をクリア
+                selectedFiles = [null, null, null];
+                photoAdjustments = [
+                    { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65 },
+                    { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65 },
+                    { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65 }
+                ];
+                
+                // AppStateも更新
+                AppState.setState({
+                    photos: [null, null, null],
+                    adjustments: photoAdjustments
+                });
+                
+                // プレビューをリセット
+                for (let i = 1; i <= 3; i++) {
+                    const preview = document.getElementById(`preview${i}`);
+                    if (preview) {
+                        preview.innerHTML = '';
+                        preview.classList.remove('has-photo');
+                    }
+                }
+                
+                for (let i = 0; i < samplePaths.length; i++) {
+                    const img = new Image();
+                    const index = i;
+                    const photoPath = samplePaths[i];
                     
-                    try {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0);
+                    img.onload = function() {
+                        loadedCount++;
+                        debugLog('info', `写真${index + 1}読み込み成功: ${photoPath}`);
                         
-                        canvas.toBlob((blob) => {
-                            if (!blob) {
-                                errorCount++;
-                                return;
-                            }
+                        try {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0);
                             
-                            const file = new File([blob], `sample_${index + 1}.jpg`, { type: 'image/jpeg' });
-                            selectedFiles[index] = file;
-                            
-                            const preview = document.getElementById(`preview${index + 1}`);
-                            if (!preview) {
-                                errorCount++;
-                                return;
-                            }
-                            
-                            const reader = new FileReader();
-                            reader.onload = (e) => {
-                                if (index === 0) {
-                                    preview.innerHTML = `
-                                        <div class="inner-container">
-                                            <div class="photo-area">
-                                                <img src="${e.target.result}" alt="写真${index + 1}">
-                                            </div>
-                                        </div>
-                                        <div class="png-overlay">
-                                            <img src="circle_logo.png" alt="ご機嫌ムード">
-                                        </div>
-                                        <div class="french-text">
-                                            <img src="Un_doux_souvenir.png" alt="Un doux souvenir">
-                                        </div>
-                                        <button class="remove-btn" onclick="removePhoto(${index})">×</button>
-                                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})">編集</button>
-                                    `;
-                                } else {
-                                    preview.innerHTML = `
-                                        <img src="${e.target.result}" alt="写真${index + 1}">
-                                        <button class="remove-btn" onclick="removePhoto(${index})">×</button>
-                                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})">編集</button>
-                                    `;
+                            canvas.toBlob((blob) => {
+                                if (!blob) {
+                                    errorCount++;
+                                    debugLog('error', `写真${index + 1}のBlob作成に失敗`);
+                                    return;
                                 }
-                                preview.classList.add('has-photo');
                                 
-                                if (loadedCount === 3) {
-                                    alert('✅ サンプル写真の読み込み完了！');
-                                    setTimeout(() => generateGallery(), 500);
-                                } else if (loadedCount + errorCount === 3) {
-                                    if (loadedCount > 0) {
-                                        alert(`⚠️ ${loadedCount}枚の写真を読み込みました（${errorCount}枚失敗）`);
-                                        setTimeout(() => generateGallery(), 500);
-                                    }
+                                const file = new File([blob], `sample_${index + 1}.jpg`, { type: 'image/jpeg' });
+                                
+                                // バリデーション
+                                const validationErrors = Validation.validatePhoto(file);
+                                if (validationErrors.length > 0) {
+                                    errorCount++;
+                                    debugLog('error', `写真${index + 1}のバリデーション失敗:`, validationErrors);
+                                    return;
                                 }
-                            };
-                            reader.readAsDataURL(file);
-                        }, 'image/jpeg');
-                    } catch (error) {
+                                
+                                selectedFiles[index] = file;
+                                
+                                const preview = document.getElementById(`preview${index + 1}`);
+                                if (!preview) {
+                                    errorCount++;
+                                    debugLog('error', `プレビュー${index + 1}が見つかりません`);
+                                    return;
+                                }
+                                
+                                const reader = new FileReader();
+                                reader.onload = (e) => {
+                                    try {
+                                        if (index === 0) {
+                                            preview.innerHTML = `
+                                                <div class="inner-container">
+                                                    <div class="photo-area">
+                                                        <img src="${e.target.result}" alt="写真${index + 1}">
+                                                    </div>
+                                                </div>
+                                                <div class="png-overlay">
+                                                    <img src="circle_logo.png" alt="ご機嫌ムード">
+                                                </div>
+                                                <div class="french-text">
+                                                    <img src="Un_doux_souvenir.png" alt="Un doux souvenir" style="width: 60%; height: auto; border-radius: 0;">
+                                                </div>
+                                                <button class="remove-btn" onclick="removePhoto(${index})">×</button>
+                                                <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
+                                            `;
+                                        } else {
+                                            preview.innerHTML = `
+                                                <img src="${e.target.result}" alt="写真${index + 1}">
+                                                <button class="remove-btn" onclick="removePhoto(${index})">×</button>
+                                                <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
+                                            `;
+                                        }
+                                        preview.classList.add('has-photo');
+                                        
+                                        // 明度1.1を適用
+                                        const previewImg = preview.querySelector('img');
+                                        if (previewImg) {
+                                            previewImg.style.filter = 'brightness(1.1)';
+                                        }
+                                        
+                                        debugLog('info', `写真${index + 1}のプレビュー更新完了`);
+                                        
+                                        if (loadedCount === 3) {
+                                            debugLog('info', '✅ サンプル写真の読み込み完了！');
+                                            AppState.setState({ photos: selectedFiles });
+                                            setTimeout(() => generateGallery(), 500);
+                                        } else if (loadedCount + errorCount === 3) {
+                                            if (loadedCount > 0) {
+                                                debugLog('warn', `⚠️ ${loadedCount}枚の写真を読み込みました（${errorCount}枚失敗）`);
+                                                setTimeout(() => generateGallery(), 500);
+                                            }
+                                        }
+                                    } catch (error) {
+                                        debugLog('error', `写真${index + 1}のプレビュー更新エラー:`, error);
+                                        errorCount++;
+                                    }
+                                };
+                                reader.readAsDataURL(file);
+                            }, 'image/jpeg');
+                        } catch (error) {
+                            errorCount++;
+                            debugLog('error', `写真${index + 1}の処理エラー:`, error);
+                            
+                            if (errorCount === samplePaths.length) {
+                                debugLog('error', '❌ すべてのサンプル写真の処理に失敗しました。\nローカルサーバーで実行してください。\n\nhttp://localhost:8080 でアクセスしてください。');
+                            }
+                        }
+                    };
+                    
+                    img.onerror = function() {
                         errorCount++;
-                        console.error(`Error processing image ${index + 1}:`, error);
+                        debugLog('error', `写真${index + 1}の読み込み失敗: ${photoPath}`);
                         
                         if (errorCount === samplePaths.length) {
-                            alert('❌ すべてのサンプル写真の処理に失敗しました。\nローカルサーバーで実行してください。\n\nhttp://localhost:8080 でアクセスしてください。');
+                            debugLog('error', '❌ すべてのサンプル写真の読み込みに失敗しました。\nローカルサーバーで実行してください。\n\nhttp://localhost:8080 でアクセスしてください。');
+                        } else {
+                            debugLog('error', `写真${index + 1}の読み込みに失敗しました: ${photoPath}`);
                         }
-                    }
-                };
-                
-                img.onerror = function() {
-                    errorCount++;
-                    console.error(`Failed to load: ${photoPath}`);
+                    };
                     
-                    if (errorCount === samplePaths.length) {
-                        alert('❌ すべてのサンプル写真の読み込みに失敗しました。\nローカルサーバーで実行してください。\n\nhttp://localhost:8080 でアクセスしてください。');
-                    } else {
-                        alert(`写真${index + 1}の読み込みに失敗しました: ${photoPath}`);
-                    }
-                };
-                
-                img.src = photoPath;
-            }
+                    img.src = photoPath;
+                }
+            });
         }
 
         // DPI選択機能
@@ -1494,55 +1771,119 @@
         
         // キャンバスをDPI情報付きのData URLに変換
         function canvasToDataURLWithDPI(canvas, dpi = 300) {
-            // まず通常のJPEGとしてエクスポート
-            const dataURL = canvas.toDataURL('image/jpeg', 0.95);
-            
-            // Base64をバイナリに変換
-            const base64 = dataURL.split(',')[1];
-            const binary = atob(base64);
-            const array = new Uint8Array(binary.length);
-            for (let i = 0; i < binary.length; i++) {
-                array[i] = binary.charCodeAt(i);
-            }
-            
-            // JFIF APP0マーカーを作成（DPI情報を含む）
-            const dpiBytes = new Uint8Array([
-                0xFF, 0xE0,                    // APP0マーカー
-                0x00, 0x10,                    // セグメント長（16バイト）
-                0x4A, 0x46, 0x49, 0x46, 0x00, // "JFIF\0"
-                0x01, 0x02,                    // JFIFバージョン 1.2
-                0x01,                          // 単位: DPI
-                (dpi >> 8) & 0xFF, dpi & 0xFF, // X解像度
-                (dpi >> 8) & 0xFF, dpi & 0xFF, // Y解像度
-                0x00, 0x00                     // サムネイルなし
-            ]);
-            
-            // 新しいJPEGを構築
-            let newArray;
-            if (array[2] === 0xFF && array[3] === 0xE0) {
-                // 既存のAPP0マーカーを置き換え
-                const app0Length = (array[4] << 8) | array[5];
-                const afterApp0 = array.slice(4 + app0Length);
-                newArray = new Uint8Array(2 + dpiBytes.length + afterApp0.length);
-                newArray.set([0xFF, 0xD8], 0);      // SOIマーカー
-                newArray.set(dpiBytes, 2);
-                newArray.set(afterApp0, 2 + dpiBytes.length);
-            } else {
-                // APP0マーカーを挿入
-                newArray = new Uint8Array(2 + dpiBytes.length + array.length - 2);
-                newArray.set([0xFF, 0xD8], 0);      // SOIマーカー
-                newArray.set(dpiBytes, 2);
-                newArray.set(array.slice(2), 2 + dpiBytes.length);
-            }
-            
-            // バイナリをBase64に変換
-            let newBinary = '';
-            for (let i = 0; i < newArray.length; i++) {
-                newBinary += String.fromCharCode(newArray[i]);
-            }
-            const newBase64 = btoa(newBinary);
-            
-            return 'data:image/jpeg;base64,' + newBase64;
+            return safeExecute(() => {
+                debugLog('info', `📸 キャンバスをJPEGに変換: ${canvas.width}x${canvas.height}, DPI=${dpi}`);
+                
+                // 新しいキャンバスを作成して白い背景を確実に設定
+                const newCanvas = document.createElement('canvas');
+                newCanvas.width = canvas.width;
+                newCanvas.height = canvas.height;
+                const newCtx = newCanvas.getContext('2d');
+                
+                // 白い背景を確実に設定
+                newCtx.fillStyle = '#ffffff';
+                newCtx.fillRect(0, 0, newCanvas.width, newCanvas.height);
+                debugLog('info', '新しいキャンバスに白い背景を設定');
+                
+                // 元のキャンバスの内容をコピー
+                newCtx.drawImage(canvas, 0, 0);
+                debugLog('info', '元のキャンバスの内容をコピー');
+                
+                // 透明ピクセルを白に変換
+                const imageData = newCtx.getImageData(0, 0, newCanvas.width, newCanvas.height);
+                const data = imageData.data;
+                
+                let transparentPixels = 0;
+                for (let i = 0; i < data.length; i += 4) {
+                    const alpha = data[i + 3];
+                    if (alpha === 0) { // 透明ピクセル
+                        data[i] = 255;     // R
+                        data[i + 1] = 255; // G
+                        data[i + 2] = 255; // B
+                        data[i + 3] = 255; // A
+                        transparentPixels++;
+                    }
+                }
+                
+                if (transparentPixels > 0) {
+                    debugLog('info', `${transparentPixels}個の透明ピクセルを白に変換しました`);
+                    newCtx.putImageData(imageData, 0, 0);
+                }
+                
+                // 新しいキャンバスを使用
+                canvas = newCanvas;
+                
+                // キャンバス全体を白で塗りつぶし（透明部分を確実に白に）
+                const finalCtx = canvas.getContext('2d');
+                const finalImageData = finalCtx.getImageData(0, 0, canvas.width, canvas.height);
+                const finalData = finalImageData.data;
+                
+                for (let i = 0; i < finalData.length; i += 4) {
+                    const alpha = finalData[i + 3];
+                    if (alpha < 255) { // 完全に不透明でない場合
+                        // アルファブレンディングで白と合成
+                        const alphaRatio = alpha / 255;
+                        finalData[i] = Math.round(finalData[i] * alphaRatio + 255 * (1 - alphaRatio));     // R
+                        finalData[i + 1] = Math.round(finalData[i + 1] * alphaRatio + 255 * (1 - alphaRatio)); // G
+                        finalData[i + 2] = Math.round(finalData[i + 2] * alphaRatio + 255 * (1 - alphaRatio)); // B
+                        finalData[i + 3] = 255; // A
+                    }
+                }
+                
+                finalCtx.putImageData(finalImageData, 0, 0);
+                debugLog('info', 'アルファブレンディングで白い背景を適用');
+                
+                // JPEGとしてエクスポート
+                const dataURL = canvas.toDataURL('image/jpeg', 0.95);
+                
+                // Base64をバイナリに変換
+                const base64 = dataURL.split(',')[1];
+                const binary = atob(base64);
+                const array = new Uint8Array(binary.length);
+                for (let i = 0; i < binary.length; i++) {
+                    array[i] = binary.charCodeAt(i);
+                }
+                
+                // JFIF APP0マーカーを作成（DPI情報を含む）
+                const dpiBytes = new Uint8Array([
+                    0xFF, 0xE0,                    // APP0マーカー
+                    0x00, 0x10,                    // セグメント長（16バイト）
+                    0x4A, 0x46, 0x49, 0x46, 0x00, // "JFIF\0"
+                    0x01, 0x02,                    // JFIFバージョン 1.2
+                    0x01,                          // 単位: DPI
+                    (dpi >> 8) & 0xFF, dpi & 0xFF, // X解像度
+                    (dpi >> 8) & 0xFF, dpi & 0xFF, // Y解像度
+                    0x00, 0x00                     // サムネイルなし
+                ]);
+                
+                // 新しいJPEGを構築
+                let newArray;
+                if (array[2] === 0xFF && array[3] === 0xE0) {
+                    // 既存のAPP0マーカーを置き換え
+                    const app0Length = (array[4] << 8) | array[5];
+                    const afterApp0 = array.slice(4 + app0Length);
+                    newArray = new Uint8Array(2 + dpiBytes.length + afterApp0.length);
+                    newArray.set([0xFF, 0xD8], 0);      // SOIマーカー
+                    newArray.set(dpiBytes, 2);
+                    newArray.set(afterApp0, 2 + dpiBytes.length);
+                } else {
+                    // APP0マーカーを挿入
+                    newArray = new Uint8Array(2 + dpiBytes.length + array.length - 2);
+                    newArray.set([0xFF, 0xD8], 0);      // SOIマーカー
+                    newArray.set(dpiBytes, 2);
+                    newArray.set(array.slice(2), 2 + dpiBytes.length);
+                }
+                
+                // バイナリをBase64に変換
+                let newBinary = '';
+                for (let i = 0; i < newArray.length; i++) {
+                    newBinary += String.fromCharCode(newArray[i]);
+                }
+                const newBase64 = btoa(newBinary);
+                
+                debugLog('info', '✅ JPEG変換完了（DPI情報付き）');
+                return 'data:image/jpeg;base64,' + newBase64;
+            }, 'canvasToDataURLWithDPI');
         }
 
         // 印刷用サイズ定義（mm）
@@ -1589,9 +1930,111 @@
         }
 
 
+        // モーダルの調整値を自動保存する関数
+        function saveModalAdjustments() {
+            return safeExecute(() => {
+                if (modalPhotoIndex < 0) {
+                    debugLog('warn', 'saveModalAdjustments: modalPhotoIndexが無効です');
+                    return;
+                }
+                
+                const adjustments = {
+                    zoom: parseFloat(document.getElementById('modalZoom').value) || 100,
+                    posX: parseFloat(document.getElementById('modalPosX').value) || 0,
+                    posY: parseFloat(document.getElementById('modalPosY').value) || 0,
+                    brightness: parseFloat(document.getElementById('modalBrightness').value) || 1.1,
+                    contrast: parseFloat(document.getElementById('modalContrast').value) || 1,
+                    saturation: parseFloat(document.getElementById('modalSaturation').value) || 1,
+                    monotone: parseFloat(document.getElementById('modalMonotone').value) || 0,
+                    hue: parseFloat(document.getElementById('modalHue').value) || 0,
+                    duotone: photoAdjustments[modalPhotoIndex]?.duotone || 'none',
+                    duotoneIntensity: parseFloat(document.getElementById('modalDuotoneIntensity').value) || 65
+                };
+                
+                // バリデーション
+                const validationErrors = Validation.validateAdjustments(adjustments);
+                if (validationErrors.length > 0) {
+                    debugLog('warn', '調整値のバリデーション警告:', validationErrors);
+                }
+                
+                photoAdjustments[modalPhotoIndex] = adjustments;
+                debugLog('info', '💾 調整値を自動保存しました:', { index: modalPhotoIndex, adjustments });
+                
+                // AppStateも更新
+                AppState.setState({
+                    adjustments: photoAdjustments
+                });
+                
+                // メインページのプレビューも更新
+                updateMainPagePreview();
+            }, 'saveModalAdjustments');
+        }
+        
+        // メインページのプレビューを更新する関数
+        function updateMainPagePreview() {
+            return safeExecute(() => {
+                if (modalPhotoIndex < 0) {
+                    debugLog('warn', 'updateMainPagePreview: modalPhotoIndexが無効です');
+                    return;
+                }
+                
+                debugLog('info', `🔄 メインページプレビュー更新: index=${modalPhotoIndex}`);
+                
+                const preview = document.getElementById(`preview${modalPhotoIndex + 1}`);
+                const previewImg = preview?.querySelector('img');
+                const modalImg = document.getElementById('modalPhotoPreview');
+                
+                if (!preview) {
+                    debugLog('error', `プレビュー要素が見つかりません: preview${modalPhotoIndex + 1}`);
+                    return;
+                }
+                
+                if (!previewImg) {
+                    debugLog('error', `プレビュー画像が見つかりません: preview${modalPhotoIndex + 1}`);
+                    return;
+                }
+                
+                if (!modalImg) {
+                    debugLog('error', 'モーダル画像が見つかりません');
+                    return;
+                }
+                
+                const adjustments = photoAdjustments[modalPhotoIndex];
+                debugLog('info', `適用する調整値:`, adjustments);
+                
+                // トリミング・拡大の適用
+                const transform = `scale(${adjustments.zoom / 100}) translate(${adjustments.posX}%, ${adjustments.posY}%)`;
+                previewImg.style.transform = transform;
+                previewImg.style.transformOrigin = 'center center';
+                debugLog('info', `transform適用: ${transform}`);
+                
+                // デュオトーンが適用されている場合は、モーダルの処理済み画像をプレビューに反映
+                if (adjustments.duotone !== 'none') {
+                    debugLog('info', `デュオトーンフィルター適用: ${adjustments.duotone}`);
+                    previewImg.src = modalImg.src;
+                    previewImg.style.filter = modalImg.style.filter;
+                } else {
+                    // デュオトーンなしの場合は、通常のフィルターを適用
+                    const filter = `brightness(${adjustments.brightness}) contrast(${adjustments.contrast}) saturate(${adjustments.saturation}) grayscale(${adjustments.monotone}) hue-rotate(${adjustments.hue}deg)`;
+                    previewImg.style.filter = filter;
+                    debugLog('info', `通常フィルター適用: ${filter}`);
+                }
+                
+                debugLog('info', `✅ メインページプレビュー更新完了: index=${modalPhotoIndex}`);
+            }, 'updateMainPagePreview');
+        }
+
         // 写真編集モーダルを開く
         function openPhotoEditModal(index) {
-            if (selectedFiles[index]) {
+            return safeExecute(() => {
+                debugLog('info', `📝 編集モーダルを開く: index=${index}`);
+                
+                if (!selectedFiles[index]) {
+                    debugLog('error', `写真が選択されていません: index=${index}`);
+                    showErrorToast(`写真${index + 1}が選択されていません`);
+                    return;
+                }
+                
                 // 前のモーダルのトリミングモードをリセット
                 if (isInteractiveMode) {
                     isInteractiveMode = false;
@@ -1614,6 +2057,8 @@
                 const modalPreviewContainer = document.querySelector('.photo-preview-large');
                 const adjustments = photoAdjustments[index];
                 
+                debugLog('info', `モーダル設定: index=${index}, adjustments=`, adjustments);
+                
                 // オリジナル画像をdata-original-srcに保存（最初の1回だけ）
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -1628,6 +2073,8 @@
                             displaySrc = previewImg.src;
                         }
                     }
+                    
+                    debugLog('info', `画像読み込み完了: index=${index}, duotone=${adjustments.duotone}`);
                     
                     // A4版（index === 0）の場合は、PNGとアーチを含むプレビューを表示
                     if (index === 0) {
@@ -1656,6 +2103,8 @@
                         // index 1は縦向き（89×127mm）、index 2は横向き（127×89mm）
                         const isVertical = index === 1;
                         const orientationClass = isVertical ? 'l-vertical' : 'l-horizontal';
+                        debugLog('info', `L版設定: index=${index}, isVertical=${isVertical}, orientationClass=${orientationClass}`);
+                        
                         modalPreviewContainer.innerHTML = `
                             <span class="corner-arrow top-left">↖️</span>
                             <span class="corner-arrow top-right">↗️</span>
@@ -1681,8 +2130,8 @@
                 const intensityControl = document.getElementById('duotoneIntensityControl');
                 if (adjustments.duotone && adjustments.duotone !== 'none') {
                     intensityControl.style.display = 'block';
-                    document.getElementById('modalDuotoneIntensity').value = adjustments.duotoneIntensity || 100;
-                    document.getElementById('modalDuotoneIntensityValue').textContent = adjustments.duotoneIntensity || 100;
+                    document.getElementById('modalDuotoneIntensity').value = adjustments.duotoneIntensity || 65;
+                    document.getElementById('modalDuotoneIntensityValue').textContent = adjustments.duotoneIntensity || 65;
                 } else {
                     intensityControl.style.display = 'none';
                 }
@@ -1697,7 +2146,8 @@
                 reader.readAsDataURL(selectedFiles[index]);
                 
                 modal.style.display = 'block';
-            }
+                debugLog('info', `✅ 編集モーダル表示完了: index=${index}`);
+            }, 'openPhotoEditModal');
         }
 
         // 写真編集モーダルを閉じる
@@ -1738,29 +2188,49 @@
 
         // モーダルでフィルターを適用
         function applyModalFilters() {
-            const zoom = document.getElementById('modalZoom').value;
-            const posX = document.getElementById('modalPosX').value;
-            const posY = document.getElementById('modalPosY').value;
-            const brightness = document.getElementById('modalBrightness').value;
-            const contrast = document.getElementById('modalContrast').value;
-            const saturation = document.getElementById('modalSaturation').value;
-            const monotone = document.getElementById('modalMonotone').value;
-            const hue = document.getElementById('modalHue').value;
-            const duotone = photoAdjustments[modalPhotoIndex]?.duotone || 'none';
-            
-            // トリミング・拡大の適用
-            const img = document.getElementById('modalPhotoPreview');
-            img.style.transform = `scale(${zoom / 100}) translate(${posX}%, ${posY}%)`;
-            img.style.transformOrigin = 'center center';
-            
-            // デュオトーン効果がある場合はCanvasで処理
-            if (duotone !== 'none') {
-                applyDuotoneToPreview(brightness, contrast, saturation, duotone);
-            } else {
-                // 通常のフィルター（モノトーンを追加）
-                const filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturation}) grayscale(${monotone}) hue-rotate(${hue}deg)`;
-                img.style.filter = filter;
-            }
+            return safeExecute(() => {
+                debugLog('info', `🎨 モーダルフィルター適用: index=${modalPhotoIndex}`);
+                
+                const zoom = document.getElementById('modalZoom').value;
+                const posX = document.getElementById('modalPosX').value;
+                const posY = document.getElementById('modalPosY').value;
+                const brightness = document.getElementById('modalBrightness').value;
+                const contrast = document.getElementById('modalContrast').value;
+                const saturation = document.getElementById('modalSaturation').value;
+                const monotone = document.getElementById('modalMonotone').value;
+                const hue = document.getElementById('modalHue').value;
+                const duotone = photoAdjustments[modalPhotoIndex]?.duotone || 'none';
+                
+                debugLog('info', `フィルター値: brightness=${brightness}, contrast=${contrast}, saturation=${saturation}, duotone=${duotone}`);
+                
+                // トリミング・拡大の適用
+                const img = document.getElementById('modalPhotoPreview');
+                if (!img) {
+                    debugLog('error', 'モーダル画像が見つかりません');
+                    return;
+                }
+                
+                img.style.transform = `scale(${zoom / 100}) translate(${posX}%, ${posY}%)`;
+                img.style.transformOrigin = 'center center';
+                
+                // デュオトーン効果がある場合はCanvasで処理
+                if (duotone !== 'none') {
+                    debugLog('info', `デュオトーン処理: ${duotone}`);
+                    applyDuotoneToPreview(brightness, contrast, saturation, duotone);
+                } else {
+                    // 通常のフィルター（モノトーンを追加）
+                    const filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturation}) grayscale(${monotone}) hue-rotate(${hue}deg)`;
+                    img.style.filter = filter;
+                    debugLog('info', `通常フィルター適用: ${filter}`);
+                }
+                
+                // メインページのプレビューも更新
+                setTimeout(() => {
+                    updateMainPagePreview();
+                }, 50);
+                
+                debugLog('info', `✅ モーダルフィルター適用完了: index=${modalPhotoIndex}`);
+            }, 'applyModalFilters');
         }
 
         // Canvas APIで正確なデュオトーン効果を適用
@@ -1792,7 +2262,9 @@
                 
                 // デュオトーンカラー定義（暗部の色、明部の色）- より淡い色に調整
                 const duotoneColors = {
+                    'gray': { dark: [120, 120, 120], light: [200, 200, 200] },     // 柔らかいグレー
                     'orange': { dark: [140, 100, 80], light: [246, 195, 175] },    // 柔らかいオレンジ
+                    'yellow': { dark: [180, 160, 80], light: [255, 242, 204] },     // 柔らかいイエロー
                     'blue': { dark: [100, 120, 160], light: [200, 220, 240] },     // 柔らかいブルー
                     'green': { dark: [100, 140, 100], light: [200, 230, 200] },    // 柔らかいグリーン
                     'pink': { dark: [150, 120, 130], light: [250, 210, 230] },     // 柔らかいピンク
@@ -1822,7 +2294,7 @@
                     const duotoneB = colors.dark[2] * (1 - t) + colors.light[2] * t;
                     
                     // 元の色とデュオトーン色を濃度に応じてブレンド
-                    const intensity = (photoAdjustments[modalPhotoIndex].duotoneIntensity || 100) / 100;
+                    const intensity = (photoAdjustments[modalPhotoIndex].duotoneIntensity || 65) / 100;
                     data[i] = r * (1 - intensity) + duotoneR * intensity;
                     data[i + 1] = g * (1 - intensity) + duotoneG * intensity;
                     data[i + 2] = b * (1 - intensity) + duotoneB * intensity;
@@ -1859,15 +2331,16 @@
                     }
                 } else {
                     intensityControl.style.display = 'block';
-                    // 初期値を設定（もし未設定なら100%）
+                    // 初期値を設定（もし未設定なら65%）
                     if (!photoAdjustments[modalPhotoIndex].duotoneIntensity) {
-                        photoAdjustments[modalPhotoIndex].duotoneIntensity = 100;
-                        document.getElementById('modalDuotoneIntensity').value = 100;
-                        document.getElementById('modalDuotoneIntensityValue').textContent = 100;
+                        photoAdjustments[modalPhotoIndex].duotoneIntensity = 65;
+                        document.getElementById('modalDuotoneIntensity').value = 65;
+                        document.getElementById('modalDuotoneIntensityValue').textContent = 65;
                     }
                 }
                 
                 applyModalFilters();
+                saveModalAdjustments(); // 自動保存 + メインページ更新
             }
         }
 
@@ -1892,67 +2365,52 @@
 
         // モーダルの調整をリセット
         function resetModalAdjustments() {
-            document.getElementById('modalZoom').value = 100;
-            document.getElementById('modalPosX').value = 0;
-            document.getElementById('modalPosY').value = 0;
-            document.getElementById('modalBrightness').value = 1.1;
-            document.getElementById('modalContrast').value = 1;
-            document.getElementById('modalSaturation').value = 1;
-            document.getElementById('modalMonotone').value = 0;
-            document.getElementById('modalHue').value = 0;
-            
-            updateModalValues();
-            applyModalFilters();
-        }
-
-        // モーダルの変更を適用
-        function applyModalChanges() {
-            if (modalPhotoIndex >= 0) {
-                const duotone = photoAdjustments[modalPhotoIndex].duotone || 'none';
+            return safeExecute(() => {
+                debugLog('info', '🔄 モーダル調整をリセット中');
                 
-                photoAdjustments[modalPhotoIndex] = {
-                    zoom: parseFloat(document.getElementById('modalZoom').value),
-                    posX: parseFloat(document.getElementById('modalPosX').value),
-                    posY: parseFloat(document.getElementById('modalPosY').value),
-                    brightness: parseFloat(document.getElementById('modalBrightness').value),
-                    contrast: parseFloat(document.getElementById('modalContrast').value),
-                    saturation: parseFloat(document.getElementById('modalSaturation').value),
-                    monotone: parseFloat(document.getElementById('modalMonotone').value),
-                    hue: parseFloat(document.getElementById('modalHue').value),
-                    mainText: '',
-                    subText: '',
-                    duotone: duotone,
-                    duotoneIntensity: parseFloat(document.getElementById('modalDuotoneIntensity').value) || 100
-                };
+                document.getElementById('modalZoom').value = 100;
+                document.getElementById('modalPosX').value = 0;
+                document.getElementById('modalPosY').value = 0;
+                document.getElementById('modalBrightness').value = 1.1;
+                document.getElementById('modalContrast').value = 1;
+                document.getElementById('modalSaturation').value = 1;
+                document.getElementById('modalMonotone').value = 0;
+                document.getElementById('modalHue').value = 0;
+                document.getElementById('modalDuotoneIntensity').value = 65;
+                document.getElementById('modalDuotoneIntensityValue').textContent = 65;
                 
-                // プレビューの写真に調整を適用
-                const preview = document.getElementById(`preview${modalPhotoIndex + 1}`);
-                const previewImg = preview.querySelector('img');
-                const modalImg = document.getElementById('modalPhotoPreview');
-                
-                if (previewImg && modalImg) {
-                    // トリミング・拡大の適用
-                    const adjustments = photoAdjustments[modalPhotoIndex];
-                    previewImg.style.transform = `scale(${adjustments.zoom / 100}) translate(${adjustments.posX}%, ${adjustments.posY}%)`;
-                    previewImg.style.transformOrigin = 'center center';
+                // デュオトーンをリセット
+                if (modalPhotoIndex >= 0) {
+                    photoAdjustments[modalPhotoIndex].duotone = 'none';
+                    photoAdjustments[modalPhotoIndex].duotoneIntensity = 65;
                     
-                    // デュオトーンが適用されている場合は、モーダルの処理済み画像をプレビューに反映
-                    if (duotone !== 'none') {
-                        previewImg.src = modalImg.src;
-                        previewImg.style.filter = modalImg.style.filter;
-                    } else {
-                        // デュオトーンなしの場合は、通常のフィルターを適用
-                        const filter = `brightness(${adjustments.brightness}) contrast(${adjustments.contrast}) saturate(${adjustments.saturation}) grayscale(${adjustments.monotone}) hue-rotate(${adjustments.hue}deg)`;
-                        previewImg.style.filter = filter;
+                    // AppStateも更新
+                    AppState.setState({
+                        adjustments: photoAdjustments
+                    });
+                    
+                    // デュオトーン濃度コントロールを非表示
+                    const intensityControl = document.getElementById('duotoneIntensityControl');
+                    if (intensityControl) {
+                        intensityControl.style.display = 'none';
+                    }
+                    
+                    // 元の画像に戻す
+                    const img = document.getElementById('modalPhotoPreview');
+                    const originalSrc = img.getAttribute('data-original-src');
+                    if (originalSrc) {
+                        img.src = originalSrc;
                     }
                 }
                 
-                // キャンバスを再生成
-                setTimeout(() => {
-                    generateGallery();
-                }, 100);
-            }
+                updateModalValues();
+                applyModalFilters();
+                saveModalAdjustments();
+                
+                debugLog('info', '✅ モーダル調整のリセット完了');
+            }, 'resetModalAdjustments');
         }
+
 
 
 
@@ -2001,6 +2459,9 @@
                 // 画像が読み込まれたら自動的にキャンバスを生成
                 const imgElement = preview.querySelector('img');
                 imgElement.onload = function() {
+                    // 明度1.1を適用
+                    imgElement.style.filter = 'brightness(1.1)';
+                    
                     // 自動色調整は削除（ユーザーが手動で調整）
                     setTimeout(() => {
                         generateGallery();
@@ -2014,7 +2475,7 @@
             selectedFiles[index] = null;
             const preview = document.getElementById(`preview${index + 1}`);
             const sizeText = index === 0 ? 'A4版<br><small>210×297mm<br>タップで写真を追加</small>' : 
-                           'L版<br><small>89×127mm<br>タップで写真を追加</small>';
+                           'L版<br><small>89×<br>127mm<br>+ボタン</small>';
             
             if (index === 0) {
                 // A4版の場合はinner-containerとphoto-areaを使用
@@ -2042,6 +2503,12 @@
                 `;
             }
             preview.classList.remove('has-photo');
+            
+            // 編集ボタンを非表示にする（写真がないため）
+            const editBtn = preview.querySelector('.edit-btn');
+            if (editBtn) {
+                editBtn.style.display = 'none';
+            }
         }
 
 
@@ -2217,10 +2684,10 @@
             let sizeText;
             if (index === 0) {
                 sizeText = 'A4版<br><small>210×297mm<br>タップで写真を追加</small>';
-            } else if (index === 1) {
-                sizeText = 'L版<br><small>89×127mm<br>タップで写真を追加</small>';
+            } else             if (index === 1) {
+                sizeText = 'L版<br><small>89×<br>127mm<br>+ボタン</small>';
             } else {
-                sizeText = 'L版<br><small>127×89mm<br>タップで写真を追加</small>';
+                sizeText = 'L版<br><small>127×89mm<br>タップで追加</small>';
             }
             
             const placeholder = element.querySelector('.placeholder');
@@ -2305,7 +2772,9 @@
                 const data = imageData.data;
                 
                 const duotoneColors = {
+                    'gray': { dark: [120, 120, 120], light: [200, 200, 200] },
                     'orange': { dark: [140, 100, 80], light: [246, 195, 175] },
+                    'yellow': { dark: [180, 160, 80], light: [255, 242, 204] },
                     'blue': { dark: [100, 120, 160], light: [200, 220, 240] },
                     'green': { dark: [100, 140, 100], light: [200, 230, 200] },
                     'pink': { dark: [150, 120, 130], light: [250, 210, 230] },
@@ -2468,7 +2937,7 @@
                     applyFiltersToCanvas(canvas, adjustments, (filteredCanvas) => {
                         callback(filteredCanvas.toDataURL('image/jpeg', 0.95));
                     });
-                });
+                }, adjustments);
             };
             sourceImg.src = selectedFiles[index] ? URL.createObjectURL(selectedFiles[index]) : '';
         }
@@ -2510,10 +2979,13 @@
                 
                 ctx.drawImage(sourceImg, drawX, drawY, drawWidth, drawHeight);
                 
-                // フィルターを適用
-                applyFiltersToCanvas(canvas, adjustments, (filteredCanvas) => {
-                    callback(filteredCanvas.toDataURL('image/jpeg', 0.95));
-                });
+                // PNGオーバーレイを追加
+                addPngImagesToCanvas(ctx, L_WIDTH, L_HEIGHT, () => {
+                    // フィルターを適用
+                    applyFiltersToCanvas(canvas, adjustments, (filteredCanvas) => {
+                        callback(filteredCanvas.toDataURL('image/jpeg', 0.95));
+                    });
+                }, adjustments);
             };
             sourceImg.src = selectedFiles[index] ? URL.createObjectURL(selectedFiles[index]) : '';
         }
@@ -2634,9 +3106,10 @@
                                 archCanvas.width = canvases[i].width;
                                 archCanvas.height = canvases[i].height;
                                 
-                                // 白い背景
+                                // 白い背景（確実に設定）
                                 archCtx.fillStyle = '#ffffff';
                                 archCtx.fillRect(0, 0, archCanvas.width, archCanvas.height);
+                                debugLog('info', `A4版: 白い背景を設定 ${archCanvas.width}x${archCanvas.height}`);
                                 
                                 // アーチ型クリッピング
                                 archCtx.save();
@@ -2741,70 +3214,76 @@
                         sourceImg.src = selectedFiles[i] ? URL.createObjectURL(selectedFiles[i]) : '';
                         
                         sourceImg.onload = () => {
-                            console.log(`Source image loaded for index ${i}, size:`, sourceImg.width, 'x', sourceImg.height);
-                            // まず元画像をcanvasのサイズにリサイズしてからフィルター適用
-                            const resizeCanvas = document.createElement('canvas');
-                            const resizeCtx = resizeCanvas.getContext('2d');
-                            resizeCanvas.width = canvases[i].width;
-                            resizeCanvas.height = canvases[i].height;
+                            debugLog('info', `L版: ソース画像読み込み完了 ${sourceImg.width}x${sourceImg.height}`);
                             
-                            // 余白を考慮（プレビューのborder 4px + padding 2px = 6pxに相当）
-                            // プレビューサイズとの比率で計算
-                            const previewSize = i === 1 ? 60 : 85; // preview2は60px、preview3は85px（主要な辺）
-                            const marginRatio = 6 / previewSize; // プレビューの余白比率
-                            const margin = Math.min(resizeCanvas.width, resizeCanvas.height) * marginRatio;
-                            console.log(`L版 index ${i}: Canvas size=${resizeCanvas.width}x${resizeCanvas.height}, previewSize=${previewSize}, marginRatio=${marginRatio.toFixed(3)}, margin=${margin.toFixed(1)}px`);
-                            const photoArea = {
-                                width: resizeCanvas.width - (margin * 2),
-                                height: resizeCanvas.height - (margin * 2),
-                                x: margin,
-                                y: margin
-                            };
-                            console.log(`Photo area: ${photoArea.width.toFixed(1)}x${photoArea.height.toFixed(1)} at (${photoArea.x.toFixed(1)}, ${photoArea.y.toFixed(1)})`);
-                            console.log(`Margin as % of shorter side: ${(margin / Math.min(resizeCanvas.width, resizeCanvas.height) * 100).toFixed(1)}%`);
-                            
-                            // 白背景
-                            resizeCtx.fillStyle = '#ffffff';
-                            resizeCtx.fillRect(0, 0, resizeCanvas.width, resizeCanvas.height);
-                            
-                            // object-fit: cover のように画像をトリミング
-                            const imgRatio = sourceImg.width / sourceImg.height;
-                            const areaRatio = photoArea.width / photoArea.height;
-                            console.log(`Image ratio: ${imgRatio.toFixed(2)}, Area ratio: ${areaRatio.toFixed(2)}`);
-                            
-                            let drawWidth, drawHeight, drawX, drawY;
-                            
-                            if (imgRatio > areaRatio) {
-                                // 画像が横長 → 高さを合わせて幅をトリミング
-                                drawHeight = photoArea.height;
-                                drawWidth = drawHeight * imgRatio;
-                                drawX = photoArea.x - (drawWidth - photoArea.width) / 2;
-                                drawY = photoArea.y;
-                            } else {
-                                // 画像が縦長 → 幅を合わせて高さをトリミング
-                                drawWidth = photoArea.width;
-                                drawHeight = drawWidth / imgRatio;
-                                drawX = photoArea.x;
-                                drawY = photoArea.y - (drawHeight - photoArea.height) / 2;
-                            }
-                            
-                            // クリッピング領域を設定
-                            resizeCtx.save();
-                            resizeCtx.beginPath();
-                            resizeCtx.rect(photoArea.x, photoArea.y, photoArea.width, photoArea.height);
-                            resizeCtx.clip();
-                            
-                            // 画像を描画
-                            resizeCtx.drawImage(sourceImg, drawX, drawY, drawWidth, drawHeight);
-                            resizeCtx.restore();
-                            
-                            // リサイズされた画像にフィルターを適用
-                            applyFiltersToCanvas(resizeCanvas, adjustments, (filteredCanvas) => {
+                            // A4版と同じ方法：フィルターを先に適用してから白い外枠レイヤーを追加
+                            applyFiltersToCanvas(sourceImg, adjustments, (filteredCanvas) => {
+                                // L版キャンバスを作成（A4版のarchCanvasと同じ構造）
+                                const lCanvas = document.createElement('canvas');
+                                const lCtx = lCanvas.getContext('2d');
+                                lCanvas.width = canvases[i].width;
+                                lCanvas.height = canvases[i].height;
+                                
+                                // 白い背景レイヤー（最下層）
+                                lCtx.fillStyle = '#ffffff';
+                                lCtx.fillRect(0, 0, lCanvas.width, lCanvas.height);
+                                debugLog('info', `L版: 白い外枠レイヤーを設定 ${lCanvas.width}x${lCanvas.height}`);
+                                
+                                // 余白を考慮（プレビューのborder 4px + padding 2px = 6pxに相当）
+                                const previewSize = 85; // 両方とも85pxに統一（理想的な外枠サイズ）
+                                const marginRatio = 6 / previewSize; // プレビューの余白比率
+                                const margin = Math.min(lCanvas.width, lCanvas.height) * marginRatio;
+                                const photoArea = {
+                                    width: lCanvas.width - (margin * 2),
+                                    height: lCanvas.height - (margin * 2),
+                                    x: margin,
+                                    y: margin
+                                };
+                                debugLog('info', `L版: 写真エリア ${photoArea.width.toFixed(1)}x${photoArea.height.toFixed(1)} at (${photoArea.x.toFixed(1)}, ${photoArea.y.toFixed(1)})`);
+                                
+                                // 写真エリアのクリッピング（A4版のアーチ型クリッピングと同じ構造）
+                                lCtx.save();
+                                lCtx.beginPath();
+                                lCtx.rect(photoArea.x, photoArea.y, photoArea.width, photoArea.height);
+                                lCtx.clip();
+                                
+                                // フィルター適用済み画像を描画（A4版と同じ方法）
+                                const imgRatio = filteredCanvas.width / filteredCanvas.height;
+                                const areaRatio = photoArea.width / photoArea.height;
+                                
+                                let srcX = 0, srcY = 0, srcWidth = filteredCanvas.width, srcHeight = filteredCanvas.height;
+                                
+                                if (imgRatio > areaRatio) {
+                                    // 画像が横長 → 高さを合わせて幅をトリミング
+                                    srcWidth = filteredCanvas.height * areaRatio;
+                                    srcX = (filteredCanvas.width - srcWidth) / 2;
+                                } else {
+                                    // 画像が縦長 → 幅を合わせて高さをトリミング
+                                    srcHeight = filteredCanvas.width / areaRatio;
+                                    srcY = (filteredCanvas.height - srcHeight) / 2;
+                                }
+                                
+                                // ズームとポジション調整を適用（A4版と同じ方法）
+                                const scale = adjustments.zoom / 100;
+                                const scaledWidth = photoArea.width * scale;
+                                const scaledHeight = photoArea.height * scale;
+                                const offsetX = photoArea.x + (photoArea.width - scaledWidth) / 2 + (adjustments.posX * photoArea.width / 100);
+                                const offsetY = photoArea.y + (photoArea.height - scaledHeight) / 2 + (adjustments.posY * photoArea.height / 100);
+                                
+                                lCtx.drawImage(
+                                    filteredCanvas,
+                                    srcX, srcY, srcWidth, srcHeight,  // ソースのトリミング領域
+                                    offsetX, offsetY, scaledWidth, scaledHeight  // 描画先の位置とサイズ
+                                );
+                                lCtx.restore();
+                                
+                                // ダウンロード実行
                                 const selectedDPI = getSelectedDPI();
                                 const link = document.createElement('a');
                                 link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
-                                link.href = canvasToDataURLWithDPI(filteredCanvas, selectedDPI);
+                                link.href = canvasToDataURLWithDPI(lCanvas, selectedDPI);
                                 link.click();
+                                debugLog('info', `L版: ダウンロード完了 index=${i}`);
                             });
                         };
                     }
@@ -2812,6 +3291,84 @@
             }
         }
 
+
+        function addPngImagesToCanvas(ctx, canvasWidth, canvasHeight, callback, adjustments = null) {
+            // ロゴ画像を読み込み
+            const logoImg = new Image();
+            logoImg.onload = function() {
+                // ロゴのサイズと位置を計算（プレビューと同じ比率）
+                const logoSize = canvasWidth * 0.15; // キャンバス幅の15%
+                const logoX = canvasWidth - logoSize - (canvasWidth * 0.02); // 右端から2%のマージン
+                const logoY = canvasHeight * 0.03; // 上端から3%のマージン
+                
+                // ロゴを描画
+                ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
+                
+                // フランス語テキストを読み込み
+                const frenchImg = new Image();
+                frenchImg.onload = function() {
+                    // フランス語テキストのサイズと位置を計算
+                    const frenchWidth = canvasWidth * 0.4; // キャンバス幅の40%
+                    const frenchHeight = frenchWidth * (frenchImg.height / frenchImg.width);
+                    const frenchX = (canvasWidth - frenchWidth) / 2; // 中央揃え
+                    const frenchY = canvasHeight - frenchHeight - (canvasHeight * 0.05); // 下端から5%のマージン
+                    
+                    // フランス語テキストを描画
+                    ctx.drawImage(frenchImg, frenchX, frenchY, frenchWidth, frenchHeight);
+                    
+                    // ユーザーテキストを描画（mainText, subText）
+                    if (adjustments && (adjustments.mainText || adjustments.subText)) {
+                        drawUserText(ctx, canvasWidth, canvasHeight, adjustments.mainText, adjustments.subText);
+                    }
+                    
+                    // コールバックを実行
+                    if (callback) callback();
+                };
+                frenchImg.src = 'Un_doux_souvenir.png';
+            };
+            logoImg.src = 'circle_logo.png';
+        }
+
+        function drawUserText(ctx, canvasWidth, canvasHeight, mainText, subText) {
+            // テキストの位置を計算（写真エリアの中央）
+            const textX = canvasWidth / 2;
+            const textY = canvasHeight * 0.6; // 写真エリアの中央付近
+            
+            // L版かA4版かを判定（L版は幅が小さい）
+            const isLSize = canvasWidth < 1000; // 300DPIでL版は約1000px未満
+            
+            ctx.save();
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // メインテキストを描画
+            if (mainText) {
+                ctx.fillStyle = '#333';
+                if (isLSize) {
+                    // L版の場合は文字サイズを小さく
+                    ctx.font = `bold ${canvasWidth * 0.03}px 'Dancing Script', cursive`;
+                } else {
+                    // A4版の場合は通常サイズ
+                    ctx.font = `bold ${canvasWidth * 0.05}px 'Dancing Script', cursive`;
+                }
+                ctx.fillText(mainText, textX, textY - canvasHeight * 0.02);
+            }
+            
+            // サブテキストを描画
+            if (subText) {
+                ctx.fillStyle = '#666';
+                if (isLSize) {
+                    // L版の場合は文字サイズを小さく
+                    ctx.font = `${canvasWidth * 0.02}px 'Parisienne', cursive`;
+                } else {
+                    // A4版の場合は通常サイズ
+                    ctx.font = `${canvasWidth * 0.03}px 'Parisienne', cursive`;
+                }
+                ctx.fillText(subText, textX, textY + canvasHeight * 0.02);
+            }
+            
+            ctx.restore();
+        }
 
         function downloadZip() {
             // 簡易版：個別ダウンロードを順次実行
@@ -2851,26 +3408,31 @@
         document.getElementById('modalBrightness').addEventListener('input', function() {
             updateModalValues();
             applyModalFilters();
+            saveModalAdjustments(); // 自動保存
         });
 
         document.getElementById('modalContrast').addEventListener('input', function() {
             updateModalValues();
             applyModalFilters();
+            saveModalAdjustments(); // 自動保存
         });
 
         document.getElementById('modalSaturation').addEventListener('input', function() {
             updateModalValues();
             applyModalFilters();
+            saveModalAdjustments(); // 自動保存
         });
 
         document.getElementById('modalMonotone').addEventListener('input', function() {
             updateModalValues();
             applyModalFilters();
+            saveModalAdjustments(); // 自動保存
         });
 
         document.getElementById('modalHue').addEventListener('input', function() {
             updateModalValues();
             applyModalFilters();
+            saveModalAdjustments(); // 自動保存
         });
         
         document.getElementById('modalDuotoneIntensity').addEventListener('input', function() {
@@ -2879,6 +3441,7 @@
             if (modalPhotoIndex >= 0) {
                 photoAdjustments[modalPhotoIndex].duotoneIntensity = parseFloat(value);
                 applyModalFilters();
+                saveModalAdjustments(); // 自動保存
             }
         });
 
@@ -3123,6 +3686,7 @@
             
             updateModalValues();
             applyModalFilters();
+            saveModalAdjustments(); // 自動保存
         }
 
         function onMouseUp() {
@@ -3162,6 +3726,7 @@
                 photoAdjustments[modalPhotoIndex].zoom = newZoom;
             }
             applyModalFilters();
+            saveModalAdjustments(); // 自動保存
         }
 
         // タッチ操作（モバイル）
@@ -3206,6 +3771,7 @@
                 
                 updateModalValues();
                 applyModalFilters();
+                saveModalAdjustments(); // 自動保存
             } else if (e.touches.length === 2) {
                 // ピンチ
                 const dx = e.touches[0].clientX - e.touches[1].clientX;
@@ -3218,6 +3784,7 @@
                 document.getElementById('modalZoom').value = newZoom;
                 updateModalValues();
                 applyModalFilters();
+                saveModalAdjustments(); // 自動保存
             }
         }
 
