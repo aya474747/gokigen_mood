@@ -1,0 +1,318 @@
+<mxfile host="65bd71144e">
+    <diagram name="GOKIGEN MOOD ユーザー体験フロー" id="user-flow">
+        <mxGraphModel dx="1587" dy="2640" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="swimlane-user" value="ユーザー" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="40" width="350" height="800" as="geometry"/>
+                </mxCell>
+                <mxCell id="user-1" value="1. ページにアクセス" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" parent="swimlane-user" vertex="1">
+                    <mxGeometry y="30" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="user-2" value="2. フレームをクリック" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="swimlane-user" vertex="1">
+                    <mxGeometry y="70" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="user-3" value="3. サンプル写真ボタン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="swimlane-user" vertex="1">
+                    <mxGeometry y="110" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="user-4" value="4. 編集ボタンクリック" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="swimlane-user" vertex="1">
+                    <mxGeometry y="150" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="user-5" value="5. フィルター調整" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="swimlane-user" vertex="1">
+                    <mxGeometry y="190" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="user-6" value="6. トリミング操作" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="swimlane-user" vertex="1">
+                    <mxGeometry y="230" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="user-7" value="7. 保存ボタンクリック" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="swimlane-user" vertex="1">
+                    <mxGeometry y="270" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="user-8" value="8. 写真切り替え" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="swimlane-user" vertex="1">
+                    <mxGeometry y="310" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="user-9" value="9. ダウンロードボタン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="swimlane-user" vertex="1">
+                    <mxGeometry y="350" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="user-10" value="10. リセットボタン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="swimlane-user">
+                    <mxGeometry y="390" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="swimlane-system" value="システム" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="420" y="40" width="350" height="800" as="geometry"/>
+                </mxCell>
+                <mxCell id="system-1" value="1. ページ初期化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" parent="swimlane-system" vertex="1">
+                    <mxGeometry y="30" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="system-2" value="2. ファイル選択ダイアログ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="swimlane-system" vertex="1">
+                    <mxGeometry y="70" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="system-3" value="3. サンプル写真読み込み" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="swimlane-system" vertex="1">
+                    <mxGeometry y="110" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="system-4" value="4. 写真ファイル検証" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="swimlane-system" vertex="1">
+                    <mxGeometry y="150" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="system-5" value="5. 編集モーダル表示" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="swimlane-system" vertex="1">
+                    <mxGeometry y="190" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="system-6" value="6. フィルター処理" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="swimlane-system" vertex="1">
+                    <mxGeometry y="230" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="system-7" value="7. トリミング処理" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="swimlane-system" vertex="1">
+                    <mxGeometry y="270" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="system-8" value="8. 編集内容保存" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="swimlane-system" vertex="1">
+                    <mxGeometry y="310" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="system-9" value="9. 写真切り替え処理" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="swimlane-system" vertex="1">
+                    <mxGeometry y="350" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="system-10" value="10. JPEG生成・ダウンロード" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="swimlane-system">
+                    <mxGeometry y="390" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="system-11" value="11. ページリセット" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="swimlane-system">
+                    <mxGeometry y="430" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="swimlane-ui" value="UI" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="40" width="350" height="800" as="geometry"/>
+                </mxCell>
+                <mxCell id="ui-1" value="1. 3つのフレーム表示" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" parent="swimlane-ui" vertex="1">
+                    <mxGeometry y="30" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ui-2" value="2. プレースホルダー表示" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="swimlane-ui" vertex="1">
+                    <mxGeometry y="70" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ui-3" value="3. 写真プレビュー表示" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="swimlane-ui" vertex="1">
+                    <mxGeometry y="110" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ui-4" value="4. 編集・削除ボタン表示" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="swimlane-ui" vertex="1">
+                    <mxGeometry y="150" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ui-5" value="5. 写真切り替えタブ表示" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="swimlane-ui" vertex="1">
+                    <mxGeometry y="190" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ui-6" value="6. フィルターコントロール表示" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="swimlane-ui" vertex="1">
+                    <mxGeometry y="230" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ui-7" value="7. トリミングコントロール表示" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="swimlane-ui" vertex="1">
+                    <mxGeometry y="270" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ui-8" value="8. リアルタイムプレビュー更新" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="swimlane-ui" vertex="1">
+                    <mxGeometry y="310" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ui-9" value="9. 写真切り替えUI表示" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="swimlane-ui" vertex="1">
+                    <mxGeometry y="350" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ui-10" value="10. ダウンロード完了表示" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="swimlane-ui">
+                    <mxGeometry y="390" width="350" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow1" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=2;" parent="1" source="user-1" target="system-1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="390" y="70" as="sourcePoint"/>
+                        <mxPoint x="440" y="20" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow2" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=2;" parent="1" source="system-1" target="ui-1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="770" y="70" as="sourcePoint"/>
+                        <mxPoint x="820" y="20" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow3" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=2;" parent="1" source="ui-1" target="user-2" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1150" y="70" as="sourcePoint"/>
+                        <mxPoint x="1200" y="20" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow4" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#0066CC;strokeWidth=1;" edge="1" parent="1" source="ui-2" target="user-2">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1150" y="130" as="sourcePoint"/>
+                        <mxPoint x="1200" y="80" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow5" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#0066CC;strokeWidth=1;" edge="1" parent="1" source="ui-2" target="user-3">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1150" y="130" as="sourcePoint"/>
+                        <mxPoint x="1200" y="80" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow6" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="user-2" target="system-2">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="390" y="130" as="sourcePoint"/>
+                        <mxPoint x="440" y="80" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow7" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="system-2" target="system-4">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="560" y="130" as="sourcePoint"/>
+                        <mxPoint x="610" y="80" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow8" value="成功" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#00AA00;strokeWidth=1;fontSize=10;" edge="1" parent="1" source="system-4" target="system-3">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="560" y="250" as="sourcePoint"/>
+                        <mxPoint x="610" y="200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow9" value="失敗" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#FF0000;strokeWidth=1;fontSize=10;" edge="1" parent="1" source="system-4" target="ui-2">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="560" y="250" as="sourcePoint"/>
+                        <mxPoint x="610" y="200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow10" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="user-3" target="system-3">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="390" y="190" as="sourcePoint"/>
+                        <mxPoint x="440" y="140" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow11" value="成功" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#00AA00;strokeWidth=1;fontSize=10;" edge="1" parent="1" source="system-3" target="ui-3">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="770" y="190" as="sourcePoint"/>
+                        <mxPoint x="820" y="140" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow12" value="失敗" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#FF0000;strokeWidth=1;fontSize=10;" edge="1" parent="1" source="system-3" target="ui-2">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="770" y="190" as="sourcePoint"/>
+                        <mxPoint x="820" y="140" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow13" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="user-4" target="system-5">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="390" y="250" as="sourcePoint"/>
+                        <mxPoint x="440" y="200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow14" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="system-5" target="ui-5">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="770" y="310" as="sourcePoint"/>
+                        <mxPoint x="820" y="260" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow15" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="ui-5" target="user-5">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1150" y="310" as="sourcePoint"/>
+                        <mxPoint x="1200" y="260" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow16" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="user-5" target="system-6">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="390" y="310" as="sourcePoint"/>
+                        <mxPoint x="440" y="260" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow17" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="system-6" target="ui-6">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="770" y="370" as="sourcePoint"/>
+                        <mxPoint x="820" y="320" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow18" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="ui-6" target="user-6">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1150" y="370" as="sourcePoint"/>
+                        <mxPoint x="1200" y="320" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow19" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="user-6" target="system-7">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="390" y="370" as="sourcePoint"/>
+                        <mxPoint x="440" y="320" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow20" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="system-7" target="ui-7">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="770" y="430" as="sourcePoint"/>
+                        <mxPoint x="820" y="380" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow21" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="ui-7" target="user-7">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1150" y="430" as="sourcePoint"/>
+                        <mxPoint x="1200" y="380" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow22" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="user-7" target="system-8">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="390" y="430" as="sourcePoint"/>
+                        <mxPoint x="440" y="380" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow23" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="system-8" target="ui-8">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="770" y="490" as="sourcePoint"/>
+                        <mxPoint x="820" y="440" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow24" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="ui-8" target="user-9">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1150" y="550" as="sourcePoint"/>
+                        <mxPoint x="1200" y="500" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow25" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="user-9" target="system-10">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="390" y="550" as="sourcePoint"/>
+                        <mxPoint x="440" y="500" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow26" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="system-10" target="ui-10">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="770" y="610" as="sourcePoint"/>
+                        <mxPoint x="820" y="560" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow27" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="user-10" target="system-11">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="390" y="610" as="sourcePoint"/>
+                        <mxPoint x="440" y="560" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow28" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1" source="system-11" target="ui-1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="770" y="670" as="sourcePoint"/>
+                        <mxPoint x="820" y="620" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                
+                <!-- 写真切り替えフロー -->
+                <mxCell id="flow29" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#0066CC;strokeWidth=1;" edge="1" parent="1" source="ui-5" target="user-8">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1150" y="310" as="sourcePoint"/>
+                        <mxPoint x="1200" y="260" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                
+                <mxCell id="flow30" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#0066CC;strokeWidth=1;" edge="1" parent="1" source="user-8" target="system-9">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="390" y="430" as="sourcePoint"/>
+                        <mxPoint x="440" y="380" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                
+                <mxCell id="flow31" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#0066CC;strokeWidth=1;" edge="1" parent="1" source="system-9" target="ui-9">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="770" y="470" as="sourcePoint"/>
+                        <mxPoint x="820" y="420" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                
+                <mxCell id="flow32" value="自動保存" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#FF6600;strokeWidth=1;fontSize=10;" edge="1" parent="1" source="system-9" target="system-8">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="560" y="430" as="sourcePoint"/>
+                        <mxPoint x="610" y="380" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="error1" value="ファイル形式エラー" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#d79b9b;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="250" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="error2" value="ネットワークエラー" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#d79b9b;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="290" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="error3" value="保存エラー" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#d79b9b;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="330" width="100" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

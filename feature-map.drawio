@@ -1,0 +1,176 @@
+<mxfile host="app.diagrams.net" modified="2025-01-11T00:00:00.000Z" agent="5.0" etag="def456" version="24.7.17">
+  <diagram name="GOKIGEN MOOD 機能マップ" id="feature-map">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- メイン機能 -->
+        <mxCell id="main" value="GOKIGEN MOOD ツール" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="400" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- 写真管理機能 -->
+        <mxCell id="photo-mgmt" value="写真管理" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="150" width="120" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="upload" value="アップロード" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="50" y="250" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="delete" value="削除" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="150" y="250" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="switch" value="切り替え" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="250" y="250" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="drag-drop" value="ドラッグ&ドロップ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="30" y="320" width="100" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="file-select" value="ファイル選択" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="150" y="320" width="100" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="sample-photos" value="サンプル写真" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="270" y="320" width="100" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- 編集機能 -->
+        <mxCell id="edit" value="編集機能" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="150" width="120" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="filter" value="フィルター" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="350" y="250" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="trimming" value="トリミング" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="450" y="250" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="text" value="テキスト" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="550" y="250" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="duotone" value="デュオトーン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="330" y="320" width="100" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="color-adjust" value="色調調整" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="450" y="320" width="100" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="monotone" value="モノトーン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="570" y="320" width="100" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- プレビュー機能 -->
+        <mxCell id="preview" value="プレビュー機能" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="700" y="150" width="120" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="realtime" value="リアルタイム表示" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="650" y="250" width="100" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="photo-switch" value="写真切り替え" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="770" y="250" width="100" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="adjust-confirm" value="調整確認" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="890" y="250" width="100" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- ダウンロード機能 -->
+        <mxCell id="download" value="ダウンロード機能" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="400" width="120" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="dpi-select" value="DPI選択" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="350" y="500" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="individual-dl" value="個別ダウンロード" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="450" y="500" width="100" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="batch-dl" value="一括ダウンロード" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="570" y="500" width="100" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="dpi-72" value="72 DPI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="330" y="570" width="60" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="dpi-150" value="150 DPI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="410" y="570" width="60" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="dpi-300" value="300 DPI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="490" y="570" width="60" height="30" as="geometry" />
+        </mxCell>
+        
+        <!-- 接続線 -->
+        <mxCell id="conn1" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="main" target="photo-mgmt">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="110" as="sourcePoint" />
+            <mxPoint x="550" y="60" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="conn2" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="main" target="edit">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="110" as="sourcePoint" />
+            <mxPoint x="550" y="60" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="conn3" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="main" target="preview">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="110" as="sourcePoint" />
+            <mxPoint x="550" y="60" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="conn4" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="main" target="download">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="110" as="sourcePoint" />
+            <mxPoint x="550" y="60" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="conn5" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="photo-mgmt" target="upload">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="200" as="sourcePoint" />
+            <mxPoint x="550" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="conn6" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="photo-mgmt" target="delete">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="200" as="sourcePoint" />
+            <mxPoint x="550" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="conn7" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="photo-mgmt" target="switch">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="200" as="sourcePoint" />
+            <mxPoint x="550" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+
+
+
+
+
+
