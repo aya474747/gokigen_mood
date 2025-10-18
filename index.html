@@ -2636,30 +2636,14 @@
                         <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
                     `;
                 } else {
-                    // L版の場合は余白フレーム付きで表示
-                    const showCheckFrame = photoAdjustments[index]?.showCheckFrame || false;
-                    
-                    // photo-areaで写真を囲む（白い余白を作る）
-                    let photoAreaHtml = '';
-                    
-                    // 写真を最初に追加（一番下のレイヤー）
-                    photoAreaHtml += `<img src="${e.target.result}" alt="写真${index + 1}" class="photo-img" style="position: absolute; z-index: 1; object-fit: cover;">`;
-                    
-                    // チェックフレームが有効な場合は、写真の上に被せる
-                    if (showCheckFrame) {
-                        const rotateStyle = index === 2 ? 'transform: rotate(90deg);' : '';
-                        photoAreaHtml += `<img src="チェックフレーム.png" class="check-frame-overlay" style="position: absolute; pointer-events: none; z-index: 1; object-fit: cover; ${rotateStyle}">`;
-                    }
-                    
-                    let html = `
-                    <div class="photo-area ${index === 2 ? 'photo-area-horizontal' : 'photo-area-vertical'}">
-                        ${photoAreaHtml}
-                    </div>
-                    <button class="remove-btn" onclick="removePhoto(${index})">×</button>
-                    <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
-                `;
-                    
-                    preview.innerHTML = html;
+                    // L版の場合は余白フレーム付きで表示（A4版と同じシンプルな構造）
+                    preview.innerHTML = `
+                        <div class="photo-area ${index === 2 ? 'photo-area-horizontal' : 'photo-area-vertical'}">
+                            <img src="${e.target.result}" alt="写真${index + 1}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <button class="remove-btn" onclick="removePhoto(${index})">×</button>
+                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
+                    `;
                 }
                 preview.classList.add('has-photo');
                 selectedFiles[index] = file;
