@@ -3617,19 +3617,22 @@
                                         { x: 0, y: 0, width: lCanvas.width, height: lCanvas.height } : 
                                         photoArea;
                                     
-                                    const imgRatio = filteredCanvas.width / filteredCanvas.height;
-                                    const areaRatio = refArea.width / refArea.height;
-                                    
                                     let srcX = 0, srcY = 0, srcWidth = filteredCanvas.width, srcHeight = filteredCanvas.height;
                                     
-                                    if (imgRatio > areaRatio) {
-                                        // 画像が横長 → 高さを合わせて幅をトリミング
-                                        srcWidth = filteredCanvas.height * areaRatio;
-                                        srcX = (filteredCanvas.width - srcWidth) / 2;
-                                    } else {
-                                        // 画像が縦長 → 幅を合わせて高さをトリミング
-                                        srcHeight = filteredCanvas.width / areaRatio;
-                                        srcY = (filteredCanvas.height - srcHeight) / 2;
+                                    // チェックフレーム無効時のみトリミング（有効時はフルサイズ）
+                                    if (!isCheckFrameMode) {
+                                        const imgRatio = filteredCanvas.width / filteredCanvas.height;
+                                        const areaRatio = refArea.width / refArea.height;
+                                        
+                                        if (imgRatio > areaRatio) {
+                                            // 画像が横長 → 高さを合わせて幅をトリミング
+                                            srcWidth = filteredCanvas.height * areaRatio;
+                                            srcX = (filteredCanvas.width - srcWidth) / 2;
+                                        } else {
+                                            // 画像が縦長 → 幅を合わせて高さをトリミング
+                                            srcHeight = filteredCanvas.width / areaRatio;
+                                            srcY = (filteredCanvas.height - srcHeight) / 2;
+                                        }
                                     }
                                     
                                     // ズームとポジション調整を適用
