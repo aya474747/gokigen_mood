@@ -3648,9 +3648,14 @@
                                     
                                     let offsetX, offsetY;
                                     if (isCheckFrameMode) {
-                                        // チェックフレーム有効時：キャンバス全体を基準に計算（左端が切れないように）
-                                        offsetX = (refArea.width - scaledWidth) / 2 + (adjustments.posX * refArea.width / 100);
-                                        offsetY = (refArea.height - scaledHeight) / 2 + (adjustments.posY * refArea.height / 100);
+                                        // チェックフレーム有効時：制限なしで自由に配置（左端が切れないように）
+                                        const posXPercent = adjustments.posX || 0;
+                                        const posYPercent = adjustments.posY || 0;
+                                        offsetX = (refArea.width - scaledWidth) / 2 + (posXPercent * refArea.width / 100);
+                                        offsetY = (refArea.height - scaledHeight) / 2 + (posYPercent * refArea.height / 100);
+                                        
+                                        // デバッグログ
+                                        debugLog('info', `L版チェックフレーム: posX=${posXPercent}%, posY=${posYPercent}%, offsetX=${offsetX.toFixed(1)}, offsetY=${offsetY.toFixed(1)}`);
                                     } else {
                                         // チェックフレーム無効時：従来通りphotoAreaを基準
                                         offsetX = refArea.x + (refArea.width - scaledWidth) / 2 + (adjustments.posX * refArea.width / 100);
@@ -4126,10 +4131,10 @@
                 maxMoveY = overflow / 2 * (currentZoom / 100);
             }
             
-            // チェックフレーム有効時に移動範囲を拡大（被写体を端まで配置可能に）
+            // チェックフレーム有効時に移動範囲を大幅拡大（被写体を端まで配置可能に）
             const checkbox = document.getElementById('showCheckFrame');
             if (checkbox && checkbox.checked) {
-                const expandRatio = 1.5; // 1.5倍に拡大
+                const expandRatio = 3.0; // 3倍に拡大（大幅緩和）
                 maxMoveX *= expandRatio;
                 maxMoveY *= expandRatio;
             }
@@ -4245,10 +4250,10 @@
                     maxMoveY = overflow / 2 * (currentZoom / 100);
                 }
                 
-                // チェックフレーム有効時に移動範囲を拡大（被写体を端まで配置可能に）
+                // チェックフレーム有効時に移動範囲を大幅拡大（被写体を端まで配置可能に）
                 const checkboxTouch = document.getElementById('showCheckFrame');
                 if (checkboxTouch && checkboxTouch.checked) {
-                    const expandRatio = 1.5; // 1.5倍に拡大
+                    const expandRatio = 3.0; // 3倍に拡大（大幅緩和）
                     maxMoveX *= expandRatio;
                     maxMoveY *= expandRatio;
                 }
