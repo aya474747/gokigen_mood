@@ -3583,28 +3583,23 @@
                                     };
                                     debugLog('info', `L版: 写真エリア ${photoArea.width.toFixed(1)}x${photoArea.height.toFixed(1)} at (${photoArea.x.toFixed(1)}, ${photoArea.y.toFixed(1)})`);
                                     
-                                    // 写真エリアのクリッピング（チェックフレーム有効時はフルサイズ）
-                                    lCtx.save();
-                                    lCtx.beginPath();
+                                    // 写真エリアのクリッピング（チェックフレーム有効時はスキップ）
+                                    let needsRestore = false;
                                     if (showCheckFrame && i === 1) {
-                                        // チェックフレーム有効時：キャンバス全体をクリッピング（写真が端っこまで見える）
-                                        lCtx.rect(0, 0, lCanvas.width, lCanvas.height);
+                                        // チェックフレーム有効時：クリッピングなし（写真がキャンバス全体に描画される）
+                                        // チェックフレーム描画
+                                        lCtx.drawImage(checkFrameImg, 0, 0, lCanvas.width, lCanvas.height);
+                                        debugLog('info', `L版縦向き: チェックフレーム描画完了（フルサイズ）`);
                                     } else {
-                                        // チェックフレーム無効時：photoAreaのみ
+                                        // チェックフレーム無効時：従来通りクリッピング設定
+                                        lCtx.save();
+                                        lCtx.beginPath();
                                         lCtx.rect(photoArea.x, photoArea.y, photoArea.width, photoArea.height);
-                                    }
-                                    lCtx.clip();
-                                    
-                                    // チェックフレーム画像をクリッピング領域内に描画（有効な場合のみ）
-                                    if (showCheckFrame && checkFrameImg) {
-                                        if (i === 1) {
-                                            // L版縦向き：キャンバス全体にフルサイズで描画（ボーダーなし）
-                                            lCtx.restore(); // クリッピング解除
-                                            lCtx.drawImage(checkFrameImg, 0, 0, lCanvas.width, lCanvas.height);
-                                            debugLog('info', `L版縦向き: チェックフレーム描画完了（フルサイズ）`);
-                                            lCtx.save(); // 下の restore と対応させるため再度 save
-                                        } else {
-                                            // L版横向き：クリッピング領域内に描画（ボーダー付き）
+                                        lCtx.clip();
+                                        needsRestore = true;
+                                        
+                                        // L版横向き：チェックフレーム描画（ボーダー付き）
+                                        if (checkFrameImg) {
                                             lCtx.drawImage(checkFrameImg, photoArea.x, photoArea.y, photoArea.width, photoArea.height);
                                             debugLog('info', `L版横向き: チェックフレーム描画完了（ボーダー付き）`);
                                         }
@@ -3663,7 +3658,9 @@
                                         }
                                     }
                                     
-                                    lCtx.restore();
+                                    if (needsRestore) {
+                                        lCtx.restore();
+                                    }
                                     
                                     // ダウンロード実行
                                     const selectedDPI = getSelectedDPI();
