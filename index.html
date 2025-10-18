@@ -3546,7 +3546,16 @@
                             debugLog('info', `L版: ソース画像読み込み完了 ${sourceImg.width}x${sourceImg.height}`);
                             
                             // チェックフレームが有効な場合のみ読み込む
-                            const showCheckFrame = adjustments.showCheckFrame || false;
+                            // モーダルが開いている状態なら最新値を使用、そうでなければadjustmentsを使用
+                            let showCheckFrame = false;
+                            if (modalPhotoIndex === i && document.getElementById('photoEditModal').style.display !== 'none') {
+                                // モーダルが開いている場合、チェックボックスの状態を使用
+                                const checkbox = document.getElementById('showCheckFrame');
+                                showCheckFrame = checkbox ? checkbox.checked : (adjustments.showCheckFrame || false);
+                            } else {
+                                // モーダルが閉じている場合、adjustmentsを使用
+                                showCheckFrame = adjustments.showCheckFrame || false;
+                            }
                             
                             const processLCanvas = (checkFrameImg = null) => {
                                 // A4版と同じ方法：フィルターを先に適用してから白い外枠レイヤーを追加
@@ -3561,12 +3570,6 @@
                                     lCtx.fillStyle = '#ffffff';
                                     lCtx.fillRect(0, 0, lCanvas.width, lCanvas.height);
                                     debugLog('info', `L版: 白い外枠レイヤーを設定 ${lCanvas.width}x${lCanvas.height}`);
-                                    
-                                    // チェックフレーム画像を背景として描画（有効な場合のみ）
-                                    if (showCheckFrame && checkFrameImg) {
-                                        lCtx.drawImage(checkFrameImg, 0, 0, lCanvas.width, lCanvas.height);
-                                        debugLog('info', `L版: チェックフレーム描画完了`);
-                                    }
                                     
                                     // 余白を考慮（プレビューのborder 4px + padding 2px = 6pxに相当）
                                     const previewSize = 85; // 両方とも85pxに統一（理想的な外枠サイズ）
@@ -3585,6 +3588,12 @@
                                     lCtx.beginPath();
                                     lCtx.rect(photoArea.x, photoArea.y, photoArea.width, photoArea.height);
                                     lCtx.clip();
+                                    
+                                    // チェックフレーム画像をクリッピング領域内に描画（有効な場合のみ）
+                                    if (showCheckFrame && checkFrameImg) {
+                                        lCtx.drawImage(checkFrameImg, photoArea.x, photoArea.y, photoArea.width, photoArea.height);
+                                        debugLog('info', `L版: チェックフレーム描画完了`);
+                                    }
                                     
                                     // フィルター適用済み画像を描画（A4版と同じ方法）
                                     const imgRatio = filteredCanvas.width / filteredCanvas.height;
@@ -3614,6 +3623,13 @@
                                         srcX, srcY, srcWidth, srcHeight,  // ソースのトリミング領域
                                         offsetX, offsetY, scaledWidth, scaledHeight  // 描画先の位置とサイズ
                                     );
+                                    
+                                    // チェックフレーム画像をクリッピング領域内に描画（写真の上に重ねる）
+                                    if (showCheckFrame && checkFrameImg) {
+                                        lCtx.drawImage(checkFrameImg, photoArea.x, photoArea.y, photoArea.width, photoArea.height);
+                                        debugLog('info', `L版: チェックフレーム描画完了`);
+                                    }
+                                    
                                     lCtx.restore();
                                     
                                     // ダウンロード実行
