@@ -2636,14 +2636,33 @@
                         <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
                     `;
                 } else {
-                    // L版の場合は余白フレーム付きで表示（A4版と同じシンプルな構造）
-                    preview.innerHTML = `
-                        <div class="photo-area ${index === 2 ? 'photo-area-horizontal' : 'photo-area-vertical'}">
-                            <img src="${e.target.result}" alt="写真${index + 1}" style="width: 100%; height: 100%; object-fit: cover;">
-                        </div>
-                        <button class="remove-btn" onclick="removePhoto(${index})">×</button>
-                        <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
-                    `;
+                    // L版：写真を.placeholder の前に挿入（チェックフレームは削除しない）
+                    const photoArea = preview.querySelector('.photo-area');
+                    if (photoArea) {
+                        // 既存の写真を削除
+                        const existingPhoto = photoArea.querySelector('img[alt^="写真"]');
+                        if (existingPhoto) existingPhoto.remove();
+                        
+                        // 写真を作成
+                        const photoImg = document.createElement('img');
+                        photoImg.src = e.target.result;
+                        photoImg.alt = `写真${index + 1}`;
+                        photoImg.style.width = '100%';
+                        photoImg.style.height = '100%';
+                        photoImg.style.objectFit = 'cover';
+                        photoImg.style.position = 'absolute';
+                        photoImg.style.zIndex = '0';
+                        
+                        // placeholder を探す
+                        const placeholder = photoArea.querySelector('.placeholder');
+                        
+                        // placeholder の前に写真を挿入
+                        if (placeholder) {
+                            photoArea.insertBefore(photoImg, placeholder);
+                        } else {
+                            photoArea.insertBefore(photoImg, photoArea.firstChild);
+                        }
+                    }
                 }
                 preview.classList.add('has-photo');
                 selectedFiles[index] = file;
