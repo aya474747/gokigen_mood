@@ -3610,9 +3610,15 @@
                                         }
                                     }
                                     
-                                    // フィルター適用済み画像を描画（A4版と同じ方法）
+                                    // フィルター適用済み画像を描画
+                                    // チェックフレーム有効時はキャンバス全体、無効時はphotoAreaを基準
+                                    const isCheckFrameMode = showCheckFrame && i === 1;
+                                    const refArea = isCheckFrameMode ? 
+                                        { x: 0, y: 0, width: lCanvas.width, height: lCanvas.height } : 
+                                        photoArea;
+                                    
                                     const imgRatio = filteredCanvas.width / filteredCanvas.height;
-                                    const areaRatio = photoArea.width / photoArea.height;
+                                    const areaRatio = refArea.width / refArea.height;
                                     
                                     let srcX = 0, srcY = 0, srcWidth = filteredCanvas.width, srcHeight = filteredCanvas.height;
                                     
@@ -3626,12 +3632,12 @@
                                         srcY = (filteredCanvas.height - srcHeight) / 2;
                                     }
                                     
-                                    // ズームとポジション調整を適用（A4版と同じ方法）
+                                    // ズームとポジション調整を適用
                                     const scale = adjustments.zoom / 100;
-                                    const scaledWidth = photoArea.width * scale;
-                                    const scaledHeight = photoArea.height * scale;
-                                    const offsetX = photoArea.x + (photoArea.width - scaledWidth) / 2 + (adjustments.posX * photoArea.width / 100);
-                                    const offsetY = photoArea.y + (photoArea.height - scaledHeight) / 2 + (adjustments.posY * photoArea.height / 100);
+                                    const scaledWidth = refArea.width * scale;
+                                    const scaledHeight = refArea.height * scale;
+                                    const offsetX = refArea.x + (refArea.width - scaledWidth) / 2 + (adjustments.posX * refArea.width / 100);
+                                    const offsetY = refArea.y + (refArea.height - scaledHeight) / 2 + (adjustments.posY * refArea.height / 100);
                                     
                                     lCtx.drawImage(
                                         filteredCanvas,
