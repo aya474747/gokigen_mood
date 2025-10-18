@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1248" height="646" viewBox="0 0 1248 646">
+  <!-- Background -->
+  <rect width="1248" height="646" fill="#FBF8EF"/>
+
+  <!-- Common styles: hand-drawn look -->
+  <defs>
+    <style><![CDATA[
+      .r{stroke:#C84A3E;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;fill:none}
+      .b{stroke:#2E63A6;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;fill:none}
+      .fill-peach{fill:#F6B8A7;opacity:.25}
+      .fill-blue{fill:#AFC5EA;opacity:.22}
+      .hatch{stroke:#C84A3E;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    ]]></style>
+  </defs>
+
+  <!-- Left small frame -->
+  <g transform="translate(80,360)">
+    <rect x="0" y="0" rx="8" ry="8" width="95" height="130" class="r"/>
+    <rect x="12" y="14" width="71" height="102" class="r fill-peach"/>
+    <path d="M32 98 v-38 m31 38 v-38" class="r"/>
+    <circle cx="32" cy="46" r="8" class="r"/>
+    <circle cx="63" cy="46" r="8" class="r"/>
+  </g>
+
+  <!-- Left tall family frame -->
+  <g transform="translate(290,120)">
+    <rect x="0" y="0" rx="10" ry="10" width="190" height="250" class="r"/>
+    <rect x="18" y="18" width="154" height="214" class="r"/>
+    <!-- faces -->
+    <g class="r">
+      <circle cx="72" cy="120" r="24"/>
+      <path d="M56 118 q16 18 32 0"/>
+      <circle cx="122" cy="108" r="22"/>
+      <path d="M108 106 q14 16 28 0"/>
+      <circle cx="96" cy="166" r="18"/>
+      <path d="M84 165 q12 12 24 0"/>
+    </g>
+  </g>
+
+  <!-- Top small portrait -->
+  <g transform="translate(560,70)">
+    <rect x="0" y="0" rx="8" ry="8" width="85" height="110" class="r"/>
+    <rect x="12" y="14" width="61" height="82" class="r"/>
+    <g class="r" transform="translate(18,28)">
+      <circle cx="22" cy="22" r="16"/>
+      <path d="M10 21 q12 12 24 0"/>
+    </g>
+  </g>
+
+  <!-- Right small portrait -->
+  <g transform="translate(1035,220)">
+    <rect x="0" y="0" rx="8" ry="8" width="75" height="110" class="r"/>
+    <rect x="12" y="14" width="51" height="82" class="r fill-peach"/>
+    <path d="M30 42 q10 -12 18 12 q-10 20 -24 28" class="r"/>
+  </g>
+
+  <!-- Bottom-left mid frame -->
+  <g transform="translate(440,430)">
+    <rect x="0" y="0" rx="10" ry="10" width="140" height="120" class="r"/>
+    <rect x="16" y="16" width="108" height="88" class="r"/>
+    <g class="r" transform="translate(26,26)">
+      <circle cx="20" cy="34" r="14"/>
+      <circle cx="54" cy="38" r="14"/>
+      <circle cx="88" cy="34" r="14"/>
+    </g>
+  </g>
+
+  <!-- Center-right big smiling child frame -->
+  <g transform="translate(730,330)">
+    <rect x="0" y="0" rx="12" ry="12" width="220" height="240" class="r"/>
+    <rect x="20" y="20" width="180" height="200" class="r"/>
+    <g class="r" transform="translate(52,70)">
+      <circle cx="58" cy="48" r="42"/>
+      <path d="M38 46 q20 18 40 0"/>
+      <path d="M30 16 q12 16 28 0"/>
+      <path d="M86 16 q12 16 28 0"/>
+      <path d="M-4 98 h124"/>
+      <path d="M6 98 v34 m104 -34 v34"/>
+    </g>
+  </g>
+
+  <!-- Bottom-right wide frame with two people -->
+  <g transform="translate(1015,460)">
+    <rect x="0" y="0" rx="12" ry="12" width="220" height="155" class="r"/>
+    <rect x="18" y="18" width="184" height="119" class="r fill-peach"/>
+    <g class="r" transform="translate(34,38)">
+      <circle cx="44" cy="44" r="24"/>
+      <path d="M26 44 q18 14 36 0"/>
+      <circle cx="124" cy="44" r="24"/>
+      <path d="M106 44 q18 14 36 0"/>
+      <path d="M8 86 q30 -28 72 -8 q44 -18 92 10"/>
+    </g>
+  </g>
+
+  <!-- Tiny accents (blue) to evoke two-color risograph look -->
+  <g class="b">
+    <path d="M290 112 q10 -10 22 -6"/>
+    <path d="M506 104 q10 -9 22 -5"/>
+    <path d="M740 318 q12 -10 26 -6"/>
+    <path d="M1008 448 q12 -10 22 -6"/>
+  </g>
+
+  <!-- Title-like scribble (optional, subtle) -->
+  <g class="hatch" opacity=".15">
+    <path d="M72 82 l36 0 m8 0 l24 0 m8 0 l18 0"/>
+  </g>
+</svg>
+
+

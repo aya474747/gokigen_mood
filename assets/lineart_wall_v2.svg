@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1248" height="646" viewBox="0 0 1248 646">
+  <!-- Simple, mono-line blue sketch like the second sample. No fills. -->
+  <rect width="1248" height="646" fill="#FFFDF6"/>
+  <defs>
+    <style><![CDATA[
+      .ink{stroke:#245aa8;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;fill:none}
+    ]]></style>
+    <!-- roughen filter to add hand jitter -->
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="3" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <!-- helper: slight squiggle function via small segments (hand-drawn look) -->
+  <!-- Left small frame -->
+  <g class="ink" transform="translate(86,360)" filter="url(#rough)">
+    <path d="M2,2 h92 q6,0 6,6 v118 q0,6 -6,6 h-92 q-6,0 -6,-6 v-118 q0,-6 6,-6 z"/>
+    <rect x="14" y="16" width="72" height="98" rx="2"/>
+    <!-- two people (faces instead of silhouettes) -->
+    <g transform="translate(22,34)">
+      <circle cx="14" cy="16" r="12"/>
+      <circle cx="46" cy="18" r="12"/>
+      <path d="M8 16 q6 6 12 0"/>
+      <path d="M40 18 q6 6 12 0"/>
+      <circle cx="10" cy="14" r="1.6"/>
+      <circle cx="18" cy="14" r="1.6"/>
+      <circle cx="42" cy="16" r="1.6"/>
+      <circle cx="50" cy="16" r="1.6"/>
+      <path d="M6 30 q22 -8 36 0"/>
+    </g>
+  </g>
+
+  <!-- Left tall family frame (rough rectangle) -->
+  <g class="ink" transform="translate(288,120)" filter="url(#rough)">
+    <path d="M6,6 h178 q8,0 8,8 v226 q0,8 -8,8 h-178 q-8,0 -8,-8 v-226 q0,-8 8,-8 z"/>
+    <rect x="22" y="24" width="150" height="198" rx="2"/>
+    <!-- three faces with simple realistic features -->
+    <g>
+      <!-- left adult -->
+      <circle cx="70" cy="116" r="24"/>
+      <path d="M58 112 q12 8 24 0"/>
+      <circle cx="62" cy="114" r="2"/>
+      <circle cx="78" cy="114" r="2"/>
+      <path d="M66 124 q8 6 16 0"/>
+      <!-- right adult -->
+      <circle cx="124" cy="110" r="22"/>
+      <path d="M112 106 q10 8 20 0"/>
+      <circle cx="116" cy="108" r="2"/>
+      <circle cx="130" cy="108" r="2"/>
+      <path d="M118 118 q8 6 14 0"/>
+      <!-- child -->
+      <circle cx="98" cy="164" r="18"/>
+      <circle cx="92" cy="162" r="1.8"/>
+      <circle cx="104" cy="162" r="1.8"/>
+      <path d="M90 170 q8 6 16 0"/>
+    </g>
+  </g>
+
+  <!-- Top small portrait -->
+  <g class="ink" transform="translate(566,72)" filter="url(#rough)">
+    <path d="M4,4 h78 q6,0 6,6 v96 q0,6 -6,6 h-78 q-6,0 -6,-6 v-96 q0,-6 6,-6 z"/>
+    <rect x="14" y="16" width="60" height="76" rx="2"/>
+    <circle cx="44" cy="42" r="16"/>
+    <circle cx="38" cy="40" r="1.8"/>
+    <circle cx="50" cy="40" r="1.8"/>
+    <path d="M36 49 q8 6 16 0"/>
+    <path d="M30 34 q8 -10 20 -6"/>
+  </g>
+
+  <!-- Right small portrait -->
+  <g class="ink" transform="translate(1036,222)" filter="url(#rough)">
+    <path d="M4,4 h66 q6,0 6,6 v96 q0,6 -6,6 h-66 q-6,0 -6,-6 v-96 q0,-6 6,-6 z"/>
+    <rect x="14" y="16" width="48" height="74" rx="2"/>
+    <circle cx="36" cy="48" r="12"/>
+    <circle cx="32" cy="46" r="1.6"/>
+    <circle cx="40" cy="46" r="1.6"/>
+    <path d="M30 54 q6 6 12 0"/>
+    <path d="M22 40 q12 -10 24 0"/>
+  </g>
+
+  <!-- Bottom-left mid frame -->
+  <g class="ink" transform="translate(444,432)" filter="url(#rough)">
+    <path d="M6,6 h128 q8,0 8,8 v96 q0,8 -8,8 h-128 q-8,0 -8,-8 v-96 q0,-8 8,-8 z"/>
+    <rect x="20" y="20" width="104" height="80" rx="2"/>
+    <!-- three people with faces -->
+    <g transform="translate(22,30)">
+      <circle cx="22" cy="28" r="13"/>
+      <circle cx="50" cy="30" r="13"/>
+      <circle cx="78" cy="28" r="13"/>
+      <circle cx="18" cy="26" r="1.6"/>
+      <circle cx="26" cy="26" r="1.6"/>
+      <circle cx="46" cy="28" r="1.6"/>
+      <circle cx="54" cy="28" r="1.6"/>
+      <circle cx="74" cy="26" r="1.6"/>
+      <circle cx="82" cy="26" r="1.6"/>
+      <path d="M14 36 q8 6 16 0 m18 -2 q8 6 16 0 m18 -2 q8 6 16 0"/>
+    </g>
+  </g>
+
+  <!-- Center-right large frame with smiling child -->
+  <g class="ink" transform="translate(734,326)" filter="url(#rough)">
+    <path d="M8,8 h204 q10,0 10,10 v212 q0,10 -10,10 h-204 q-10,0 -10,-10 v-212 q0,-10 10,-10 z"/>
+    <rect x="24" y="24" width="170" height="180" rx="2"/>
+    <circle cx="109" cy="88" r="40"/>
+    <circle cx="96" cy="84" r="2.4"/>
+    <circle cx="122" cy="84" r="2.4"/>
+    <path d="M104 92 q6 -2 10 0"/>
+    <path d="M92 100 q18 14 34 0"/>
+    <path d="M78 60 q12 -12 26 -6 m16 -2 q12 2 20 12"/>
+    <path d="M30 138 h160"/>
+    <path d="M42 138 v32 m136 -32 v32"/>
+  </g>
+
+  <!-- Bottom-right wide frame with two people -->
+  <g class="ink" transform="translate(1016,462)" filter="url(#rough)">
+    <path d="M8,8 h200 q10,0 10,10 v120 q0,10 -10,10 h-200 q-10,0 -10,-10 v-120 q0,-10 10,-10 z"/>
+    <rect x="24" y="24" width="168" height="92" rx="2"/>
+    <circle cx="66" cy="64" r="22"/>
+    <circle cx="58" cy="60" r="2"/>
+    <circle cx="74" cy="60" r="2"/>
+    <path d="M56 68 q10 8 20 0"/>
+    <circle cx="136" cy="64" r="22"/>
+    <circle cx="128" cy="60" r="2"/>
+    <circle cx="144" cy="60" r="2"/>
+    <path d="M126 68 q10 8 20 0"/>
+    <path d="M20 100 q34 -28 76 -10 q44 -18 92 8"/>
+  </g>
+
+  <!-- tiny annotation like strokes to evoke notebook feel -->
+  <g class="ink" opacity=".35">
+    <path d="M84 90 h40 m10 0 h24 m10 0 h18"/>
+  </g>
+</svg>
+
+
