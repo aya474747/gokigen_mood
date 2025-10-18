@@ -43,6 +43,13 @@
             text-align: center;
         }
 
+        .header-logo {
+            max-width: 200px;
+            height: auto;
+            margin: 0 auto 10px;
+            display: block;
+        }
+
         .header h1 {
             font-size: 1.3em;
             margin-bottom: 6px;
@@ -299,21 +306,25 @@
         .preview-item.medium .photo-area {
             width: 100%;
             height: 100%;
-            background: #f5f5f5;
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            padding: 3px; /* 余白 */
+            box-sizing: border-box;
+            position: relative;
         }
 
         .preview-item.small .photo-area {
             width: 100%;
             height: 100%;
-            background: #f5f5f5;
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            padding: 3px; /* 余白 */
+            box-sizing: border-box;
+            position: relative;
         }
 
         .preview-item img {
@@ -396,6 +407,52 @@
             font-size: 0.5em;
             line-height: 1.1;
             padding: 1px;
+        }
+
+        /* L版の余白フレーム */
+        .preview-item.medium .photo-area,
+        .preview-item.small .photo-area {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px; /* 余白 */
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .preview-item.medium .photo-area img,
+        .preview-item.small .photo-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* L版縦向き */
+        .photo-area-vertical {
+            padding: 0 !important;
+            position: relative;
+        }
+        .photo-area-vertical img {
+            top: 3px;
+            left: 3px;
+            width: calc(100% - 6px);
+            height: calc(100% - 6px);
+        }
+
+        /* L版横向き */
+        .photo-area-horizontal {
+            padding: 0 !important;
+            position: relative;
+        }
+        .photo-area-horizontal img {
+            top: 3px;
+            left: 3px;
+            width: calc(100% - 6px);
+            height: calc(100% - 6px);
         }
 
         .controls {
@@ -805,7 +862,7 @@
             align-items: center;
             background: white;
             position: relative;
-            padding: 10px;
+            padding: 0;
             border-radius: 8px;
             overflow: hidden;
             cursor: move;
@@ -901,12 +958,12 @@
         }
 
         .photo-preview-large .modal-inner-container {
-            width: 100%;
-            height: 100%;
+            width: 80%;
+            height: 76%;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 12% 10%;
+            padding: 0;
         }
 
         .photo-preview-large .modal-photo-area {
@@ -919,10 +976,14 @@
         }
 
         .photo-preview-large .modal-photo-area img {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: contain; /* coverからcontainに変更 - 写真が切れないように */
-            /* border-radius: 200px 200px 0 0; 削除 - 白いフレームで切り抜き */
+            object-fit: cover;
+            object-position: center;
+            display: block;
         }
 
         .photo-preview-large .modal-png-overlay {
@@ -989,6 +1050,8 @@
             object-fit: cover;
             /* トリミング時も外枠サイズを固定 */
             max-width: 100%;
+            position: relative;
+            z-index: 1;
             max-height: 100%;
         }
 
@@ -1185,8 +1248,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🌈 GOKIGEN MOOD 💘<br>無料フォトポスター作成ツール</h1>
-            <p style="font-size: 12px;">気分上げてこ♡ 3枚の写真でおしゃれなポスターを作ろう！</p>
+            <img src="site_logo.png" alt="GOKIGEN MOOD" class="header-logo">
+            <p style="font-size: 12px; margin-top: 10px;">気分上げてこ♡ポスター作成ツール</p>
         </div>
 
         <div class="main-content">
@@ -1199,8 +1262,7 @@
                     <div class="preview-item large" id="preview1" onclick="selectSlot(0)" style="position: absolute; top: 10px; left: 10px; width: 128px; height: 181px;">
                         <div class="inner-container">
                             <div class="photo-area">
-                                <div class="placeholder">A4版<br><small>210×297mm<br>タップで写真を追加</small></div>
-                            <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(0)" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 18px; cursor: pointer; z-index: 15;">+</button>
+                                <div class="placeholder">フレームをタップして写真を追加</div>
                             </div>
                         </div>
                         <!-- PNG画像を右上に配置 -->
@@ -1214,30 +1276,32 @@
                         <button class="remove-btn" onclick="removePhoto(0)">×</button>
                         <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(0)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
                     </div>
-                    <div class="preview-item medium" id="preview2" onclick="selectSlot(1)" style="position: absolute; top: 10px; right: 20px; width: 60px; height: 85px;">
-                        <div class="photo-area">
+                    <div class="preview-item medium" id="preview2" onclick="selectSlot(1)" style="position: absolute; top: 10px; right: 20px; width: 60px; height: 85px; background: #f0f0f0;">
+                        <div class="photo-area photo-area-vertical">
+                            <img src="チェックフレーム.png" style="position: absolute; object-fit: cover; z-index: 0;">
                             <div class="placeholder">L版<br><small>89×<br>127mm</small></div>
-                            <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(1)" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 16px; cursor: pointer; z-index: 15;">+</button>
                         </div>
+                        <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(1)" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 16px; cursor: pointer; z-index: 15;">+</button>
                         <button class="remove-btn" onclick="removePhoto(1)">×</button>
                         <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(1)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
                     </div>
-                    <div class="preview-item small" id="preview3" onclick="selectSlot(2)" style="position: absolute; top: 120px; right: 20px; width: 85px; height: 60px;">
-                        <div class="photo-area">
-                            <div class="placeholder">L版<br><small>127×89mm</small></div>
-                            <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(2)" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 16px; cursor: pointer; z-index: 15;">+</button>
+                    <div class="preview-item small" id="preview3" onclick="selectSlot(2)" style="position: absolute; top: 120px; right: 20px; width: 85px; height: 60px; background: #f0f0f0;">
+                        <div class="photo-area photo-area-horizontal">
+                            <img src="チェックフレーム.png" style="position: absolute; object-fit: cover; z-index: 0;">
+                            <div class="placeholder">L版<br><small>89×127mm</small></div>
                         </div>
+                        <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(2)" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 16px; cursor: pointer; z-index: 15;">+</button>
                         <button class="remove-btn" onclick="removePhoto(2)">×</button>
                         <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(2)" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
                     </div>
                     
                 </div>
                 <p style="text-align: center; margin-top: 2px; color: #666; font-size: 0.9em;">
-                    💡 フレームをタップして写真を追加してね
+                    💡 フレームをタップして写真を追加
                 </p>
                 <div style="text-align: center; margin-top: 3px; display: flex; gap: 8px; justify-content: center;">
                     <button onclick="loadSamplePhotos()" style="background: #F6A18F; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.9em; cursor: pointer;">
-                        📸 サンプル写真を表示
+                        📸 サンプル写真
                     </button>
                     <button onclick="location.reload()" style="background: #999; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.9em; cursor: pointer;">
                         🔄 リセット
@@ -1336,6 +1400,24 @@
                         </div>
                     </div>
 
+                    <!-- 黒色抽出カラーフィルター - 保留中（次回リリース予定） -->
+                    <div class="control-section" style="display: none;">
+                        <h4>🎨 黒色抽出カラーフィルター</h4>
+                        <div class="preset-buttons">
+                            <button class="preset-btn" onclick="applyBlackColorExtraction(false)" style="background: linear-gradient(135deg, #E8E8E8, #F5F5F5);">オフ</button>
+                            <button class="preset-btn" onclick="applyBlackColorExtraction(true)" style="background: linear-gradient(135deg, #2C2C2C, #555555); color: white;">🖤 オン</button>
+                        </div>
+                        
+                        <!-- 感度調整 -->
+                        <div id="blackColorExtractionControl" style="display: none; margin-top: 15px;">
+                            <label>
+                                黒色感度: <span class="slider-value" id="blackColorThresholdValue">50</span>%
+                                <input type="range" id="blackColorThreshold" min="0" max="100" value="50" step="5" oninput="updateBlackColorThreshold(this.value)" onchange="updateBlackColorThreshold(this.value)">
+                            </label>
+                            <small style="display: block; margin-top: 8px; color: #666;">値が大きいほど、より多くの色が黒と判定されカラー表示になります</small>
+                        </div>
+                    </div>
+
                     <!-- 色調調整 -->
                     <div class="control-section">
                         <h4>🌈 色調調整</h4>
@@ -1374,6 +1456,16 @@
                                 <span class="slider-value" id="modalHueValue">0°</span>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- L版チェックフレーム設定 -->
+                    <div class="control-section" id="checkFrameSection" style="display: none;">
+                        <h4>📐 チェックフレーム</h4>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="showCheckFrame" onchange="toggleCheckFrame(this.checked)" style="width: 20px; height: 20px; cursor: pointer;">
+                            <span>L版にチェックフレームを表示</span>
+                        </label>
+                        <small style="display: block; margin-top: 8px; color: #666;">印刷位置確認用のガイドフレームを表示します</small>
                     </div>
 
                 </div>
@@ -1587,9 +1679,9 @@
         let currentSlot = 0;
         let currentPhotoIndex = -1; // 現在選択中の写真のインデックス
         let photoAdjustments = [
-            { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none' },
-            { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none' },
-            { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none' }
+            { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65, showCheckFrame: false },
+            { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65, showCheckFrame: false },
+            { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65, showCheckFrame: false }
         ];
         let modalPhotoIndex = -1; // モーダルで編集中の写真のインデックス
 
@@ -1981,7 +2073,10 @@
                 debugLog('info', `🔄 メインページプレビュー更新: index=${modalPhotoIndex}`);
                 
                 const preview = document.getElementById(`preview${modalPhotoIndex + 1}`);
-                const previewImg = preview?.querySelector('img');
+                // L版の場合は.photo-area内の画像、A4版は.photo-area内の画像を取得
+                const previewImg = preview?.querySelector('.photo-area img.photo-img') || 
+                                 preview?.querySelector('.photo-area img') ||
+                                 preview?.querySelector('img:not(.check-frame-overlay)');
                 const modalImg = document.getElementById('modalPhotoPreview');
                 
                 if (!preview) {
@@ -2006,6 +2101,8 @@
                 const transform = `scale(${adjustments.zoom / 100}) translate(${adjustments.posX}%, ${adjustments.posY}%)`;
                 previewImg.style.transform = transform;
                 previewImg.style.transformOrigin = 'center center';
+                previewImg.style.position = 'relative';
+                previewImg.style.zIndex = '1';
                 debugLog('info', `transform適用: ${transform}`);
                 
                 // デュオトーンが適用されている場合は、モーダルの処理済み画像をプレビューに反映
@@ -2018,6 +2115,43 @@
                     const filter = `brightness(${adjustments.brightness}) contrast(${adjustments.contrast}) saturate(${adjustments.saturation}) grayscale(${adjustments.monotone}) hue-rotate(${adjustments.hue}deg)`;
                     previewImg.style.filter = filter;
                     debugLog('info', `通常フィルター適用: ${filter}`);
+                }
+                
+                // L版の場合、チェックフレームを表示/非表示
+                if (modalPhotoIndex === 1 || modalPhotoIndex === 2) {
+                    const photoArea = preview.querySelector('.photo-area');
+                    if (!photoArea) {
+                        debugLog('warn', 'photo-areaが見つかりません');
+                        return;
+                    }
+                    
+                    // 既存のチェックフレームを削除（photo-area内）
+                    const existingFrame = photoArea.querySelector('.check-frame-overlay');
+                    if (existingFrame) {
+                        existingFrame.remove();
+                        debugLog('info', `🗑️ 既存チェックフレーム削除: index=${modalPhotoIndex}`);
+                    }
+                    
+                    // チェックフレームが有効な場合は追加（photo-area内）
+                    if (adjustments.showCheckFrame) {
+                        const checkFrame = document.createElement('img');
+                        checkFrame.src = 'チェックフレーム.png';
+                        checkFrame.className = 'check-frame-overlay';
+                        checkFrame.alt = 'チェックフレーム';
+                        checkFrame.style.cssText = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; object-fit: cover;';
+                        
+                        // 写真の上に被せるため、最後の子要素として追加
+                        photoArea.appendChild(checkFrame);
+                        debugLog('info', `✅ photo-area内にチェックフレーム追加: index=${modalPhotoIndex}`);
+                        
+                        // 画像の読み込みを確認
+                        checkFrame.onload = () => {
+                            debugLog('info', `📐 チェックフレーム画像読み込み完了: ${checkFrame.naturalWidth}x${checkFrame.naturalHeight}`);
+                        };
+                        checkFrame.onerror = () => {
+                            debugLog('error', `❌ チェックフレーム画像の読み込みに失敗しました`);
+                        };
+                    }
                 }
                 
                 debugLog('info', `✅ メインページプレビュー更新完了: index=${modalPhotoIndex}`);
@@ -2097,6 +2231,7 @@
                                 </div>
                             </div>
                         `;
+                        updateModalArchRadius();
                     } else {
                         // L版の場合もフレーム付きプレビュー
                         modalPreviewContainer.classList.add('simple-preview');
@@ -2114,6 +2249,7 @@
                                 <img id="modalPhotoPreview" src="${displaySrc}" alt="編集中の写真" data-original-src="${originalSrc}">
                             </div>
                         `;
+                        updateModalArchRadius();
                     }
                 
                 // 調整値を設定
@@ -2136,11 +2272,24 @@
                     intensityControl.style.display = 'none';
                 }
                 
+                // チェックフレームの設定と表示/非表示（L版のみ）
+                const checkFrameSection = document.getElementById('checkFrameSection');
+                const showCheckFrameCheckbox = document.getElementById('showCheckFrame');
+                if (index === 1 || index === 2) {
+                    // L版の場合はチェックフレームセクションを表示
+                    checkFrameSection.style.display = 'block';
+                    showCheckFrameCheckbox.checked = adjustments.showCheckFrame || false;
+                } else {
+                    // A4版の場合は非表示
+                    checkFrameSection.style.display = 'none';
+                }
+                
                 updateModalValues();
                     
                     // フィルターを適用（DOMが完全に準備されるまで待つ）
                     setTimeout(() => {
                 applyModalFilters();
+                        applyCheckFrameToModal(); // チェックフレームを適用
                     }, 100);
                 };
                 reader.readAsDataURL(selectedFiles[index]);
@@ -2222,6 +2371,15 @@
                     const filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturation}) grayscale(${monotone}) hue-rotate(${hue}deg)`;
                     img.style.filter = filter;
                     debugLog('info', `通常フィルター適用: ${filter}`);
+                }
+                
+                // 黒色抽出カラーフィルター処理
+                const blackColorExtraction = photoAdjustments[modalPhotoIndex]?.blackColorExtraction || false;
+                if (blackColorExtraction) {
+                    const threshold = photoAdjustments[modalPhotoIndex]?.blackColorThreshold || 50;
+                    const duotoneType = photoAdjustments[modalPhotoIndex]?.duotone || 'gray';
+                    debugLog('info', `黒色抽出フィルター処理: threshold=${threshold}, duotoneType=${duotoneType}`);
+                    applyBlackColorExtractionToPreview(threshold, duotoneType);
                 }
                 
                 // メインページのプレビューも更新
@@ -2383,6 +2541,9 @@
                 if (modalPhotoIndex >= 0) {
                     photoAdjustments[modalPhotoIndex].duotone = 'none';
                     photoAdjustments[modalPhotoIndex].duotoneIntensity = 65;
+                    photoAdjustments[modalPhotoIndex].blackColorExtraction = false;
+                    photoAdjustments[modalPhotoIndex].blackColorThreshold = 50;
+                    photoAdjustments[modalPhotoIndex].showCheckFrame = false;
                     
                     // AppStateも更新
                     AppState.setState({
@@ -2393,6 +2554,31 @@
                     const intensityControl = document.getElementById('duotoneIntensityControl');
                     if (intensityControl) {
                         intensityControl.style.display = 'none';
+                    }
+                    
+                    // 黒色抽出カラーフィルター制御を非表示
+                    const blackColorControl = document.getElementById('blackColorExtractionControl');
+                    if (blackColorControl) {
+                        blackColorControl.style.display = 'none';
+                    }
+                    
+                    // チェックフレームチェックボックスをリセット
+                    const showCheckFrameCheckbox = document.getElementById('showCheckFrame');
+                    if (showCheckFrameCheckbox) {
+                        showCheckFrameCheckbox.checked = false;
+                    }
+                    
+                    // モーダルとプレビューからチェックフレームを削除
+                    const modalFrame = document.querySelector('.modal-l-frame .check-frame-overlay');
+                    if (modalFrame) {
+                        modalFrame.remove();
+                    }
+                    // プレビューのphoto-area内からチェックフレームを削除
+                    const preview = document.getElementById(`preview${modalPhotoIndex + 1}`);
+                    const photoArea = preview?.querySelector('.photo-area');
+                    const previewFrame = photoArea?.querySelector('.check-frame-overlay');
+                    if (previewFrame) {
+                        previewFrame.remove();
                     }
                     
                     // 元の画像に戻す
@@ -2443,30 +2629,51 @@
                         <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
                     `;
                 } else {
-                    // L版の場合は通常の表示
-                preview.innerHTML = `
-                    <img src="${e.target.result}" alt="写真${index + 1}">
+                    // L版の場合は余白フレーム付きで表示
+                    const showCheckFrame = photoAdjustments[index]?.showCheckFrame || false;
+                    
+                    // photo-areaで写真を囲む（白い余白を作る）
+                    let photoAreaHtml = '';
+                    
+                    // 写真を最初に追加（一番下のレイヤー）
+                    photoAreaHtml += `<img src="${e.target.result}" alt="写真${index + 1}" class="photo-img" style="position: absolute; z-index: 0; object-fit: cover;">`;
+                    
+                    // チェックフレームが有効な場合は、写真の上に被せる
+                    if (showCheckFrame) {
+                        const rotateStyle = index === 2 ? 'transform: rotate(90deg);' : '';
+                        photoAreaHtml += `<img src="チェックフレーム.png" class="check-frame-overlay" style="position: absolute; pointer-events: none; z-index: 1; object-fit: cover; ${rotateStyle}">`;
+                    }
+                    
+                    let html = `
+                    <div class="photo-area ${index === 2 ? 'photo-area-horizontal' : 'photo-area-vertical'}">
+                        ${photoAreaHtml}
+                    </div>
                     <button class="remove-btn" onclick="removePhoto(${index})">×</button>
                     <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
                 `;
+                    
+                    preview.innerHTML = html;
                 }
                 preview.classList.add('has-photo');
                 selectedFiles[index] = file;
                 
-                // 背景を白に設定
-                preview.style.background = 'white';
+                // 背景をグレーに設定
+                preview.style.background = '#f0f0f0';
+                preview.style.position = 'relative';
                 
                 // 画像が読み込まれたら自動的にキャンバスを生成
-                const imgElement = preview.querySelector('img');
-                imgElement.onload = function() {
-                    // 明度1.1を適用
-                    imgElement.style.filter = 'brightness(1.1)';
-                    
-                    // 自動色調整は削除（ユーザーが手動で調整）
-                    setTimeout(() => {
-                        generateGallery();
-                    }, 100);
-                };
+                const imgElement = preview.querySelector('.photo-area img.photo-img') || preview.querySelector('.photo-area img');
+                if (imgElement) {
+                    imgElement.onload = function() {
+                        // 明度1.1を適用
+                        imgElement.style.filter = 'brightness(1.1)';
+                        
+                        // 自動色調整は削除（ユーザーが手動で調整）
+                        setTimeout(() => {
+                            generateGallery();
+                        }, 100);
+                    };
+                }
             };
             reader.readAsDataURL(file);
         }
@@ -2475,7 +2682,7 @@
             selectedFiles[index] = null;
             const preview = document.getElementById(`preview${index + 1}`);
             const sizeText = index === 0 ? 'A4版<br><small>210×297mm<br>タップで写真を追加</small>' : 
-                           'L版<br><small>89×<br>127mm<br>+ボタン</small>';
+                           'L版<br><small>89×127mm</small>';
             
             if (index === 0) {
                 // A4版の場合はinner-containerとphoto-areaを使用
@@ -2498,7 +2705,10 @@
             } else {
                 // L版の場合は通常の表示
                 preview.innerHTML = `
-                    <div class="placeholder">${sizeText}</div>
+                    <div class="photo-area">
+                        <div class="placeholder">${sizeText}</div>
+                    </div>
+                    <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(${index})" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 16px; cursor: pointer; z-index: 15;">+</button>
                     <button class="remove-btn" onclick="removePhoto(${index})">×</button>
                 `;
             }
@@ -2685,7 +2895,7 @@
             if (index === 0) {
                 sizeText = 'A4版<br><small>210×297mm<br>タップで写真を追加</small>';
             } else             if (index === 1) {
-                sizeText = 'L版<br><small>89×<br>127mm<br>+ボタン</small>';
+                sizeText = 'L版<br><small>89×127mm</small>';
             } else {
                 sizeText = 'L版<br><small>127×89mm<br>タップで追加</small>';
             }
@@ -3216,75 +3426,102 @@
                         sourceImg.onload = () => {
                             debugLog('info', `L版: ソース画像読み込み完了 ${sourceImg.width}x${sourceImg.height}`);
                             
-                            // A4版と同じ方法：フィルターを先に適用してから白い外枠レイヤーを追加
-                            applyFiltersToCanvas(sourceImg, adjustments, (filteredCanvas) => {
-                                // L版キャンバスを作成（A4版のarchCanvasと同じ構造）
-                                const lCanvas = document.createElement('canvas');
-                                const lCtx = lCanvas.getContext('2d');
-                                lCanvas.width = canvases[i].width;
-                                lCanvas.height = canvases[i].height;
-                                
-                                // 白い背景レイヤー（最下層）
-                                lCtx.fillStyle = '#ffffff';
-                                lCtx.fillRect(0, 0, lCanvas.width, lCanvas.height);
-                                debugLog('info', `L版: 白い外枠レイヤーを設定 ${lCanvas.width}x${lCanvas.height}`);
-                                
-                                // 余白を考慮（プレビューのborder 4px + padding 2px = 6pxに相当）
-                                const previewSize = 85; // 両方とも85pxに統一（理想的な外枠サイズ）
-                                const marginRatio = 6 / previewSize; // プレビューの余白比率
-                                const margin = Math.min(lCanvas.width, lCanvas.height) * marginRatio;
-                                const photoArea = {
-                                    width: lCanvas.width - (margin * 2),
-                                    height: lCanvas.height - (margin * 2),
-                                    x: margin,
-                                    y: margin
+                            // チェックフレームが有効な場合のみ読み込む
+                            const showCheckFrame = adjustments.showCheckFrame || false;
+                            
+                            const processLCanvas = (checkFrameImg = null) => {
+                                // A4版と同じ方法：フィルターを先に適用してから白い外枠レイヤーを追加
+                                applyFiltersToCanvas(sourceImg, adjustments, (filteredCanvas) => {
+                                    // L版キャンバスを作成（A4版のarchCanvasと同じ構造）
+                                    const lCanvas = document.createElement('canvas');
+                                    const lCtx = lCanvas.getContext('2d');
+                                    lCanvas.width = canvases[i].width;
+                                    lCanvas.height = canvases[i].height;
+                                    
+                                    // 白い背景レイヤー（最下層）
+                                    lCtx.fillStyle = '#ffffff';
+                                    lCtx.fillRect(0, 0, lCanvas.width, lCanvas.height);
+                                    debugLog('info', `L版: 白い外枠レイヤーを設定 ${lCanvas.width}x${lCanvas.height}`);
+                                    
+                                    // チェックフレーム画像を背景として描画（有効な場合のみ）
+                                    if (showCheckFrame && checkFrameImg) {
+                                        lCtx.drawImage(checkFrameImg, 0, 0, lCanvas.width, lCanvas.height);
+                                        debugLog('info', `L版: チェックフレーム描画完了`);
+                                    }
+                                    
+                                    // 余白を考慮（プレビューのborder 4px + padding 2px = 6pxに相当）
+                                    const previewSize = 85; // 両方とも85pxに統一（理想的な外枠サイズ）
+                                    const marginRatio = 6 / previewSize; // プレビューの余白比率
+                                    const margin = Math.min(lCanvas.width, lCanvas.height) * marginRatio;
+                                    const photoArea = {
+                                        width: lCanvas.width - (margin * 2),
+                                        height: lCanvas.height - (margin * 2),
+                                        x: margin,
+                                        y: margin
+                                    };
+                                    debugLog('info', `L版: 写真エリア ${photoArea.width.toFixed(1)}x${photoArea.height.toFixed(1)} at (${photoArea.x.toFixed(1)}, ${photoArea.y.toFixed(1)})`);
+                                    
+                                    // 写真エリアのクリッピング（A4版のアーチ型クリッピングと同じ構造）
+                                    lCtx.save();
+                                    lCtx.beginPath();
+                                    lCtx.rect(photoArea.x, photoArea.y, photoArea.width, photoArea.height);
+                                    lCtx.clip();
+                                    
+                                    // フィルター適用済み画像を描画（A4版と同じ方法）
+                                    const imgRatio = filteredCanvas.width / filteredCanvas.height;
+                                    const areaRatio = photoArea.width / photoArea.height;
+                                    
+                                    let srcX = 0, srcY = 0, srcWidth = filteredCanvas.width, srcHeight = filteredCanvas.height;
+                                    
+                                    if (imgRatio > areaRatio) {
+                                        // 画像が横長 → 高さを合わせて幅をトリミング
+                                        srcWidth = filteredCanvas.height * areaRatio;
+                                        srcX = (filteredCanvas.width - srcWidth) / 2;
+                                    } else {
+                                        // 画像が縦長 → 幅を合わせて高さをトリミング
+                                        srcHeight = filteredCanvas.width / areaRatio;
+                                        srcY = (filteredCanvas.height - srcHeight) / 2;
+                                    }
+                                    
+                                    // ズームとポジション調整を適用（A4版と同じ方法）
+                                    const scale = adjustments.zoom / 100;
+                                    const scaledWidth = photoArea.width * scale;
+                                    const scaledHeight = photoArea.height * scale;
+                                    const offsetX = photoArea.x + (photoArea.width - scaledWidth) / 2 + (adjustments.posX * photoArea.width / 100);
+                                    const offsetY = photoArea.y + (photoArea.height - scaledHeight) / 2 + (adjustments.posY * photoArea.height / 100);
+                                    
+                                    lCtx.drawImage(
+                                        filteredCanvas,
+                                        srcX, srcY, srcWidth, srcHeight,  // ソースのトリミング領域
+                                        offsetX, offsetY, scaledWidth, scaledHeight  // 描画先の位置とサイズ
+                                    );
+                                    lCtx.restore();
+                                    
+                                    // ダウンロード実行
+                                    const selectedDPI = getSelectedDPI();
+                                    const link = document.createElement('a');
+                                    link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
+                                    link.href = canvasToDataURLWithDPI(lCanvas, selectedDPI);
+                                    link.click();
+                                    debugLog('info', `L版: ダウンロード完了 index=${i}`);
+                                });
+                            };
+                            
+                            // チェックフレームが有効な場合は画像を読み込んでから処理
+                            if (showCheckFrame) {
+                                const checkFrameImg = new Image();
+                                checkFrameImg.src = 'チェックフレーム.png';
+                                checkFrameImg.onload = () => {
+                                    processLCanvas(checkFrameImg);
                                 };
-                                debugLog('info', `L版: 写真エリア ${photoArea.width.toFixed(1)}x${photoArea.height.toFixed(1)} at (${photoArea.x.toFixed(1)}, ${photoArea.y.toFixed(1)})`);
-                                
-                                // 写真エリアのクリッピング（A4版のアーチ型クリッピングと同じ構造）
-                                lCtx.save();
-                                lCtx.beginPath();
-                                lCtx.rect(photoArea.x, photoArea.y, photoArea.width, photoArea.height);
-                                lCtx.clip();
-                                
-                                // フィルター適用済み画像を描画（A4版と同じ方法）
-                                const imgRatio = filteredCanvas.width / filteredCanvas.height;
-                                const areaRatio = photoArea.width / photoArea.height;
-                                
-                                let srcX = 0, srcY = 0, srcWidth = filteredCanvas.width, srcHeight = filteredCanvas.height;
-                                
-                                if (imgRatio > areaRatio) {
-                                    // 画像が横長 → 高さを合わせて幅をトリミング
-                                    srcWidth = filteredCanvas.height * areaRatio;
-                                    srcX = (filteredCanvas.width - srcWidth) / 2;
-                                } else {
-                                    // 画像が縦長 → 幅を合わせて高さをトリミング
-                                    srcHeight = filteredCanvas.width / areaRatio;
-                                    srcY = (filteredCanvas.height - srcHeight) / 2;
-                                }
-                                
-                                // ズームとポジション調整を適用（A4版と同じ方法）
-                                const scale = adjustments.zoom / 100;
-                                const scaledWidth = photoArea.width * scale;
-                                const scaledHeight = photoArea.height * scale;
-                                const offsetX = photoArea.x + (photoArea.width - scaledWidth) / 2 + (adjustments.posX * photoArea.width / 100);
-                                const offsetY = photoArea.y + (photoArea.height - scaledHeight) / 2 + (adjustments.posY * photoArea.height / 100);
-                                
-                                lCtx.drawImage(
-                                    filteredCanvas,
-                                    srcX, srcY, srcWidth, srcHeight,  // ソースのトリミング領域
-                                    offsetX, offsetY, scaledWidth, scaledHeight  // 描画先の位置とサイズ
-                                );
-                                lCtx.restore();
-                                
-                                // ダウンロード実行
-                                const selectedDPI = getSelectedDPI();
-                                const link = document.createElement('a');
-                                link.download = `gokigen-mood-gallery-${i + 1}-${Date.now()}.jpg`;
-                                link.href = canvasToDataURLWithDPI(lCanvas, selectedDPI);
-                                link.click();
-                                debugLog('info', `L版: ダウンロード完了 index=${i}`);
-                            });
+                                checkFrameImg.onerror = () => {
+                                    console.warn('チェックフレーム画像の読み込みに失敗しました。チェックフレームなしで処理を続行します。');
+                                    processLCanvas();
+                                };
+                            } else {
+                                // チェックフレームが無効な場合は直接処理
+                                processLCanvas();
+                            }
                         };
                     }
                 }
@@ -3678,8 +3915,34 @@
             const deltaX = (e.clientX - startX) / 3;
             const deltaY = (e.clientY - startY) / 3;
             
-            const newPosX = Math.max(-50, Math.min(50, initialPosX + deltaX));
-            const newPosY = Math.max(-50, Math.min(50, initialPosY + deltaY));
+            // ズーム率に応じて移動範囲を計算（画像の端まで）
+            const currentZoom = parseFloat(document.getElementById('modalZoom').value) || 100;
+            const img = document.getElementById('modalPhotoPreview');
+            
+            // 画像とフレームのアスペクト比を取得
+            const imgAspect = img.naturalWidth / img.naturalHeight;
+            const frameAspect = img.parentElement.clientWidth / img.parentElement.clientHeight;
+            
+            let maxMoveX = 0, maxMoveY = 0;
+            
+            if (imgAspect > frameAspect) {
+                // 画像が横長 → 横方向にはみ出る
+                const coverScale = img.parentElement.clientHeight / img.naturalHeight;
+                const visibleWidth = img.parentElement.clientWidth / coverScale;
+                const overflow = (img.naturalWidth - visibleWidth) / img.naturalWidth * 100;
+                maxMoveX = overflow / 2 * (currentZoom / 100);
+                maxMoveY = Math.max(0, (currentZoom - 100) / 2);
+            } else {
+                // 画像が縦長 → 縦方向にはみ出る
+                const coverScale = img.parentElement.clientWidth / img.naturalWidth;
+                const visibleHeight = img.parentElement.clientHeight / coverScale;
+                const overflow = (img.naturalHeight - visibleHeight) / img.naturalHeight * 100;
+                maxMoveX = Math.max(0, (currentZoom - 100) / 2);
+                maxMoveY = overflow / 2 * (currentZoom / 100);
+            }
+            
+            const newPosX = Math.max(-maxMoveX, Math.min(maxMoveX, initialPosX + deltaX));
+            const newPosY = Math.max(-maxMoveY, Math.min(maxMoveY, initialPosY + deltaY));
             
             document.getElementById('modalPosX').value = newPosX;
             document.getElementById('modalPosY').value = newPosY;
@@ -3763,8 +4026,34 @@
                 const deltaX = (e.touches[0].clientX - startX) / 2;
                 const deltaY = (e.touches[0].clientY - startY) / 2;
                 
-                const newPosX = Math.max(-50, Math.min(50, initialPosX + deltaX));
-                const newPosY = Math.max(-50, Math.min(50, initialPosY + deltaY));
+                // ズーム率に応じて移動範囲を計算（画像の端まで）
+                const currentZoom = parseFloat(document.getElementById('modalZoom').value) || 100;
+                const img = document.getElementById('modalPhotoPreview');
+                
+                // 画像とフレームのアスペクト比を取得
+                const imgAspect = img.naturalWidth / img.naturalHeight;
+                const frameAspect = img.parentElement.clientWidth / img.parentElement.clientHeight;
+                
+                let maxMoveX = 0, maxMoveY = 0;
+                
+                if (imgAspect > frameAspect) {
+                    // 画像が横長 → 横方向にはみ出る
+                    const coverScale = img.parentElement.clientHeight / img.naturalHeight;
+                    const visibleWidth = img.parentElement.clientWidth / coverScale;
+                    const overflow = (img.naturalWidth - visibleWidth) / img.naturalWidth * 100;
+                    maxMoveX = overflow / 2 * (currentZoom / 100);
+                    maxMoveY = Math.max(0, (currentZoom - 100) / 2);
+                } else {
+                    // 画像が縦長 → 縦方向にはみ出る
+                    const coverScale = img.parentElement.clientWidth / img.naturalWidth;
+                    const visibleHeight = img.parentElement.clientHeight / coverScale;
+                    const overflow = (img.naturalHeight - visibleHeight) / img.naturalHeight * 100;
+                    maxMoveX = Math.max(0, (currentZoom - 100) / 2);
+                    maxMoveY = overflow / 2 * (currentZoom / 100);
+                }
+                
+                const newPosX = Math.max(-maxMoveX, Math.min(maxMoveX, initialPosX + deltaX));
+                const newPosY = Math.max(-maxMoveY, Math.min(maxMoveY, initialPosY + deltaY));
                 
                 document.getElementById('modalPosX').value = newPosX;
                 document.getElementById('modalPosY').value = newPosY;
@@ -3796,7 +4085,248 @@
             }
         }
 
+        // チェックフレームのON/OFF切り替え
+        function toggleCheckFrame(enabled) {
+            console.log('📐 toggleCheckFrame called:', { enabled, modalPhotoIndex });
+            if (modalPhotoIndex >= 0) {
+                photoAdjustments[modalPhotoIndex].showCheckFrame = enabled;
+                console.log('✅ チェックフレーム設定完了:', { showCheckFrame: enabled });
+                
+                // プレビューを更新
+                updateMainPagePreview();
+                applyCheckFrameToModal();
+                saveModalAdjustments();
+            }
+        }
+
+        // モーダルのプレビューにチェックフレームを適用
+        function applyCheckFrameToModal() {
+            if (modalPhotoIndex < 1 || modalPhotoIndex > 2) return; // L版のみ
+            
+            const adjustments = photoAdjustments[modalPhotoIndex];
+            const modalFrame = document.querySelector('.modal-l-frame');
+            if (!modalFrame) {
+                console.warn('⚠️ modal-l-frameが見つかりません');
+                return;
+            }
+            
+            // modal-l-frameをposition: relativeに設定
+            modalFrame.style.position = 'relative';
+            
+            // 既存のチェックフレームを削除
+            const existingFrame = modalFrame.querySelector('.check-frame-overlay');
+            if (existingFrame) {
+                existingFrame.remove();
+                console.log('🗑️ モーダルの既存チェックフレーム削除');
+            }
+            
+            // チェックフレームが有効な場合は追加
+            if (adjustments.showCheckFrame) {
+                const checkFrame = document.createElement('img');
+                checkFrame.src = 'チェックフレーム.png';
+                checkFrame.className = 'check-frame-overlay';
+                checkFrame.alt = 'チェックフレーム';
+                checkFrame.style.cssText = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; object-fit: cover;';
+                
+                // 写真の上に被せるため、最後の子要素として追加
+                modalFrame.appendChild(checkFrame);
+                console.log('✅ モーダルにチェックフレーム追加');
+                
+                // 画像の読み込みを確認
+                checkFrame.onload = () => {
+                    console.log('📐 モーダルチェックフレーム読み込み完了:', checkFrame.naturalWidth, 'x', checkFrame.naturalHeight);
+                };
+                checkFrame.onerror = () => {
+                    console.error('❌ モーダルチェックフレーム読み込み失敗');
+                };
+            }
+        }
+
+        // 黒色抽出カラーフィルター
+        function applyBlackColorExtraction(enabled) {
+            console.log('🎨 applyBlackColorExtraction called:', { enabled, modalPhotoIndex });
+            if (modalPhotoIndex >= 0) {
+                photoAdjustments[modalPhotoIndex].blackColorExtraction = enabled;
+                
+                // 感度コントロールの表示/非表示
+                const intensityControl = document.getElementById('blackColorExtractionControl');
+                const slider = document.getElementById('blackColorThreshold');
+                const sliderValue = document.getElementById('blackColorThresholdValue');
+                
+                if (!enabled) {
+                    intensityControl.style.display = 'none';
+                } else {
+                    intensityControl.style.display = 'block';
+                    
+                    // 既存の値があればそれを使用、なければデフォルト値50を設定
+                    const currentThreshold = photoAdjustments[modalPhotoIndex].blackColorThreshold || 50;
+                    photoAdjustments[modalPhotoIndex].blackColorThreshold = currentThreshold;
+                    
+                    // スライダーとラベルを同期
+                    slider.value = currentThreshold;
+                    sliderValue.textContent = currentThreshold;
+                    
+                    console.log('✅ スライダー初期化完了:', { currentThreshold, sliderValue: slider.value });
+                }
+                
+                applyModalFilters();
+                saveModalAdjustments();
+            }
+        }
+
+        // 黒色感度スライダーの変更を監視
+        function updateBlackColorThreshold(value) {
+            console.log('🎨 黒色感度変更:', value, 'modalPhotoIndex:', modalPhotoIndex);
+            document.getElementById('blackColorThresholdValue').textContent = value;
+            if (modalPhotoIndex >= 0) {
+                photoAdjustments[modalPhotoIndex].blackColorThreshold = parseInt(value);
+                console.log('✅ 黒色感度設定完了:', photoAdjustments[modalPhotoIndex].blackColorThreshold);
+                applyModalFilters();
+                saveModalAdjustments();
+            } else {
+                console.warn('⚠️ modalPhotoIndex が無効です:', modalPhotoIndex);
+            }
+        }
+
+        function applyPreset(preset) {
+            const presets = {
+                'pastel': { brightness: 1.2, contrast: 0.8, saturation: 0.6, monotone: 0, hue: 0 },
+                'soft': { brightness: 1.1, contrast: 0.9, saturation: 0.8, monotone: 0, hue: 0 },
+                'dramatic': { brightness: 0.8, contrast: 1.4, saturation: 1.3, monotone: 0, hue: -10 },
+                'cool': { brightness: 1.0, contrast: 1.2, saturation: 1.1, monotone: 0, hue: -30 }
+            };
+            
+            const presetValues = presets[preset];
+            document.getElementById('modalBrightness').value = presetValues.brightness;
+            document.getElementById('modalContrast').value = presetValues.contrast;
+            document.getElementById('modalSaturation').value = presetValues.saturation;
+            document.getElementById('modalMonotone').value = presetValues.monotone;
+            document.getElementById('modalHue').value = presetValues.hue;
+            
+            updateModalValues();
+            applyModalFilters();
+        }
+
+        // 黒色抽出カラーフィルターを適用
+        function applyBlackColorExtractionToPreview(threshold, duotoneType) {
+            console.log('🎨 黒色抽出フィルター実行開始:', { threshold, duotoneType });
+            const img = document.getElementById('modalPhotoPreview');
+            const originalSrc = img.getAttribute('data-original-src') || img.src;
+            
+            // オリジナル画像を保存
+            if (!img.getAttribute('data-original-src')) {
+                img.setAttribute('data-original-src', originalSrc);
+            }
+            
+            // 一時キャンバスを作成
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            
+            const tempImg = new Image();
+            tempImg.crossOrigin = 'anonymous';
+            tempImg.onload = function() {
+                console.log('✅ 画像読み込み完了、処理開始');
+                tempCanvas.width = tempImg.width;
+                tempCanvas.height = tempImg.height;
+                
+                // 元の画像を描画
+                tempCtx.drawImage(tempImg, 0, 0);
+                
+                // ピクセルデータを取得
+                const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                const data = imageData.data;
+                
+                // 黒色判定の閾値を計算（感度に基づく）
+                const blackThreshold = (threshold / 100) * 255;
+                console.log('🎯 閾値設定:', { threshold, blackThreshold });
+                
+                // デュオトーンカラー定義
+                const duotoneColors = {
+                    'gray': { dark: [120, 120, 120], light: [200, 200, 200] },
+                    'orange': { dark: [140, 100, 80], light: [246, 195, 175] },
+                    'yellow': { dark: [180, 160, 80], light: [255, 242, 204] },
+                    'blue': { dark: [100, 120, 160], light: [200, 220, 240] },
+                    'green': { dark: [100, 140, 100], light: [200, 230, 200] },
+                    'pink': { dark: [150, 120, 130], light: [250, 210, 230] },
+                    'purple': { dark: [130, 120, 160], light: [220, 210, 245] }
+                };
+                
+                const colors = duotoneColors[duotoneType] || duotoneColors['gray'];
+                
+                // 各ピクセルを処理
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+                    
+                    // グレースケール値を計算
+                    const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+                    
+                    // 黒色判定：グレースケール値が閾値以下なら黒と判定
+                    const isBlack = gray <= blackThreshold;
+                    
+                    if (isBlack) {
+                        // 黒い部分 = デュオトーンの明るい色で置き換え
+                        data[i] = colors.light[0];
+                        data[i + 1] = colors.light[1];
+                        data[i + 2] = colors.light[2];
+                    } else {
+                        // 黒くない部分 = 白
+                        data[i] = 255;
+                        data[i + 1] = 255;
+                        data[i + 2] = 255;
+                    }
+                }
+                
+                // 処理済み画像を書き戻す
+                tempCtx.putImageData(imageData, 0, 0);
+                
+                // プレビューに反映
+                img.src = tempCanvas.toDataURL('image/jpeg', 0.95);
+            };
+            
+            tempImg.src = originalSrc;
+        }
+
+        // プリセットを適用
+    </script>
+
+    <!-- モーダルのアーチ半径を印刷と同一比率に合わせる（半径 = 内側幅の1/2） -->
+    <script>
+        function updateModalArchRadius() {
+            try {
+                const area = document.querySelector('.photo-preview-large .modal-photo-area');
+                if (!area) return;
+                const width = area.clientWidth;
+                const radiusPx = Math.max(0, Math.floor(width / 2));
+                area.style.borderTopLeftRadius = radiusPx + 'px';
+                area.style.borderTopRightRadius = radiusPx + 'px';
+            } catch (_) {}
+        }
+
+        window.addEventListener('resize', () => {
+            updateModalArchRadius();
+        });
+        
+        // 黒色感度スライダーのイベントリスナーを初期化
+        window.addEventListener('load', () => {
+            const slider = document.getElementById('blackColorThreshold');
+            if (slider) {
+                console.log('✅ 黒色感度スライダーを初期化しました');
+                // HTMLの oninput/onchange 属性で既に設定されているが、念のため追加
+                slider.addEventListener('input', (e) => {
+                    console.log('📊 スライダー input イベント:', e.target.value);
+                    updateBlackColorThreshold(e.target.value);
+                });
+                slider.addEventListener('change', (e) => {
+                    console.log('📊 スライダー change イベント:', e.target.value);
+                    updateBlackColorThreshold(e.target.value);
+                });
+            } else {
+                console.warn('⚠️ 黒色感度スライダーが見つかりません');
+            }
+        });
     </script>
 </body>
 </html>
-<!-- Updated Sun Oct  5 13:36:38 JST 2025 -->
+<!-- 🎨 ZINEフェス用リリース版 - チェックフレームをphoto-area内に配置 - 2025-10-19 01:15 -->
