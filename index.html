@@ -3645,8 +3645,17 @@
                                     const scale = adjustments.zoom / 100;
                                     const scaledWidth = refArea.width * scale;
                                     const scaledHeight = refArea.height * scale;
-                                    const offsetX = refArea.x + (refArea.width - scaledWidth) / 2 + (adjustments.posX * refArea.width / 100);
-                                    const offsetY = refArea.y + (refArea.height - scaledHeight) / 2 + (adjustments.posY * refArea.height / 100);
+                                    
+                                    let offsetX, offsetY;
+                                    if (isCheckFrameMode) {
+                                        // チェックフレーム有効時：キャンバス全体を基準に計算（左端が切れないように）
+                                        offsetX = (refArea.width - scaledWidth) / 2 + (adjustments.posX * refArea.width / 100);
+                                        offsetY = (refArea.height - scaledHeight) / 2 + (adjustments.posY * refArea.height / 100);
+                                    } else {
+                                        // チェックフレーム無効時：従来通りphotoAreaを基準
+                                        offsetX = refArea.x + (refArea.width - scaledWidth) / 2 + (adjustments.posX * refArea.width / 100);
+                                        offsetY = refArea.y + (refArea.height - scaledHeight) / 2 + (adjustments.posY * refArea.height / 100);
+                                    }
                                     
                                     lCtx.drawImage(
                                         filteredCanvas,
