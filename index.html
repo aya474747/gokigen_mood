@@ -455,6 +455,30 @@
             height: calc(100% - 6px);
         }
 
+        /* Preview2 (L版縦向き 89×127mm) 個別調整 */
+        #preview2 .photo-area-vertical img {
+            top: -10px;
+            left: -9px;
+        }
+
+        #preview2 .photo-area img {
+            width: 139%;
+            height: 131%;
+        }
+
+        /* Preview3 (L版横向き 127×89mm) 個別調整 */
+        #preview3 .photo-area img {
+            width: 69%;
+            height: 190%;
+            object-fit: cover;
+            display: block;
+        }
+
+        #preview3 .photo-area-horizontal img {
+            top: -22px;
+            left: 9px;
+        }
+
         .controls {
             margin-top: 20px;
             padding: 20px;
