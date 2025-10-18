@@ -3583,10 +3583,16 @@
                                     };
                                     debugLog('info', `L版: 写真エリア ${photoArea.width.toFixed(1)}x${photoArea.height.toFixed(1)} at (${photoArea.x.toFixed(1)}, ${photoArea.y.toFixed(1)})`);
                                     
-                                    // 写真エリアのクリッピング（A4版のアーチ型クリッピングと同じ構造）
+                                    // 写真エリアのクリッピング（チェックフレーム有効時はフルサイズ）
                                     lCtx.save();
                                     lCtx.beginPath();
-                                    lCtx.rect(photoArea.x, photoArea.y, photoArea.width, photoArea.height);
+                                    if (showCheckFrame && i === 1) {
+                                        // チェックフレーム有効時：キャンバス全体をクリッピング（写真が端っこまで見える）
+                                        lCtx.rect(0, 0, lCanvas.width, lCanvas.height);
+                                    } else {
+                                        // チェックフレーム無効時：photoAreaのみ
+                                        lCtx.rect(photoArea.x, photoArea.y, photoArea.width, photoArea.height);
+                                    }
                                     lCtx.clip();
                                     
                                     // チェックフレーム画像をクリッピング領域内に描画（有効な場合のみ）
