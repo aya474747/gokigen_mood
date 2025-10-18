@@ -1074,9 +1074,10 @@
         }
 
         .photo-preview-large .modal-l-frame.l-vertical {
-            width: 140px;
-            height: 200px;
-            /* L版縦向き: 89:127の正しい比率（140:200 = 0.7:1） */
+            width: var(--l-vertical-width, 140px);
+            height: var(--l-vertical-height, 200px);
+            /* L版縦向き: プレビューサイズをダウンロード画像の比率に合わせる */
+            /* 実際のL版比率: 89mm:127mm ≈ 0.7:1 */
         }
 
         .photo-preview-large .modal-l-frame.l-horizontal {
@@ -1521,6 +1522,34 @@
     </div>
 
     <script>
+        // プレビューサイズをダウンロード画像の比率に合わせる関数
+        function adjustPreviewSize() {
+            const selectedDPI = getSelectedDPI();
+            const L_WIDTH = mmToPixels(89, selectedDPI); // L版縦向きの幅
+            const L_HEIGHT = mmToPixels(127, selectedDPI); // L版縦向きの高さ
+            
+            // プレビューの基準サイズ（200px高さ）
+            const previewHeight = 200;
+            const previewWidth = previewHeight * (L_WIDTH / L_HEIGHT);
+            
+            // CSS変数で動的にサイズを設定
+            document.documentElement.style.setProperty('--l-vertical-width', previewWidth + 'px');
+            document.documentElement.style.setProperty('--l-vertical-height', previewHeight + 'px');
+            
+            console.log(`プレビューサイズ調整: ${previewWidth.toFixed(1)}px x ${previewHeight}px (DPI: ${selectedDPI})`);
+        }
+        
+        // DPI変更時にプレビューサイズも更新
+        const originalGetSelectedDPI = getSelectedDPI;
+        window.getSelectedDPI = function() {
+            const dpi = originalGetSelectedDPI();
+            setTimeout(adjustPreviewSize, 100); // 少し遅延してから実行
+            return dpi;
+        };
+        
+        // ページ読み込み時に実行
+        document.addEventListener('DOMContentLoaded', adjustPreviewSize);
+
 
 
         // ========================================
@@ -4515,6 +4544,34 @@
 
     <!-- モーダルのアーチ半径を印刷と同一比率に合わせる（半径 = 内側幅の1/2） -->
     <script>
+        // プレビューサイズをダウンロード画像の比率に合わせる関数
+        function adjustPreviewSize() {
+            const selectedDPI = getSelectedDPI();
+            const L_WIDTH = mmToPixels(89, selectedDPI); // L版縦向きの幅
+            const L_HEIGHT = mmToPixels(127, selectedDPI); // L版縦向きの高さ
+            
+            // プレビューの基準サイズ（200px高さ）
+            const previewHeight = 200;
+            const previewWidth = previewHeight * (L_WIDTH / L_HEIGHT);
+            
+            // CSS変数で動的にサイズを設定
+            document.documentElement.style.setProperty('--l-vertical-width', previewWidth + 'px');
+            document.documentElement.style.setProperty('--l-vertical-height', previewHeight + 'px');
+            
+            console.log(`プレビューサイズ調整: ${previewWidth.toFixed(1)}px x ${previewHeight}px (DPI: ${selectedDPI})`);
+        }
+        
+        // DPI変更時にプレビューサイズも更新
+        const originalGetSelectedDPI = getSelectedDPI;
+        window.getSelectedDPI = function() {
+            const dpi = originalGetSelectedDPI();
+            setTimeout(adjustPreviewSize, 100); // 少し遅延してから実行
+            return dpi;
+        };
+        
+        // ページ読み込み時に実行
+        document.addEventListener('DOMContentLoaded', adjustPreviewSize);
+
         // モバイルデバイス検出
         function isMobile() {
             return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
