@@ -469,13 +469,13 @@
 
         /* Preview2 (L版縦向き 89×127mm) 個別調整 */
         #preview2 .photo-area-vertical img {
-            top: -10px;
-            left: -9px;
+            top: 0px;
+            left: 0px;
         }
 
         #preview2 .photo-area img {
-            width: 139%;
-            height: 131%;
+            width: 108%;
+            height: 121%;
             z-index: 1;
         }
 
@@ -489,8 +489,8 @@
         }
 
         #preview3 .photo-area-horizontal img {
-            top: -22px;
-            left: 9px;
+            top: -3px;
+            left: -2px;
         }
 
         .controls {
@@ -1325,7 +1325,6 @@
                     </div>
                     <div class="preview-item small" id="preview3" onclick="selectSlot(2)" style="position: absolute; top: 120px; right: 20px; width: 85px; height: 60px; background: #f0f0f0;">
                         <div class="photo-area photo-area-horizontal">
-                            <img src="チェックフレーム.png" style="position: absolute; object-fit: cover; z-index: 0; display: none;">
                             <div class="placeholder">L版<br><small>89×127mm</small></div>
                         </div>
                         <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(2)" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 16px; cursor: pointer; z-index: 15;">+</button>
@@ -1360,7 +1359,7 @@
             <div class="download-options">
                 <button class="download-btn" onclick="downloadIndividual()">📸 ダウンロード<span class="mobile-hint">（スマホでは長押しで保存）</span></button>
                 <button class="download-btn mobile-save" onclick="saveToCameraRoll()" style="display: none;">📱 カメラロールに保存</button>
-                <button class="download-btn ar" onclick="openAR()" style="background: #4CAF50; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; margin-top: 10px; width: 100%;">📱 ARで部屋に配置してみる</button>
+
             </div>
         </div>
 
@@ -1493,9 +1492,9 @@
                         <h4>📐 チェックフレーム</h4>
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                             <input type="checkbox" id="showCheckFrame" onchange="toggleCheckFrame(this.checked)" style="width: 20px; height: 20px; cursor: pointer;">
-                            <span>L版にチェックフレームを表示</span>
+                            <span>チェックフレーム</span>
                         </label>
-                        <small style="display: block; margin-top: 8px; color: #666;">印刷位置確認用のガイドフレームを表示します</small>
+
                     </div>
 
                 </div>
@@ -1655,8 +1654,8 @@
                     errors.push('明度は0.1〜3の範囲で設定してください');
                 }
                 
-                if (adjustments.zoom < 50 || adjustments.zoom > 300) {
-                    errors.push('ズームは50〜300%の範囲で設定してください');
+                if (adjustments.zoom < 20 || adjustments.zoom > 300) {
+                    errors.push('ズームは20〜300%の範囲で設定してください');
                 }
                 
                 if (errors.length > 0) {
@@ -1710,7 +1709,7 @@
         let currentPhotoIndex = -1; // 現在選択中の写真のインデックス
         let photoAdjustments = [
             { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65, showCheckFrame: false },
-            { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65, showCheckFrame: false },
+            { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65, showCheckFrame: true },
             { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65, showCheckFrame: false }
         ];
         let modalPhotoIndex = -1; // モーダルで編集中の写真のインデックス
@@ -1739,9 +1738,9 @@
                 // 既存の写真をクリア
                 selectedFiles = [null, null, null];
                 photoAdjustments = [
-                    { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65 },
-                    { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65 },
-                    { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65 }
+                    { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65, showCheckFrame: false },
+                    { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65, showCheckFrame: true },
+                    { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 65, showCheckFrame: false }
                 ];
                 
                 // AppStateも更新
@@ -1772,11 +1771,21 @@
                                 </div>
                                 <button class="remove-btn" onclick="removePhoto(${i})">×</button>
                             `;
-                        } else {
-                            // L版の場合
+                        } else if (i === 1) {
+                            // L版縦向き（preview2）
                             preview.innerHTML = `
                                 <div class="photo-area photo-area-vertical">
                                     <img src="チェックフレーム.png" style="position: absolute; object-fit: cover; z-index: 0;">
+                                    <div class="placeholder">${sizeText}</div>
+                                </div>
+                                <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(${i})" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 16px; cursor: pointer; z-index: 15;">+</button>
+                                <button class="remove-btn" onclick="removePhoto(${i})">×</button>
+                                <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${i})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
+                            `;
+                        } else {
+                            // L版横向き（preview3）：チェックフレームなし
+                            preview.innerHTML = `
+                                <div class="photo-area photo-area-horizontal">
                                     <div class="placeholder">${sizeText}</div>
                                 </div>
                                 <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(${i})" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 16px; cursor: pointer; z-index: 15;">+</button>
@@ -2124,7 +2133,8 @@
                     monotone: parseFloat(document.getElementById('modalMonotone').value) || 0,
                     hue: parseFloat(document.getElementById('modalHue').value) || 0,
                     duotone: photoAdjustments[modalPhotoIndex]?.duotone || 'none',
-                    duotoneIntensity: parseFloat(document.getElementById('modalDuotoneIntensity').value) || 65
+                    duotoneIntensity: parseFloat(document.getElementById('modalDuotoneIntensity').value) || 65,
+                    showCheckFrame: photoAdjustments[modalPhotoIndex]?.showCheckFrame || false
                 };
                 
                 // バリデーション
@@ -2356,15 +2366,15 @@
                     intensityControl.style.display = 'none';
                 }
                 
-                // チェックフレームの設定と表示/非表示（L版のみ）
+                // チェックフレームの設定と表示/非表示（縦向きL版のみ）
                 const checkFrameSection = document.getElementById('checkFrameSection');
                 const showCheckFrameCheckbox = document.getElementById('showCheckFrame');
-                if (index === 1 || index === 2) {
-                    // L版の場合はチェックフレームセクションを表示
+                if (index === 1) {
+                    // 縦向きL版の場合のみチェックフレームセクションを表示
                     checkFrameSection.style.display = 'block';
                     showCheckFrameCheckbox.checked = adjustments.showCheckFrame || false;
                 } else {
-                    // A4版の場合は非表示
+                    // A4版と横向きL版の場合は非表示
                     checkFrameSection.style.display = 'none';
                 }
                 
@@ -2687,7 +2697,8 @@
         function displayPhoto(file, index) {
             // photoAdjustmentsが未定義の場合は初期化
             if (!photoAdjustments[index]) {
-                photoAdjustments[index] = { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 100 };
+                const showCheckFrame = index === 1 ? true : false;
+                photoAdjustments[index] = { brightness: 1.1, contrast: 1, saturation: 1, monotone: 0, hue: 0, zoom: 100, posX: 0, posY: 0, mainText: '', subText: '', duotone: 'none', duotoneIntensity: 100, showCheckFrame: showCheckFrame };
             }
             
             const reader = new FileReader();
@@ -2724,11 +2735,12 @@
                         const photoImg = document.createElement('img');
                         photoImg.src = e.target.result;
                         photoImg.alt = `写真${index + 1}`;
-                        photoImg.style.width = '100%';
-                        photoImg.style.height = '100%';
+                        photoImg.style.width = '110%';
+                        photoImg.style.height = '110%';
                         photoImg.style.objectFit = 'cover';
                         photoImg.style.position = 'absolute';
                         photoImg.style.zIndex = '-1';
+                        photoImg.style.filter = 'brightness(1.1)';
                         
                         // placeholder を探す
                         const placeholder = photoArea.querySelector('.placeholder');
@@ -2750,6 +2762,12 @@
                 // 背景をグレーに設定
                 preview.style.background = '#f0f0f0';
                 preview.style.position = 'relative';
+                
+                // 編集ボタンが非表示になっていれば表示する
+                const editBtn = preview.querySelector('.edit-btn');
+                if (editBtn && editBtn.style.display === 'none') {
+                    editBtn.style.display = 'block';
+                }
                 
                 // 画像が読み込まれたら自動的にキャンバスを生成
                 const imgElement = preview.querySelector('.photo-area img.photo-img') || preview.querySelector('.photo-area img');
@@ -2792,11 +2810,21 @@
                     </div>
                 <button class="remove-btn" onclick="removePhoto(${index})">×</button>
             `;
-            } else {
-                // L版の場合は通常の表示
+            } else if (index === 1) {
+                // L版縦向き（preview2）
                 preview.innerHTML = `
                     <div class="photo-area photo-area-vertical">
                         <img src="チェックフレーム.png" style="position: absolute; object-fit: cover; z-index: 0;">
+                        <div class="placeholder">${sizeText}</div>
+                    </div>
+                    <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(${index})" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 16px; cursor: pointer; z-index: 15;">+</button>
+                    <button class="remove-btn" onclick="removePhoto(${index})">×</button>
+                    <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
+                `;
+            } else {
+                // L版横向き（preview3）：チェックフレームなし
+                preview.innerHTML = `
+                    <div class="photo-area photo-area-horizontal">
                         <div class="placeholder">${sizeText}</div>
                     </div>
                     <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(${index})" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 16px; cursor: pointer; z-index: 15;">+</button>
@@ -4073,7 +4101,7 @@
             
             const delta = e.deltaY > 0 ? -5 : 5;
             const currentZoom = parseFloat(document.getElementById('modalZoom').value);
-            const newZoom = Math.max(100, Math.min(200, currentZoom + delta));
+            const newZoom = Math.max(20, Math.min(300, currentZoom + delta));
             
             console.log('✅ Zoom changed from', currentZoom, 'to', newZoom);
             document.getElementById('modalZoom').value = newZoom;
@@ -4160,7 +4188,7 @@
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 const scale = distance / initialDistance;
                 
-                const newZoom = Math.max(100, Math.min(200, initialZoom * scale));
+                const newZoom = Math.max(20, Math.min(300, initialZoom * scale));
                 
                 document.getElementById('modalZoom').value = newZoom;
                 updateModalValues();
