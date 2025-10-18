@@ -3642,22 +3642,38 @@
                                     }
                                     
                                     // ズームとポジション調整を適用
-                                    const scale = adjustments.zoom / 100;
-                                    const scaledWidth = refArea.width * scale;
-                                    const scaledHeight = refArea.height * scale;
+                                    let scaledWidth, scaledHeight, offsetX, offsetY;
                                     
-                                    let offsetX, offsetY;
                                     if (isCheckFrameMode) {
-                                        // チェックフレーム有効時：制限なしで自由に配置（左端が切れないように）
+                                        // チェックフレーム有効時：写真のアスペクト比を保持して描画
+                                        const scale = adjustments.zoom / 100;
+                                        const imgAspect = filteredCanvas.width / filteredCanvas.height;
+                                        const canvasAspect = lCanvas.width / lCanvas.height;
+                                        
+                                        // 写真をキャンバスにフィットさせる（アスペクト比保持）
+                                        if (imgAspect > canvasAspect) {
+                                            // 写真が横長 → 幅をキャンバス幅に合わせる
+                                            scaledWidth = lCanvas.width * scale;
+                                            scaledHeight = scaledWidth / imgAspect;
+                                        } else {
+                                            // 写真が縦長 → 高さをキャンバス高さに合わせる
+                                            scaledHeight = lCanvas.height * scale;
+                                            scaledWidth = scaledHeight * imgAspect;
+                                        }
+                                        
+                                        // ポジション調整（制限なし）
                                         const posXPercent = adjustments.posX || 0;
                                         const posYPercent = adjustments.posY || 0;
-                                        offsetX = (refArea.width - scaledWidth) / 2 + (posXPercent * refArea.width / 100);
-                                        offsetY = (refArea.height - scaledHeight) / 2 + (posYPercent * refArea.height / 100);
+                                        offsetX = (lCanvas.width - scaledWidth) / 2 + (posXPercent * lCanvas.width / 100);
+                                        offsetY = (lCanvas.height - scaledHeight) / 2 + (posYPercent * lCanvas.height / 100);
                                         
                                         // デバッグログ
-                                        debugLog('info', `L版チェックフレーム: posX=${posXPercent}%, posY=${posYPercent}%, offsetX=${offsetX.toFixed(1)}, offsetY=${offsetY.toFixed(1)}`);
+                                        debugLog('info', `L版チェックフレーム: 写真アスペクト比保持, scaledWidth=${scaledWidth.toFixed(1)}, scaledHeight=${scaledHeight.toFixed(1)}, offsetX=${offsetX.toFixed(1)}, offsetY=${offsetY.toFixed(1)}`);
                                     } else {
                                         // チェックフレーム無効時：従来通りphotoAreaを基準
+                                        const scale = adjustments.zoom / 100;
+                                        scaledWidth = refArea.width * scale;
+                                        scaledHeight = refArea.height * scale;
                                         offsetX = refArea.x + (refArea.width - scaledWidth) / 2 + (adjustments.posX * refArea.width / 100);
                                         offsetY = refArea.y + (refArea.height - scaledHeight) / 2 + (adjustments.posY * refArea.height / 100);
                                     }
