@@ -1357,8 +1357,8 @@
             
             
             <div class="download-options">
-                <button class="download-btn" onclick="downloadIndividual()">📸 ダウンロード<span class="mobile-hint">（スマホでは長押しで保存）</span></button>
-                <button class="download-btn mobile-save" onclick="saveToCameraRoll()" style="display: none;">📱 カメラロールに保存</button>
+                <button class="download-btn" onclick="downloadIndividual()">📸 ダウンロード<span class="mobile-hint">（PC用）</span></button>
+                <button class="download-btn mobile-save" onclick="saveToCameraRoll()" style="display: none;">📱 カメラロールに保存<span class="mobile-hint">（スマホ用）</span></button>
 
             </div>
         </div>
@@ -1518,6 +1518,8 @@
     </div>
 
     <script>
+
+
         // ========================================
         // 🚀 一括改善: デバッグ・エラーハンドリング・状態管理・バリデーション
         // ========================================
@@ -3414,6 +3416,12 @@
         }
 
         function downloadIndividual() {
+            // スマホの場合はカメラロール保存にリダイレクト
+            if (isMobile()) {
+                saveToCameraRoll();
+                return;
+            }
+            
             for (let i = 0; i < 3; i++) {
                 if (canvases[i]) {
                     const adjustments = photoAdjustments[i];
@@ -4474,6 +4482,28 @@
 
     <!-- モーダルのアーチ半径を印刷と同一比率に合わせる（半径 = 内側幅の1/2） -->
     <script>
+        // モバイルデバイス検出
+        function isMobile() {
+            return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+        
+        // ページ読み込み時にモバイル用UIを調整
+        function adjustUIForMobile() {
+            if (isMobile()) {
+                // スマホではカメラロール保存ボタンのみ表示
+                const downloadBtn = document.querySelector('.download-btn:not(.mobile-save)');
+                const mobileSaveBtn = document.querySelector('.mobile-save');
+                if (downloadBtn && mobileSaveBtn) {
+                    downloadBtn.style.display = 'none';
+                    mobileSaveBtn.style.display = 'block';
+                }
+            }
+        }
+        
+        // ページ読み込み時に実行
+        document.addEventListener('DOMContentLoaded', adjustUIForMobile);
+        window.addEventListener('resize', adjustUIForMobile);
+
         function updateModalArchRadius() {
             try {
                 const area = document.querySelector('.photo-preview-large .modal-photo-area');
