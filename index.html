@@ -2643,7 +2643,7 @@
                     let photoAreaHtml = '';
                     
                     // 写真を最初に追加（一番下のレイヤー）
-                    photoAreaHtml += `<img src="${e.target.result}" alt="写真${index + 1}" class="photo-img" style="position: absolute; z-index: 0; object-fit: cover;">`;
+                    photoAreaHtml += `<img src="${e.target.result}" alt="写真${index + 1}" class="photo-img" style="position: absolute; z-index: 1; object-fit: cover;">`;
                     
                     // チェックフレームが有効な場合は、写真の上に被せる
                     if (showCheckFrame) {
