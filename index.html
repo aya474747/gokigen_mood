@@ -3577,10 +3577,14 @@
                                     lCanvas.width = canvases[i].width;
                                     lCanvas.height = canvases[i].height;
                                     
-                                    // 白い背景レイヤー（最下層）
-                                    lCtx.fillStyle = '#ffffff';
-                                    lCtx.fillRect(0, 0, lCanvas.width, lCanvas.height);
-                                    debugLog('info', `L版: 白い外枠レイヤーを設定 ${lCanvas.width}x${lCanvas.height}`);
+                                    // 白い背景レイヤー（チェックフレーム無効時のみ）
+                                    if (!(showCheckFrame && i === 1)) {
+                                        lCtx.fillStyle = '#ffffff';
+                                        lCtx.fillRect(0, 0, lCanvas.width, lCanvas.height);
+                                        debugLog('info', `L版: 白い外枠レイヤーを設定 ${lCanvas.width}x${lCanvas.height}`);
+                                    } else {
+                                        debugLog('info', `L版チェックフレーム: 白い背景をスキップ`);
+                                    }
                                     
                                     // 余白を考慮（プレビューのborder 4px + padding 2px = 6pxに相当）
                                     const previewSize = 85; // 両方とも85pxに統一（理想的な外枠サイズ）
