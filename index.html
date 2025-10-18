@@ -4094,6 +4094,14 @@
                 maxMoveY = overflow / 2 * (currentZoom / 100);
             }
             
+            // チェックフレーム有効時に移動範囲を拡大（被写体を端まで配置可能に）
+            const checkbox = document.getElementById('showCheckFrame');
+            if (checkbox && checkbox.checked) {
+                const expandRatio = 1.5; // 1.5倍に拡大
+                maxMoveX *= expandRatio;
+                maxMoveY *= expandRatio;
+            }
+            
             const newPosX = Math.max(-maxMoveX, Math.min(maxMoveX, initialPosX + deltaX));
             const newPosY = Math.max(-maxMoveY, Math.min(maxMoveY, initialPosY + deltaY));
             
@@ -4203,6 +4211,14 @@
                     const overflow = (img.naturalHeight - visibleHeight) / img.naturalHeight * 100;
                     maxMoveX = Math.max(0, (currentZoom - 100) / 2);
                     maxMoveY = overflow / 2 * (currentZoom / 100);
+                }
+                
+                // チェックフレーム有効時に移動範囲を拡大（被写体を端まで配置可能に）
+                const checkboxTouch = document.getElementById('showCheckFrame');
+                if (checkboxTouch && checkboxTouch.checked) {
+                    const expandRatio = 1.5; // 1.5倍に拡大
+                    maxMoveX *= expandRatio;
+                    maxMoveY *= expandRatio;
                 }
                 
                 const newPosX = Math.max(-maxMoveX, Math.min(maxMoveX, initialPosX + deltaX));
