@@ -3616,80 +3616,69 @@
                                         }
                                     }
                                     
-                                    // フィルター適用済み画像を描画
-                                    // チェックフレーム有効時はキャンバス全体、無効時はphotoAreaを基準
-                                    const isCheckFrameMode = showCheckFrame && i === 1;
-                                    const refArea = isCheckFrameMode ? 
-                                        { x: 0, y: 0, width: lCanvas.width, height: lCanvas.height } : 
-                                        photoArea;
-                                    
-                                    let srcX = 0, srcY = 0, srcWidth = filteredCanvas.width, srcHeight = filteredCanvas.height;
-                                    
-                                    // チェックフレーム無効時のみトリミング（有効時はフルサイズ）
-                                    if (!isCheckFrameMode) {
-                                        const imgRatio = filteredCanvas.width / filteredCanvas.height;
-                                        const areaRatio = refArea.width / refArea.height;
-                                        
-                                        if (imgRatio > areaRatio) {
-                                            // 画像が横長 → 高さを合わせて幅をトリミング
-                                            srcWidth = filteredCanvas.height * areaRatio;
-                                            srcX = (filteredCanvas.width - srcWidth) / 2;
-                                        } else {
-                                            // 画像が縦長 → 幅を合わせて高さをトリミング
-                                            srcHeight = filteredCanvas.width / areaRatio;
-                                            srcY = (filteredCanvas.height - srcHeight) / 2;
-                                        }
-                                    } else {
-                                        // チェックフレーム有効時：フルサイズで描画（トリミングなし）
-                                        srcX = 0;
-                                        srcY = 0;
-                                        srcWidth = filteredCanvas.width;
-                                        srcHeight = filteredCanvas.height;
-                                        debugLog('info', `L版チェックフレーム: フルサイズ描画, srcWidth=${srcWidth}, srcHeight=${srcHeight}`);
-                                    }
-                                    
-                                    // ズームとポジション調整を適用
-                                    let scaledWidth, scaledHeight, offsetX, offsetY;
-                                    
-                                    if (isCheckFrameMode) {
-                                        // チェックフレーム有効時：写真のアスペクト比を保持して描画
+                                    // チェックフレーム有効時と無効時で完全に分離
+                                    if (showCheckFrame && i === 1) {
+                                        // チェックフレーム有効時：シンプルにキャンバス全体に描画
                                         const scale = adjustments.zoom / 100;
+                                        const posXPercent = adjustments.posX || 0;
+                                        const posYPercent = adjustments.posY || 0;
+                                        
+                                        // 写真をキャンバス全体に描画（アスペクト比保持）
                                         const imgAspect = filteredCanvas.width / filteredCanvas.height;
                                         const canvasAspect = lCanvas.width / lCanvas.height;
                                         
-                                        // 写真をキャンバスにフィットさせる（アスペクト比保持）
+                                        let drawWidth, drawHeight, drawX, drawY;
+                                        
                                         if (imgAspect > canvasAspect) {
                                             // 写真が横長 → 幅をキャンバス幅に合わせる
-                                            scaledWidth = lCanvas.width * scale;
-                                            scaledHeight = scaledWidth / imgAspect;
+                                            drawWidth = lCanvas.width * scale;
+                                            drawHeight = drawWidth / imgAspect;
                                         } else {
                                             // 写真が縦長 → 高さをキャンバス高さに合わせる
-                                            scaledHeight = lCanvas.height * scale;
-                                            scaledWidth = scaledHeight * imgAspect;
+                                            drawHeight = lCanvas.height * scale;
+                                            drawWidth = drawHeight * imgAspect;
                                         }
                                         
-                                        // ポジション調整（制限なし）
-                                        const posXPercent = adjustments.posX || 0;
-                                        const posYPercent = adjustments.posY || 0;
-                                        offsetX = (lCanvas.width - scaledWidth) / 2 + (posXPercent * lCanvas.width / 100);
-                                        offsetY = (lCanvas.height - scaledHeight) / 2 + (posYPercent * lCanvas.height / 100);
+                                        // 中央配置 + ポジション調整
+                                        drawX = (lCanvas.width - drawWidth) / 2 + (posXPercent * lCanvas.width / 100);
+                                        drawY = (lCanvas.height - drawHeight) / 2 + (posYPercent * lCanvas.height / 100);
                                         
-                                        // デバッグログ
-                                        debugLog('info', `L版チェックフレーム: 写真アスペクト比保持, scaledWidth=${scaledWidth.toFixed(1)}, scaledHeight=${scaledHeight.toFixed(1)}, offsetX=${offsetX.toFixed(1)}, offsetY=${offsetY.toFixed(1)}`);
+                                        // フルサイズで描画（トリミングなし）
+                                        lCtx.drawImage(
+                                            filteredCanvas,
+                                            0, 0, filteredCanvas.width, filteredCanvas.height,  // ソース：フルサイズ
+                                            drawX, drawY, drawWidth, drawHeight  // 描画先：スケール済み
+                                        );
+                                        
+                                        debugLog('info', `L版チェックフレーム: シンプル描画, drawWidth=${drawWidth.toFixed(1)}, drawHeight=${drawHeight.toFixed(1)}, drawX=${drawX.toFixed(1)}, drawY=${drawY.toFixed(1)}`);
                                     } else {
-                                        // チェックフレーム無効時：従来通りphotoAreaを基準
+                                        // チェックフレーム無効時：従来通りの処理
+                                        const refArea = photoArea;
+                                        const imgRatio = filteredCanvas.width / filteredCanvas.height;
+                                        const areaRatio = refArea.width / refArea.height;
+                                        
+                                        let srcX = 0, srcY = 0, srcWidth = filteredCanvas.width, srcHeight = filteredCanvas.height;
+                                        
+                                        if (imgRatio > areaRatio) {
+                                            srcWidth = filteredCanvas.height * areaRatio;
+                                            srcX = (filteredCanvas.width - srcWidth) / 2;
+                                        } else {
+                                            srcHeight = filteredCanvas.width / areaRatio;
+                                            srcY = (filteredCanvas.height - srcHeight) / 2;
+                                        }
+                                        
                                         const scale = adjustments.zoom / 100;
-                                        scaledWidth = refArea.width * scale;
-                                        scaledHeight = refArea.height * scale;
-                                        offsetX = refArea.x + (refArea.width - scaledWidth) / 2 + (adjustments.posX * refArea.width / 100);
-                                        offsetY = refArea.y + (refArea.height - scaledHeight) / 2 + (adjustments.posY * refArea.height / 100);
+                                        const scaledWidth = refArea.width * scale;
+                                        const scaledHeight = refArea.height * scale;
+                                        const offsetX = refArea.x + (refArea.width - scaledWidth) / 2 + (adjustments.posX * refArea.width / 100);
+                                        const offsetY = refArea.y + (refArea.height - scaledHeight) / 2 + (adjustments.posY * refArea.height / 100);
+                                        
+                                        lCtx.drawImage(
+                                            filteredCanvas,
+                                            srcX, srcY, srcWidth, srcHeight,
+                                            offsetX, offsetY, scaledWidth, scaledHeight
+                                        );
                                     }
-                                    
-                                    lCtx.drawImage(
-                                        filteredCanvas,
-                                        srcX, srcY, srcWidth, srcHeight,  // ソースのトリミング領域
-                                        offsetX, offsetY, scaledWidth, scaledHeight  // 描画先の位置とサイズ
-                                    );
                                     
                                     // チェックフレーム画像をクリッピング領域内に描画（写真の上に重ねる）
                                     if (showCheckFrame && checkFrameImg) {
