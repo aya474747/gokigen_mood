@@ -3591,8 +3591,17 @@
                                     
                                     // チェックフレーム画像をクリッピング領域内に描画（有効な場合のみ）
                                     if (showCheckFrame && checkFrameImg) {
-                                        lCtx.drawImage(checkFrameImg, photoArea.x, photoArea.y, photoArea.width, photoArea.height);
-                                        debugLog('info', `L版: チェックフレーム描画完了`);
+                                        if (i === 1) {
+                                            // L版縦向き：キャンバス全体にフルサイズで描画（ボーダーなし）
+                                            lCtx.restore(); // クリッピング解除
+                                            lCtx.drawImage(checkFrameImg, 0, 0, lCanvas.width, lCanvas.height);
+                                            debugLog('info', `L版縦向き: チェックフレーム描画完了（フルサイズ）`);
+                                            lCtx.save(); // 下の restore と対応させるため再度 save
+                                        } else {
+                                            // L版横向き：クリッピング領域内に描画（ボーダー付き）
+                                            lCtx.drawImage(checkFrameImg, photoArea.x, photoArea.y, photoArea.width, photoArea.height);
+                                            debugLog('info', `L版横向き: チェックフレーム描画完了（ボーダー付き）`);
+                                        }
                                     }
                                     
                                     // フィルター適用済み画像を描画（A4版と同じ方法）
@@ -3626,8 +3635,17 @@
                                     
                                     // チェックフレーム画像をクリッピング領域内に描画（写真の上に重ねる）
                                     if (showCheckFrame && checkFrameImg) {
-                                        lCtx.drawImage(checkFrameImg, photoArea.x, photoArea.y, photoArea.width, photoArea.height);
-                                        debugLog('info', `L版: チェックフレーム描画完了`);
+                                        if (i === 1) {
+                                            // L版縦向き：キャンバス全体にフルサイズで描画（ボーダーなし）
+                                            lCtx.restore(); // クリッピング解除
+                                            lCtx.drawImage(checkFrameImg, 0, 0, lCanvas.width, lCanvas.height);
+                                            debugLog('info', `L版縦向き: チェックフレーム描画完了（フルサイズ）`);
+                                            lCtx.save(); // 下の restore と対応させるため再度 save
+                                        } else {
+                                            // L版横向き：クリッピング領域内に描画（ボーダー付き）
+                                            lCtx.drawImage(checkFrameImg, photoArea.x, photoArea.y, photoArea.width, photoArea.height);
+                                            debugLog('info', `L版横向き: チェックフレーム描画完了（ボーダー付き）`);
+                                        }
                                     }
                                     
                                     lCtx.restore();
