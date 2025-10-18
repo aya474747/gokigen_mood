@@ -17,7 +17,7 @@
 
         body {
             font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
-            background: #f5f5f5;
+            background: transparent;
             min-height: 100vh;
             padding: 20px;
         }
@@ -249,7 +249,7 @@
         .preview-item.large .photo-area {
             width: 112px; /* 140px * 0.8 = 112px (ダウンロード画像と同じ10%マージン) */
             height: 158px; /* 198px * 0.8 = 158px (ダウンロード画像と同じ12%マージン) */
-            background: #f5f5f5;
+            background: transparent;
             border-radius: 200px 200px 0 0;
             display: flex;
             align-items: center;
@@ -307,7 +307,7 @@
         .preview-item.small .photo-area {
             width: 100%;
             height: 100%;
-            background: #f5f5f5;
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -403,7 +403,7 @@
         .preview-item.small .photo-area {
             width: 100%;
             height: 100%;
-            background: #f5f5f5;
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -424,6 +424,7 @@
         .photo-area-vertical {
             padding: 0 !important;
             position: relative;
+            background: transparent;
         }
         .photo-area-vertical img {
             top: 3px;
@@ -1727,11 +1728,39 @@
                     adjustments: photoAdjustments
                 });
                 
-                // プレビューをリセット
-                for (let i = 1; i <= 3; i++) {
-                    const preview = document.getElementById(`preview${i}`);
+                // プレビューをリセット（デフォルト状態に復元）
+                for (let i = 0; i < 3; i++) {
+                    const preview = document.getElementById(`preview${i + 1}`);
+                    const sizeText = i === 0 ? 'A4版<br><small>210×297mm<br>タップで写真を追加</small>' : 'L版<br><small>89×127mm</small>';
+                    
                     if (preview) {
-                        preview.innerHTML = '';
+                        if (i === 0) {
+                            // A4版の場合
+                            preview.innerHTML = `
+                                <div class="inner-container">
+                                    <div class="photo-area">
+                                        <div class="placeholder">${sizeText}</div>
+                                    </div>
+                                </div>
+                                <div class="png-overlay">
+                                    <img src="circle_logo.png" alt="ご機嫌ムード">
+                                </div>
+                                <div class="french-text">
+                                    <img src="Un_doux_souvenir.png" alt="Un doux souvenir" style="width: 60%; height: auto;">
+                                </div>
+                                <button class="remove-btn" onclick="removePhoto(${i})">×</button>
+                            `;
+                        } else {
+                            // L版の場合
+                            preview.innerHTML = `
+                                <div class="photo-area photo-area-vertical">
+                                    <img src="チェックフレーム.png" style="position: absolute; object-fit: cover; z-index: 0;">
+                                    <div class="placeholder">${sizeText}</div>
+                                </div>
+                                <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(${i})" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 16px; cursor: pointer; z-index: 15;">+</button>
+                                <button class="remove-btn" onclick="removePhoto(${i})">×</button>
+                            `;
+                        }
                         preview.classList.remove('has-photo');
                     }
                 }
@@ -1798,16 +1827,38 @@
                                                 <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
                                             `;
                                         } else {
-                                            preview.innerHTML = `
-                                                <img src="${e.target.result}" alt="写真${index + 1}">
-                                                <button class="remove-btn" onclick="removePhoto(${index})">×</button>
-                                                <button class="edit-btn" onclick="event.stopPropagation(); openPhotoEditModal(${index})" style="position: absolute; bottom: 5px; left: 5px; background: #F6A18F; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">編集</button>
-                                            `;
+                                            // L版：写真を.photo-area内に挿入（チェックフレームは削除しない）
+                                            const photoArea = preview.querySelector('.photo-area');
+                                            if (photoArea) {
+                                                // 既存の写真を削除
+                                                const existingPhoto = photoArea.querySelector('img[alt^="写真"]');
+                                                if (existingPhoto) existingPhoto.remove();
+                                                
+                                                // 写真を作成
+                                                const photoImg = document.createElement('img');
+                                                photoImg.src = e.target.result;
+                                                photoImg.alt = `写真${index + 1}`;
+                                                photoImg.style.width = '100%';
+                                                photoImg.style.height = '100%';
+                                                photoImg.style.objectFit = 'cover';
+                                                photoImg.style.position = 'absolute';
+                                                photoImg.style.zIndex = '-1';
+                                                
+                                                // placeholder を探す
+                                                const placeholder = photoArea.querySelector('.placeholder');
+                                                
+                                                // placeholder の前に写真を挿入
+                                                if (placeholder) {
+                                                    photoArea.insertBefore(photoImg, placeholder);
+                                                } else {
+                                                    photoArea.insertBefore(photoImg, photoArea.firstChild);
+                                                }
+                                            }
                                         }
                                         preview.classList.add('has-photo');
                                         
                                         // 明度1.1を適用
-                                        const previewImg = preview.querySelector('img');
+                                        const previewImg = preview.querySelector('.photo-area img[alt^="写真"]') || preview.querySelector('img:not([alt^="ご機嫌"]):not([alt^="Un"])');
                                         if (previewImg) {
                                             previewImg.style.filter = 'brightness(1.1)';
                                         }
