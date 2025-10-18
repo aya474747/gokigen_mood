@@ -2715,7 +2715,8 @@
             } else {
                 // L版の場合は通常の表示
                 preview.innerHTML = `
-                    <div class="photo-area">
+                    <div class="photo-area photo-area-vertical">
+                        <img src="チェックフレーム.png" style="position: absolute; object-fit: cover; z-index: 0;">
                         <div class="placeholder">${sizeText}</div>
                     </div>
                     <button class="add-photo-btn" onclick="event.stopPropagation(); selectSlot(${index})" style="position: absolute; bottom: 5px; right: 5px; background: #F6A18F; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; font-size: 16px; cursor: pointer; z-index: 15;">+</button>
