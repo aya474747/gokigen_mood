@@ -3639,6 +3639,13 @@
                                             srcHeight = filteredCanvas.width / areaRatio;
                                             srcY = (filteredCanvas.height - srcHeight) / 2;
                                         }
+                                    } else {
+                                        // チェックフレーム有効時：フルサイズで描画（トリミングなし）
+                                        srcX = 0;
+                                        srcY = 0;
+                                        srcWidth = filteredCanvas.width;
+                                        srcHeight = filteredCanvas.height;
+                                        debugLog('info', `L版チェックフレーム: フルサイズ描画, srcWidth=${srcWidth}, srcHeight=${srcHeight}`);
                                     }
                                     
                                     // ズームとポジション調整を適用
